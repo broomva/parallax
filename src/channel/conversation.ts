@@ -18,8 +18,15 @@ import { fail, ok, type ParallaxError, type Result } from "../core/result";
  * capability only reachable by one transport is a feature of the transport.
  */
 
-/** WhatsApp caps a message body well below this; we chunk far shorter for legibility. */
-const CHUNK_CHARS = 1200;
+/**
+ * WhatsApp's body limit is 4096; the Kapso channel buffers a whole agent reply
+ * and re-splits it at 3900 on paragraph-then-line boundaries. So chunking
+ * shorter than that accomplishes nothing on this transport -- the parts are
+ * reassembled into one buffer before delivery. The split here exists for
+ * channels that do NOT buffer, and the size is a parameter because the limit
+ * belongs to the transport, not to the proposal.
+ */
+export const WHATSAPP_CHUNK_CHARS = 3900;
 
 export interface ChannelMessage {
   readonly text: string;
@@ -35,7 +42,10 @@ export interface ChannelMessage {
  * after the agent has already finished, so the whole message is composed first
  * and chunked, never progressively revised.
  */
-export function renderProposal(p: OntologyProposal): ChannelMessage[] {
+export function renderProposal(
+  p: OntologyProposal,
+  chunkChars: number = WHATSAPP_CHUNK_CHARS,
+): ChannelMessage[] {
   const lines: string[] = [];
   lines.push(`*${p.title}*`);
   lines.push(`Read from your workspace. Nothing runs until you accept it.`);
@@ -75,15 +85,15 @@ export function renderProposal(p: OntologyProposal): ChannelMessage[] {
   );
   lines.push(`ref ${p.id.slice(0, 12)}`);
 
-  return chunk(lines.join("\n"));
+  return chunk(lines.join("\n"), chunkChars);
 }
 
-function chunk(text: string): ChannelMessage[] {
+function chunk(text: string, limit: number): ChannelMessage[] {
   const paras = text.split("\n");
   const parts: string[] = [];
   let cur = "";
   for (const line of paras) {
-    if (cur.length + line.length + 1 > CHUNK_CHARS && cur.length > 0) {
+    if (cur.length + line.length + 1 > limit && cur.length > 0) {
       parts.push(cur);
       cur = "";
     }

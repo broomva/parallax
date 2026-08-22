@@ -16,7 +16,7 @@ function allAnswers(p: OntologyProposal): string {
 
 describe("rendering for a channel that cannot edit", () => {
   test("every chunk stays inside a WhatsApp-safe length", () => {
-    for (const m of renderProposal(proposal())) expect(m.text.length).toBeLessThanOrEqual(1400);
+    for (const m of renderProposal(proposal())) expect(m.text.length).toBeLessThanOrEqual(3900);
   });
   test("chunks are numbered so a split message is still readable in order", () => {
     const msgs = renderProposal(proposal());
@@ -110,5 +110,17 @@ describe("resolving an accept against the proposal", () => {
       expect(worldOf(a.value).ok).toBe(true);
       expect(a.value.acceptedBy).toBe("+57 300 000 0000");
     }
+  });
+});
+
+describe("chunking belongs to the transport, not the proposal", () => {
+  test("a buffering channel receives the proposal as one message", () => {
+    expect(renderProposal(proposal()).length).toBe(1);
+  });
+  test("a channel with a tighter limit gets it split, numbered in order", () => {
+    const msgs = renderProposal(proposal(), 300);
+    expect(msgs.length).toBeGreaterThan(1);
+    expect(msgs.every((m, i) => m.part === i + 1 && m.of === msgs.length)).toBe(true);
+    for (const m of msgs) expect(m.text.length).toBeLessThanOrEqual(400);
   });
 });
