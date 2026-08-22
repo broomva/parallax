@@ -31,7 +31,17 @@ export interface ActiveOntology {
 /** The three context classes. Each is a different way of finding out what is there. */
 export type ContextSource =
   | { kind: "filesystem"; root: string }
-  | { kind: "agent-workspace"; root: string }
+  /**
+   * The tenant's own workspace. `root` defaults to process.cwd() and you should
+   * almost always let it: the session is spawned with cwd already set to the
+   * tenant directory, and the confinement keys off exactly that. A hardcoded
+   * absolute path that disagrees with cwd by even a trailing component is
+   * DENIED rather than redirected -- and a denied read surfaces as an empty
+   * directory, so it looks like "the workspace has nothing in it" instead of
+   * an error. Passing a derived path is the failure that does not announce
+   * itself.
+   */
+  | { kind: "agent-workspace"; root?: string }
   | { kind: "business-data"; tables: Array<{ name: string; columns: string[] }> };
 
 /** A question the proposer could not answer and a human must. */
@@ -88,23 +98,24 @@ export function proposeOntology(source: ContextSource): Result<OntologyProposal,
 function proposeFromDirectory(
   source: Extract<ContextSource, { kind: "filesystem" | "agent-workspace" }>,
 ): Result<OntologyProposal, ProposeError> {
+  const root = source.root ?? process.cwd();
   let entries: string[];
   try {
-    entries = readdirSync(source.root);
+    entries = readdirSync(root);
   } catch (e) {
-    return fail("SOURCE_UNREADABLE", `cannot read ${source.root}`, {
+    return fail("SOURCE_UNREADABLE", `cannot read ${root}`, {
       cause: e instanceof Error ? e.message : String(e),
     });
   }
   if (entries.length === 0) {
-    return fail("SOURCE_EMPTY", `${source.root} has no entries to read an ontology from`);
+    return fail("SOURCE_EMPTY", `${root} has no entries to read an ontology from`);
   }
 
   const dirs: string[] = [];
   const byExt = new Map<string, number>();
   for (const name of entries) {
     if (name.startsWith(".")) continue;
-    const full = join(source.root, name);
+    const full = join(root, name);
     let s: ReturnType<typeof statSync>;
     try {
       s = statSync(full);
@@ -155,7 +166,7 @@ function proposeFromDirectory(
     blocking: false,
   });
 
-  const slug = basename(source.root) || "context";
+  const slug = basename(root) || "context";
   const proposal: OntologyProposal = {
     id: "",
     source,

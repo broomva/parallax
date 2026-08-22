@@ -55,7 +55,7 @@ describe("provenance", () => {
         { value: 1, origin: "observed" },
         { value: 2, origin: "simulated" },
       ],
-      (v) => v[0] + v[1],
+      (v) => (v[0] ?? 0) + (v[1] ?? 0),
     );
     expect(r.value).toBe(3);
     expect(r.origin).toBe("simulated");
