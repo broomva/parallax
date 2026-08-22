@@ -13,12 +13,6 @@
     }
   },
   "files": {
-    "includes": [
-      "**",
-      "!design",
-      "!landing/vendor",
-      "!landing/assets-real",
-      "!node_modules"
-    ]
+    "includes": ["**", "!design", "!landing/vendor", "!landing/assets-real", "!node_modules"]
   }
 }

@@ -3,30 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simulacro — run it again, with one thing changed</title>
-<meta name="description" content="There is no staging environment for the way a business runs. Simulacro forks your operational history and replays it with one policy changed, scored against what actually happened.">
+<title>Parallax — two futures from one past, and the angle between them</title>
+<meta name="description" content="Point Parallax at a context. It proposes an ontology built from what is actually there, you accept it, and it rolls the model forward under candidate decisions. Every answer is typed observed or simulated.">
+<meta name="color-scheme" content="light dark">
 <style>
+  /* ------------------------------------------------------------------
+     Parallax landing — broomva-blue-axis
+     One foreground colour, six alpha steps. One accent, spent twice.
+     Two families: system grotesk for human text, mono for all chrome.
+     ------------------------------------------------------------------ */
+
+  @property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
+
   :root {
-    --ground: #111413; --surface: #191D1B; --surface-alt: #222724;
-    --ink: #E6EAE6; --ink-muted: #97A09B; --ink-faint: #6E7873;
-    --rule: #2C322F; --rule-strong: #414945;
-    --accent: #6FBFB4; --warn: #D5A03F; --crit: #DE8272; --ok: #86BA90;
-    --serif: "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
-    --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    --measure: 34rem;
+    color-scheme: light dark;
+
+    /* the single foreground, as oklch channels */
+    --fg-c: 0.175 0.022 265;              /* Blue-black ink */
+    --bg:      oklch(1 0 0);              /* Paper white */
+    --bg-sub:  oklch(0.966 0.003 265);    /* Cool soft canvas */
+
+    /* six alpha steps, light-compensated so steps 1-4 clear AA on paper */
+    --a1: 0.92; --a2: 0.86; --a3: 0.72; --a4: 0.62; --a5: 0.20; --a6: 0.11;
+
+    --accent:     oklch(0.60 0.12 260);   /* Resonant AI Blue — chosen path only */
+    --accent-ink: oklch(0.48 0.14 260);   /* same hue axis, AA-safe as small text */
+    --accent-btn: oklch(0.48 0.14 260);   /* same hue axis, darkened for AA on fill */
+    --accent-btn-fg: oklch(1 0 0);
+
+    --ok:   oklch(0.46 0.13 152);
+    --warn: oklch(0.50 0.12 68);
+    --crit: oklch(0.50 0.20 27);
+
+    --serif: ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    --sans:  ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+    /* the hero sits on dark footage in both themes */
+    --cine-fg:  oklch(0.97 0.004 265);
+    --cine-dim: oklch(0.97 0.004 265 / 0.66);
+    --cine-tag: oklch(0.97 0.004 265 / 0.55);
   }
+
+  :root {
+    --fg-1: oklch(var(--fg-c) / var(--a1));
+    --fg-2: oklch(var(--fg-c) / var(--a2));
+    --fg-3: oklch(var(--fg-c) / var(--a3));
+    --fg-4: oklch(var(--fg-c) / var(--a4));
+    --fg-5: oklch(var(--fg-c) / var(--a5));
+    --fg-6: oklch(var(--fg-c) / var(--a6));
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fg-c: 0.965 0.004 265;            /* Soft ice foreground */
+      --bg:     oklch(0.135 0.020 272);   /* Deep current canvas */
+      --bg-sub: oklch(0.178 0.021 272);
+      --a1: 0.92; --a2: 0.85; --a3: 0.66; --a4: 0.55; --a5: 0.22; --a6: 0.14;
+      --accent:     oklch(0.66 0.13 260);
+      --accent-ink: oklch(0.74 0.12 260);
+      --accent-btn: oklch(0.68 0.13 260);
+      --accent-btn-fg: oklch(0.135 0.020 272);
+      --ok:   oklch(0.75 0.16 152);
+      --warn: oklch(0.80 0.14 85);
+      --crit: oklch(0.70 0.18 27);
+    }
+  }
+  :root[data-theme="dark"] {
+    --fg-c: 0.965 0.004 265;
+    --bg:     oklch(0.135 0.020 272);
+    --bg-sub: oklch(0.178 0.021 272);
+    --a1: 0.92; --a2: 0.85; --a3: 0.66; --a4: 0.55; --a5: 0.22; --a6: 0.14;
+    --accent:     oklch(0.66 0.13 260);
+    --accent-ink: oklch(0.74 0.12 260);
+    --accent-btn: oklch(0.68 0.13 260);
+    --accent-btn-fg: oklch(0.135 0.020 272);
+    --ok:   oklch(0.75 0.16 152);
+    --warn: oklch(0.80 0.14 85);
+    --crit: oklch(0.70 0.18 27);
+  }
+
   * { box-sizing: border-box; }
   html { scroll-behavior: auto; }
   body {
-    margin: 0; background: var(--ground); color: var(--ink);
-    font-family: var(--serif); font-size: 1.0625rem; line-height: 1.62;
-    -webkit-font-smoothing: antialiased;
+    margin: 0; background: var(--bg); color: var(--fg-1);
+    font-family: var(--sans); font-size: 1rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { color: var(--ink); }
+  :focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px;
+  }
+  .vh {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: fixed; top: 8px; left: 8px; z-index: 40;
+    transform: translateY(-200%); transition: transform 150ms cubic-bezier(0.25,0.1,0.25,1);
+    background: var(--bg); color: var(--fg-1); border: 1px solid var(--fg-5);
+    padding: 12px 16px; min-height: 44px; display: inline-flex; align-items: center;
+    font-family: var(--mono); font-size: 0.75rem; border-radius: 0.375rem; text-decoration: none;
+  }
+  .skip:focus-visible { transform: translateY(0); }
 
-  /* ---- cinema ---- */
+  /* ---------------- cinema (wiring preserved) ---------------- */
   #stage {
     position: fixed; inset: 0; z-index: 0; background: #0a0c0b; overflow: hidden;
   }
@@ -37,199 +117,661 @@
     background: linear-gradient(90deg, rgba(10,12,11,0.88) 0%, rgba(10,12,11,0.55) 46%, rgba(10,12,11,0.10) 78%);
   }
   .copy {
-    position: fixed; z-index: 2; left: max(6vw, 2rem); top: 50%; transform: translateY(-50%);
-    max-width: 30rem; pointer-events: none;
+    position: fixed; z-index: 2; left: max(6vw, 20px); top: 50%; transform: translateY(-50%);
+    max-width: 32rem; pointer-events: none;
+    transition: opacity 420ms cubic-bezier(0.22,1,0.36,1);
   }
   .copy .n {
-    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.18em;
-    color: var(--accent); margin: 0 0 1.25rem;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.18em;
+    color: var(--cine-tag); margin: 0 0 20px;
   }
   .copy h2 {
-    font-family: var(--serif); font-size: clamp(2rem, 4.4vw, 3.25rem); line-height: 1.06;
-    letter-spacing: -0.02em; margin: 0 0 1rem; font-weight: 400; text-wrap: pretty;
+    font-family: var(--sans); font-size: clamp(1.875rem, 4.4vw, 3.25rem); line-height: 1.06;
+    letter-spacing: -0.025em; margin: 0 0 16px; font-weight: 500;
+    color: var(--cine-fg); text-wrap: pretty;
   }
-  .copy p { margin: 0; color: var(--ink-muted); font-size: 1.0625rem; line-height: 1.6; text-wrap: pretty; }
+  .copy p.b { margin: 0; color: var(--cine-dim); font-size: 1.0625rem; line-height: 1.55; text-wrap: pretty; }
   .copy[data-hidden="true"] { opacity: 0; }
-  .copy { transition: opacity 420ms cubic-bezier(0.22,1,0.36,1); }
 
-  .brand {
-    position: fixed; z-index: 3; top: 1.75rem; left: max(6vw, 2rem);
-    font-family: var(--serif); font-size: 1.125rem; letter-spacing: -0.01em;
+  .cine-brand {
+    position: fixed; z-index: 3; top: 24px; left: max(6vw, 20px);
+    display: flex; align-items: baseline; gap: 12px;
+    transition: opacity 300ms;
   }
+  .cine-brand .w { font-family: var(--sans); font-size: 1.125rem; font-weight: 500; letter-spacing: -0.015em; color: var(--cine-fg); }
+  .cine-brand .id { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--cine-tag); }
   .scrollcue {
-    position: fixed; z-index: 3; bottom: 1.75rem; left: max(6vw, 2rem);
-    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.14em;
-    color: var(--ink-faint); text-transform: uppercase;
+    position: fixed; z-index: 3; bottom: 24px; left: max(6vw, 20px); margin: 0;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em;
+    color: var(--cine-tag); text-transform: uppercase;
   }
 
-  /* ---- prose sections ---- */
-  .after { position: relative; z-index: 2; background: var(--ground); }
-  section { padding: 7rem max(6vw, 2rem); border-top: 1px solid var(--rule); }
-  .wrap { max-width: 62rem; margin: 0 auto; }
-  .col { max-width: var(--measure); }
+  /* ---------------- document ---------------- */
+  /* The grid is step 6 modulated further: a full-bleed hairline covering the
+     whole page needs less weight than the same value used as a stroke. */
+  .after {
+    position: relative; z-index: 2; background-color: var(--bg);
+    --grid: color-mix(in oklab, var(--fg-6), transparent 58%);
+    background-image:
+      repeating-linear-gradient(to right, var(--grid) 0 1px, transparent 1px 88px),
+      repeating-linear-gradient(to bottom, var(--grid) 0 1px, transparent 1px 88px);
+    background-position: center top;
+  }
+
+  .bar {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px max(6vw, 20px); min-height: 52px;
+    background: var(--bg); border-bottom: 1px solid var(--fg-5);
+  }
+  .bar .w { font-family: var(--sans); font-weight: 500; font-size: 1rem; letter-spacing: -0.015em; color: var(--fg-1); }
+  .bar .id { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--fg-4); }
+  @media (max-width: 34rem) { .bar .id { display: none; } }
+
+  section { padding: 96px max(6vw, 20px); border-top: 1px solid var(--fg-5); }
+  section:first-of-type { border-top: 0; }
+  .wrap { max-width: 1000px; margin: 0 auto; position: relative; }
+  .col { max-width: 40rem; }
+
+  /* registration marks */
+  .frame { position: relative; }
+  .frame::before {
+    content: ""; position: absolute; inset: -20px; pointer-events: none;
+    background:
+      linear-gradient(var(--fg-5), var(--fg-5)) 0    0    / 1px 14px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 0    0    / 14px 1px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 100% 0    / 1px 14px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 100% 0    / 14px 1px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 0    100% / 1px 14px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 0    100% / 14px 1px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 100% 100% / 1px 14px no-repeat,
+      linear-gradient(var(--fg-5), var(--fg-5)) 100% 100% / 14px 1px no-repeat;
+  }
+
   .eyebrow {
-    font-family: var(--mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--accent); margin: 0 0 1.5rem;
+    font-family: var(--mono); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--fg-4); margin: 0 0 20px;
   }
-  h3 {
-    font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-    line-height: 1.1; letter-spacing: -0.018em; margin: 0 0 1.5rem; text-wrap: pretty;
+  h2.h {
+    font-family: var(--sans); font-weight: 500; font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    line-height: 1.12; letter-spacing: -0.022em; margin: 0 0 20px; color: var(--fg-1);
+    text-wrap: pretty; scroll-margin-top: 72px;
   }
+  h3 { font-family: var(--sans); font-weight: 500; font-size: 1.125rem; line-height: 1.3;
+       letter-spacing: -0.012em; margin: 0 0 8px; color: var(--fg-1); }
   p { text-wrap: pretty; }
-  .lede { font-size: 1.1875rem; color: var(--ink-muted); }
+  .lede { font-size: 1.125rem; line-height: 1.55; color: var(--fg-3); margin: 0 0 8px; max-width: 40rem; }
+  .body { font-size: 1rem; color: var(--fg-3); max-width: 40rem; }
+
+  /* verdict — the plain-language line under every metric block */
+  .verdict {
+    display: flex; gap: 12px; align-items: baseline; margin: 16px 0 0;
+    font-size: 0.9375rem; line-height: 1.5; color: var(--fg-2); max-width: 44rem;
+  }
+  .verdict::before {
+    content: "VERDICT"; flex: none; font-family: var(--mono); font-size: 0.75rem;
+    letter-spacing: 0.14em; color: var(--fg-4); transform: translateY(-1px);
+  }
+
+  /* three-up cells */
   .grid3 {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 3rem;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
+    border-radius: 0.75rem; overflow: hidden; margin-top: 40px;
   }
-  .cell { background: var(--ground); padding: 2rem 1.75rem 2.25rem; min-width: 0; }
+  .cell { background: var(--bg); padding: 24px 24px 28px; min-width: 0; }
   .cell .k {
-    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.16em;
-    color: var(--ink-faint); margin: 0 0 0.9rem; text-transform: uppercase;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em;
+    color: var(--fg-4); margin: 0 0 16px; text-transform: uppercase;
   }
-  .cell h4 { font-family: var(--serif); font-weight: 400; font-size: 1.375rem; margin: 0 0 0.65rem; letter-spacing: -0.01em; }
-  .cell p { margin: 0; font-family: var(--sans); font-size: 0.9rem; line-height: 1.58; color: var(--ink-muted); }
+  .cell p.t { margin: 0; font-size: 0.875rem; line-height: 1.6; color: var(--fg-3); }
 
-  .qa { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 3rem; }
-  .qa > div { background: var(--ground); padding: 1.75rem; }
-  .qa .q { font-family: var(--sans); font-size: 0.9rem; font-weight: 600; color: var(--ink); margin: 0 0 0.6rem; }
-  .qa .a { font-family: var(--sans); font-size: 0.9rem; line-height: 1.6; color: var(--ink-muted); margin: 0; }
-  @media (min-width: 52rem) { .qa { grid-template-columns: 1fr 1fr; } }
-
-  .receipt {
-    font-family: var(--mono); font-size: 0.8125rem; line-height: 1.85;
-    background: var(--surface); border: 1px solid var(--rule); border-left: 2px solid var(--accent);
-    padding: 1.5rem 1.75rem; margin-top: 2.5rem; overflow-x: auto; color: var(--ink-muted);
+  /* mono id chips */
+  .id-row { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 16px; }
+  .chip {
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--fg-4);
+    border: 1px solid var(--fg-5); border-radius: 0.375rem; padding: 4px 8px;
+    white-space: nowrap;
   }
-  .receipt b { color: var(--ink); font-weight: 400; }
-  .receipt .ok { color: var(--ok); }
-  .receipt .warn { color: var(--warn); }
+  .chip b { color: var(--fg-2); font-weight: 400; }
 
-  .cta { display: inline-flex; align-items: center; gap: 0.65rem; margin-top: 2.5rem;
-    font-family: var(--sans); font-size: 0.9375rem; font-weight: 600;
-    padding: 0.95rem 1.6rem; min-height: 44px; border: 1px solid var(--ink);
-    background: var(--ink); color: var(--ground); }
-  .cta:hover { background: transparent; color: var(--ink); }
-  footer { padding: 4rem max(6vw, 2rem) 6rem; border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 0.75rem; color: var(--ink-faint); }
+  /* tables */
+  .tblwrap { overflow-x: auto; margin-top: 24px; border: 1px solid var(--fg-5); border-radius: 0.75rem; background: var(--bg); }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-family: var(--mono); font-size: 0.8125rem; }
+  caption {
+    caption-side: top; text-align: left; padding: 16px 20px 0;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em;
+    color: var(--fg-4);
+  }
+  th, td { text-align: left; padding: 10px 20px; border-top: 1px solid var(--fg-5); vertical-align: top; }
+  thead th {
+    border-top: 0; font-weight: 400; font-size: 0.75rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-4); padding-top: 12px; padding-bottom: 12px;
+  }
+  tbody th { font-weight: 400; color: var(--fg-1); white-space: nowrap; }
+  td { color: var(--fg-3); }
+  td.v { color: var(--fg-1); }
+  tr.is-chosen th, tr.is-chosen td.v { color: var(--accent-ink); }
+  .mk { color: var(--fg-4); }
+  .st-ok   { color: var(--ok); }
+  .st-warn { color: var(--warn); }
+  .st-crit { color: var(--crit); }
+
+  /* code */
+  pre {
+    margin: 24px 0 0; padding: 20px; overflow-x: auto;
+    background: var(--bg-sub); border: 1px solid var(--fg-5); border-radius: 0.75rem;
+    font-family: var(--mono); font-size: 0.8125rem; line-height: 1.85; color: var(--fg-3);
+  }
+  pre .k { color: var(--fg-2); }
+  pre .j { color: var(--fg-4); }
+
+  /* the trajectory figure */
+  .figure { margin: 40px 0 0; }
+  .figscroll { overflow-x: auto; border: 1px solid var(--fg-5); border-radius: 0.75rem; background: var(--bg); }
+  .traj { display: block; width: 100%; min-width: 760px; height: auto; }
+
+  .traj .grid  { stroke: var(--fg-6); stroke-width: 1; }
+  .traj .nowline { stroke: var(--fg-5); stroke-width: 1; stroke-dasharray: 2 6; }
+  .traj .hist  { fill: none; stroke: var(--fg-2); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; }
+  .traj .ray   { fill: none; stroke-linecap: butt; }
+  .traj .recorded { stroke: var(--fg-2); stroke-width: 2; }
+  .traj .stable   { stroke: var(--fg-3); stroke-width: 2; stroke-dasharray: 10 8; }
+  .traj .pinned   { stroke: var(--fg-3); stroke-width: 1.6; stroke-dasharray: 1.5 6; stroke-linecap: round; }
+  .traj .chosen   { stroke: var(--accent); stroke-width: 2.75; }
+  .traj .dot   { fill: var(--fg-4); }
+  .traj .dot-a { fill: var(--accent); }
+  .traj .forkdot  { fill: var(--bg); stroke: var(--fg-1); stroke-width: 2.25; }
+  .traj .forkring { fill: none; stroke: var(--fg-5); stroke-width: 1; }
+  .traj .arc   { fill: none; stroke: var(--accent); stroke-width: 1.25; }
+  .traj text   { font-family: var(--mono); }
+  .traj .tag   { font-size: 13px; letter-spacing: 0.12em; fill: var(--fg-4); }
+  .traj .name  { font-size: 14px; fill: var(--fg-1); }
+  .traj .name.a { fill: var(--accent-ink); }
+  .traj .meta  { font-size: 12px; fill: var(--fg-4); }
+  .traj .delta { font-size: 18px; fill: var(--accent-ink); }
+
+  .sweep { width: calc(1280px * var(--p)); }
+  .lab { opacity: clamp(0, calc((var(--p) - 0.45) * 4), 1); }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 20px 0 0;
+    font-family: var(--mono); font-size: 0.75rem; color: var(--fg-4);
+  }
+  .legend > div { display: flex; align-items: center; gap: 10px; }
+  .legend b { color: var(--fg-2); font-weight: 400; letter-spacing: 0.1em; }
+  .legend svg { flex: none; }
+  .legend .l-rec { stroke: var(--fg-2); stroke-width: 2; }
+  .legend .l-sta { stroke: var(--fg-3); stroke-width: 2; stroke-dasharray: 10 8; }
+  .legend .l-pin { stroke: var(--fg-3); stroke-width: 1.6; stroke-dasharray: 1.5 6; stroke-linecap: round; }
+
+  figcaption { margin: 16px 0 0; font-size: 0.9375rem; color: var(--fg-4); max-width: 44rem; }
+
+  /* objections */
+  .qa { display: grid; gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
+        border-radius: 0.75rem; overflow: hidden; margin-top: 40px; }
+  .qa > div { background: var(--bg); padding: 24px; }
+  .qa .q { font-size: 0.9375rem; font-weight: 600; color: var(--fg-1); margin: 0 0 8px; }
+  .qa .a { font-size: 0.9375rem; line-height: 1.6; color: var(--fg-3); margin: 0; }
+  @media (min-width: 52rem) {
+    .qa { grid-template-columns: 1fr 1fr; }
+    .qa > div:last-child { grid-column: 1 / -1; }
+  }
+
+  /* actions */
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--sans); font-size: 0.9375rem; font-weight: 500;
+    padding: 0 24px; min-height: 44px; border-radius: 9999px;
+    background: var(--accent-btn); color: var(--accent-btn-fg);
+    border: 1px solid transparent; text-decoration: none;
+    transition: opacity 150ms cubic-bezier(0.25,0.1,0.25,1);
+  }
+  .cta:hover { opacity: 0.88; }
+  .cta.ghost { background: transparent; color: var(--fg-1); border-color: var(--fg-5); }
+  .cta.ghost:hover { border-color: var(--fg-4); opacity: 1; }
+
+  footer {
+    padding: 48px max(6vw, 20px) 80px; border-top: 1px solid var(--fg-5);
+    font-family: var(--mono); font-size: 0.75rem; line-height: 2; color: var(--fg-4);
+    background: var(--bg);
+  }
+  footer .fwrap { max-width: 1000px; margin: 0 auto; }
+  footer .note { max-width: 44rem; margin: 16px 0 0; color: var(--fg-4); }
+  footer a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px;
+             display: inline-flex; align-items: center; min-height: 44px; }
+  footer a:hover { color: var(--fg-1); }
 
   @media (prefers-reduced-motion: reduce) {
-    .copy { transition: none; }
+    .copy, .cine-brand, .skip, .cta { transition: none; }
+    .traj { --p: 1; }
+    .lab { opacity: 1; }
   }
+
+  /* moved last: these are descendant rules whose only conflict was source order.
+     Nothing else targets caption b / pre b / pre .c, so relocating cannot change
+     rendering -- and descending specificity is the exact shape that produced the
+     value-vs-violation colour collision in the run receipt earlier today. */
+  caption b { color: var(--fg-2); font-weight: 400; letter-spacing: 0.14em; }
+  pre b { color: var(--fg-1); font-weight: 400; }
+  pre .c { color: var(--fg-4); }
 </style>
 </head>
 <body>
 
+<a class="skip" href="#main">Skip the opening sequence</a>
+<h1 class="vh">Parallax — simulation results you accept before they are active</h1>
+
 <div id="stage" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 
-<div class="brand">Simulacro</div>
-<div class="scrollcue" id="cue">scroll — you are scrubbing a log</div>
+<div class="cine-brand" id="cine-brand">
+  <span class="w">Parallax</span>
+  <span class="id">BRANCH main@seq12</span>
+</div>
+<p class="scrollcue" id="cue">scroll — you are scrubbing a log</p>
 
 <div class="copy" id="copy">
   <p class="n" id="copy-n">01 / 06</p>
-  <h2 id="copy-t">Every operational change is a bet.</h2>
-  <p id="copy-b">You ship it, and then you find out.</p>
+  <h2 id="copy-t">Every operating decision is taken once.</h2>
+  <p class="b" id="copy-b">You choose, the world moves, and the alternative is never observed.</p>
 </div>
 
 <div id="track"></div>
 
-<div class="after">
+<main class="after" id="main">
 
-  <section>
-    <div class="wrap"><div class="col">
-      <p class="eyebrow">What it is</p>
-      <h3>Your operations already write an append-only history. We run it again.</h3>
-      <p class="lede">Simulacro forks that history at any moment, replays it forward with one policy changed, and scores the result against what actually happened. One arm of the comparison is not a simulation — it is your own past. That is the whole reason to believe the other arm.</p>
-    </div></div>
-  </section>
+  <header class="bar">
+    <span class="w">Parallax</span>
+    <span class="id">TRACE 435b1748 · CLASS STABLE</span>
+  </header>
 
-  <section>
+  <section id="intake">
     <div class="wrap">
-      <p class="eyebrow">The receipt</p>
-      <h3 class="col">Every answer states how much of it was real.</h3>
-      <p class="col lede">Most simulators produce confident numbers about a world that does not exist and offer no way to check them. Here reproducibility is carried per branch and withdrawn automatically the moment anything unrepeatable enters the run.</p>
-      <div class="receipt">
-same seed   <b>435b1748860d979af9b4344a008301ec</b>
-            <b>435b1748860d979af9b4344a008301ec</b>   <span class="ok">IDENTICAL</span>
-seed + 1    <b>6d240f8451d14d60af3ac636631e0ffe</b>   <span class="ok">DIVERGED (correct)</span>
-
-branch touched a live customer message  &rarr;  <span class="warn">RECORDED</span>
-byte-identical replay <span class="warn">no longer claimed</span>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <p class="eyebrow">What you get</p>
-      <h3 class="col">Three things, and the first one needs no simulation at all.</h3>
+      <p class="eyebrow">01 · Intake</p>
+      <h2 class="h">Point it at a context.</h2>
+      <p class="lede">Three context classes, one intake. Parallax reads what is already there. It does not ask you to model your operation first, because the model is the thing it is supposed to produce.</p>
       <div class="grid3">
         <div class="cell">
-          <p class="k">Day one</p>
-          <h4>Catch it before it lands</h4>
-          <p>Declare what must never be true — stock below zero, a fulfilment without a payment, a promise you cannot keep — and the governor refuses the action rather than logging the damage afterwards.</p>
+          <p class="k">Class 01 — business data</p>
+          <h3>A schema and its rows</h3>
+          <p class="t">Orders, ledgers, inventory, tickets, payroll. The conservation identity is usually already in there: money, stock, hours, seats. Finding it is the first act of declaring a domain.</p>
         </div>
         <div class="cell">
-          <p class="k">Once there is history</p>
-          <h4>Ask what would have happened</h4>
-          <p>Replay a real week with the pricing rule changed, the escalation threshold moved, the refund policy rewritten. Compare against the week you actually had.</p>
+          <p class="k">Class 02 — agent workspace</p>
+          <h3>An agent's own history</h3>
+          <p class="t">Tool calls, messages, model contexts. High-dimensional and partly unserialisable, so it is projected into typed observations rather than checked directly. Agent state is never the world state.</p>
         </div>
         <div class="cell">
-          <p class="k">Then</p>
-          <h4>Let it find the change</h4>
-          <p>State an objective and a set of constraints. Simulacro proposes operating policies, evaluates them against your own history, and returns the ones that survive.</p>
+          <p class="k">Class 03 — local filesystem</p>
+          <h3>An arbitrary directory</h3>
+          <p class="t">Files, commits, exports, logs. No integration and no schema agreed in advance. Each class ships a seed template — a starting proposal you edit down rather than a blank page.</p>
         </div>
       </div>
+      <p class="verdict">Nothing is inferred from a category name. The proposal is assembled from the rows and files that are actually present.</p>
     </div>
   </section>
 
-  <section>
+  <section id="proposal">
     <div class="wrap">
-      <p class="eyebrow">The obvious objections</p>
-      <h3 class="col">Reasonable things to distrust about this.</h3>
+      <p class="eyebrow">02 · Proposal</p>
+      <h2 class="h">It proposes an ontology. You accept it.</h2>
+      <p class="lede">A model's only job on the dynamics path is reading a mess into typed observations. What it proposes arrives as a diff over six declaration slots, each line carrying where it came from. Nothing is active until you accept it, and you can accept part of it.</p>
+      <div class="tblwrap">
+        <table>
+          <caption><b>PROPOSAL</b> ont-9c41f0 · fs:/srv/ops · 1,284 files read · awaiting review</caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="vh">Change</span></th>
+              <th scope="col">Slot</th>
+              <th scope="col">Proposed</th>
+              <th scope="col">Derived from</th>
+              <th scope="col">Your call</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mk">+</td>
+              <th scope="row">state</th>
+              <td class="v">inventory · price · cash_cents · promised[]</td>
+              <td>ledger.csv, stock.csv</td>
+              <td class="st-ok">ACCEPTED</td>
+            </tr>
+            <tr>
+              <td class="mk">+</td>
+              <th scope="row">actions</th>
+              <td class="v">promise · pay · refund · fulfill · restock · reprice</td>
+              <td>orders.csv, 6 distinct verbs</td>
+              <td class="st-ok">ACCEPTED</td>
+            </tr>
+            <tr>
+              <td class="mk">+</td>
+              <th scope="row">project</th>
+              <td class="v">message &rarr; typed order</td>
+              <td>inbox/*.eml, model, schema-validated</td>
+              <td class="st-warn">EDITED</td>
+            </tr>
+            <tr>
+              <td class="mk">+</td>
+              <th scope="row">transition</th>
+              <td class="v">fold an action into stock and cash</td>
+              <td>code, never a model</td>
+              <td class="st-ok">ACCEPTED</td>
+            </tr>
+            <tr>
+              <td class="mk">+</td>
+              <th scope="row">invariants</th>
+              <td class="v">inventory_nonneg · cash_conserved · no_unpaid_fulfillment</td>
+              <td>conservation, 2 found · safety, 1 added</td>
+              <td class="st-ok">ACCEPTED</td>
+            </tr>
+            <tr>
+              <td class="mk">~</td>
+              <th scope="row">objectives</th>
+              <td class="v">&mdash; empty &mdash;</td>
+              <td>nothing in the context implies one</td>
+              <td class="st-crit">DECLINED</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="verdict">You are approving a model of your own operation, not a model's opinion of it. An empty slot is the correct answer when the context does not support one; a plausible guess is not.</p>
+      <p class="body" style="margin-top:24px">Slots are open. Add a field the proposal missed, replace the projection with your own model behind the plugin harness, bring a third-party forecaster in as a policy. The six operators do not change, and that is precisely what makes everything above them safe to change.</p>
+    </div>
+  </section>
+
+  <section id="trajectory">
+    <div class="wrap frame">
+      <p class="eyebrow">03 · Trajectory</p>
+      <h2 class="h">Roll it forward under candidate decisions.</h2>
+      <p class="lede">The log is append-only, so a fork is a branch record with a parent and a fork point. Creating a future costs nothing. Only evaluating one costs anything. Two branches that share a past can be compared, because a tick means the same thing on both.</p>
+
+      <figure class="figure">
+        <div class="id-row">
+          <span class="chip">EXAMPLE RUN <b>storefront demo world</b></span>
+          <span class="chip">FORK <b>main@seq12</b></span>
+          <span class="chip">HORIZON <b>28</b></span>
+          <span class="chip">SEED <b>7</b></span>
+        </div>
+        <div class="figscroll">
+          <svg id="traj" class="traj" viewBox="0 0 1280 412" role="img"
+               aria-labelledby="traj-t traj-d" preserveAspectRatio="xMidYMid meet">
+            <title id="traj-t">Recorded history forking into simulated branches</title>
+            <desc id="traj-d">A solid line runs in from the left: recorded history on branch main, from sequence zero to sequence twelve. At a fork node marked NOW it divides into four straight rays. Two dashed rays are STABLE branches; one, drawn in the accent colour, is the chosen candidate and the other is main continued with nothing changed. The angle between those two rays is annotated with a delta and is the measurement. A fine dotted ray is a PINNED branch that replays byte-identically. A solid ray is a RECORDED branch that touched a live customer message and can never be re-derived.</desc>
+            <defs>
+              <clipPath id="sweep" clipPathUnits="userSpaceOnUse">
+                <rect class="sweep" x="0" y="0" width="1280" height="412"></rect>
+              </clipPath>
+            </defs>
+
+            <g clip-path="url(#sweep)">
+              <line class="nowline" x1="500" y1="38" x2="500" y2="376"></line>
+
+              <polyline class="hist" points="48,258 108,252 166,263 224,245 282,255 340,239 398,247 452,233 500,236"></polyline>
+              <circle class="dot" cx="48" cy="258" r="2.5"></circle>
+              <circle class="dot" cx="166" cy="263" r="2.5"></circle>
+              <circle class="dot" cx="282" cy="255" r="2.5"></circle>
+              <circle class="dot" cx="398" cy="247" r="2.5"></circle>
+
+              <line class="ray stable chosen" x1="500" y1="236" x2="1000" y2="84"></line>
+              <line class="ray stable"        x1="500" y1="236" x2="1000" y2="202"></line>
+              <line class="ray pinned"        x1="500" y1="236" x2="1000" y2="292"></line>
+              <line class="ray recorded"      x1="500" y1="236" x2="1000" y2="358"></line>
+
+              <path class="arc" d="M 633.95 195.30 A 140 140 0 0 1 639.68 226.50"></path>
+
+              <circle class="dot-a" cx="1000" cy="84"  r="4"></circle>
+              <circle class="dot"   cx="1000" cy="202" r="3"></circle>
+              <circle class="dot"   cx="1000" cy="292" r="3"></circle>
+              <circle class="dot"   cx="1000" cy="358" r="3"></circle>
+
+              <circle class="forkring" cx="500" cy="236" r="11"></circle>
+              <circle class="forkdot"  cx="500" cy="236" r="5"></circle>
+            </g>
+
+            <g class="lab">
+              <text class="tag"  x="48" y="200">RECORDED</text>
+              <text class="meta" x="48" y="220">main@seq0 … seq12 — what actually happened</text>
+              <text class="meta" x="48" y="288">seq0</text>
+
+              <text class="tag"  x="500" y="24" text-anchor="middle">NOW</text>
+              <text class="meta" x="500" y="400" text-anchor="middle">fork at main@seq12 — copy-on-write, O(1)</text>
+
+              <text class="delta" x="664" y="214">&#916;</text>
+
+              <text class="name a" x="1016" y="80">fork/price-hold</text>
+              <text class="meta"   x="1016" y="98">STABLE · chosen candidate</text>
+
+              <text class="name" x="1016" y="198">main@continued</text>
+              <text class="meta" x="1016" y="216">STABLE · change nothing</text>
+
+              <text class="name" x="1016" y="288">fork/seeded-sweep</text>
+              <text class="meta" x="1016" y="306">PINNED · seeded, local</text>
+
+              <text class="name" x="1016" y="354">fork/live-desk</text>
+              <text class="meta" x="1016" y="372">RECORDED · live message</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="legend">
+          <div><svg width="36" height="10" aria-hidden="true"><line class="l-rec" x1="0" y1="5" x2="36" y2="5"></line></svg><b>RECORDED</b> happened, or touched something unrepeatable</div>
+          <div><svg width="36" height="10" aria-hidden="true"><line class="l-sta" x1="0" y1="5" x2="36" y2="5"></line></svg><b>STABLE</b> reproducible in distribution, not in bytes</div>
+          <div><svg width="36" height="10" aria-hidden="true"><line class="l-pin" x1="0" y1="5" x2="36" y2="5"></line></svg><b>PINNED</b> byte-identical on replay</div>
+        </div>
+
+        <figcaption>Stroke is not decoration. Solid, dashed and dotted are the three reproducibility classes, so how a line is drawn states how much of it can be re-derived. Two rays from a shared baseline, and the angle between them as the measurement, is what the word parallax means.</figcaption>
+      </figure>
+
+      <div class="tblwrap">
+        <table>
+          <caption><b>BRANCHES</b> off main@seq12 · storefront demo world · not a customer result</caption>
+          <thead>
+            <tr>
+              <th scope="col">Branch</th>
+              <th scope="col">Class</th>
+              <th scope="col">Candidate decision</th>
+              <th scope="col">Margin</th>
+              <th scope="col">Separation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">main@continued</th>
+              <td>STABLE</td>
+              <td>change nothing</td>
+              <td class="v">14.2%</td>
+              <td>baseline</td>
+            </tr>
+            <tr class="is-chosen">
+              <th scope="row">fork/price-hold</th>
+              <td>STABLE</td>
+              <td>hold list price for 28 days</td>
+              <td class="v">16.9%</td>
+              <td>+2.7 pp</td>
+            </tr>
+            <tr>
+              <th scope="row">fork/seeded-sweep</th>
+              <td>PINNED</td>
+              <td>sweep discount 0–12%</td>
+              <td class="v">12.4%</td>
+              <td>−1.8 pp</td>
+            </tr>
+            <tr>
+              <th scope="row">fork/live-desk</th>
+              <td>RECORDED</td>
+              <td>route to the human desk</td>
+              <td class="v">15.1%</td>
+              <td class="st-warn">not re-derivable</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="verdict">The angle in the figure is drawn from the difference the run measured. It is a rendering of the number, not the number — and the number itself is only as trustworthy as the class beside it.</p>
+    </div>
+  </section>
+
+  <section id="typing">
+    <div class="wrap">
+      <p class="eyebrow">04 · Typing</p>
+      <h2 class="h">Every answer is typed observed or simulated.</h2>
+      <p class="lede">A figure that came out of your history and a figure that came out of a projection are not the same kind of thing. A system that renders them identically is lying by layout. So the type travels with the value, everywhere, including into the API.</p>
+
+      <div class="tblwrap">
+        <table>
+          <caption><b>COMPARE</b> main@continued ↔ fork/price-hold · storefront demo world</caption>
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Value</th>
+              <th scope="col">Type</th>
+              <th scope="col">Class</th>
+              <th scope="col">Provenance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">units_sold</th>
+              <td class="v">418</td>
+              <td>observed</td>
+              <td>RECORDED</td>
+              <td>main@seq0…seq12</td>
+            </tr>
+            <tr>
+              <th scope="row">cash_cents</th>
+              <td class="v">11,284,000</td>
+              <td>observed</td>
+              <td>RECORDED</td>
+              <td>main@seq0…seq12</td>
+            </tr>
+            <tr>
+              <th scope="row">margin_pct</th>
+              <td class="v">16.9%</td>
+              <td>simulated</td>
+              <td>STABLE</td>
+              <td>fork/price-hold@seq12…seq40, seed 7</td>
+            </tr>
+            <tr>
+              <th scope="row">separation</th>
+              <td class="v">+2.7 pp</td>
+              <td>simulated</td>
+              <td>STABLE</td>
+              <td>weakest input governs the pair</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="verdict">A branch is only as reproducible as its weakest input. The class is computed as the meet of the branch's own class and every input it consumed, so it can only ever fall — and an adapter is never allowed to certify its own class.</p>
+
+<pre><code><span class="c"># replay is a hash comparison, not a claim</span>
+TRACE  fork/price-hold  seed 7   <b>435b1748860d979af9b4344a008301ec</b>
+REPLAY fork/price-hold  seed 7   <b>435b1748860d979af9b4344a008301ec</b>   <span class="st-ok">IDENTICAL</span>
+REPLAY fork/price-hold  seed 8   <b>6d240f8451d14d60af3ac636631e0ffe</b>   <span class="st-ok">DIVERGED (correct)</span>
+
+<span class="c"># and the moment a branch touches something unrepeatable</span>
+fork/live-desk  read a live customer message   &rarr;   <span class="st-warn">class demoted to RECORDED</span>
+                byte-identical replay          &rarr;   <span class="st-warn">no longer claimed</span></code></pre>
+      <p class="verdict">The claim is withdrawn by the runtime, not by a person remembering to withdraw it. That is the only version of this guarantee worth having.</p>
+    </div>
+  </section>
+
+  <section id="surface">
+    <div class="wrap frame">
+      <p class="eyebrow">05 · Surface</p>
+      <h2 class="h">The agent is a user, not a client library.</h2>
+      <p class="lede">Every capability a human can reach, an agent reaches through the same surface, with the same authorisation, and with errors that are typed rather than narrated. There is no privileged human path and no second-class programmatic one.</p>
+
+<pre><code><span class="c"># the same three moves a person makes in the console</span>
+$ parallax <b>fork</b> main --at seq12 --as fork/price-hold
+BRANCH fork/price-hold   parent main@seq12   class STABLE
+
+$ parallax <b>rollout</b> fork/price-hold --policy hold-price --horizon 28 --seed 7
+ROLLOUT 28 events   violations 0   class STABLE
+
+$ parallax <b>diff</b> main@continued fork/price-hold --typed
+margin_pct   14.2% <span class="k">observed</span>  &rarr;  16.9% <span class="k">simulated</span>   +2.7 pp
+
+$ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7</code></pre>
+
+<pre><code><span class="c">// a refusal is a value with a shape, not a sentence to parse</span>
+{
+  <span class="j">"error"</span>: <b>"invariant_violated"</b>,
+  <span class="j">"branch"</span>: <b>"fork/discount-10"</b>,
+  <span class="j">"class"</span>: <b>"STABLE"</b>,
+  <span class="j">"violations"</span>: [
+    { <span class="j">"invariant"</span>: <b>"inventory_nonneg"</b>, <span class="j">"seq"</span>: <b>41</b>, <span class="j">"message"</span>: <b>"oversold panela: -1"</b> },
+    { <span class="j">"invariant"</span>: <b>"no_phantom_promise"</b>, <span class="j">"seq"</span>: <b>41</b>, <span class="j">"message"</span>: <b>"ORD-006/panela"</b> }
+  ],
+  <span class="j">"recoverable"</span>: <b>false</b>
+}</code></pre>
+      <p class="verdict">An error a model has to read prose to understand is an error it will guess about. The governor refuses the action before it lands rather than logging the damage after it does.</p>
+    </div>
+  </section>
+
+  <section id="objections">
+    <div class="wrap">
+      <p class="eyebrow">06 · Objections</p>
+      <h2 class="h">Reasonable things to distrust about this.</h2>
       <div class="qa">
         <div>
           <p class="q">It is still a simulation. Why would I trust the number?</p>
-          <p class="a">Because the baseline is not simulated. Every counterfactual is scored against the recorded outcome of the same period, so a replay that cannot reproduce what already happened is visibly wrong before it is ever used to predict.</p>
+          <p class="a">Because one arm of the comparison is not simulated. Every branch is scored against the recorded history it forked from, so a replay that cannot reproduce what already happened is visibly wrong long before anyone uses it to predict.</p>
         </div>
         <div>
-          <p class="q">Is this a language model guessing at my numbers?</p>
-          <p class="a">No model computes the ledger and no model judges whether a constraint held. Both are code. Models propose actions and read messy inputs into typed facts; everything downstream of that is arithmetic you can audit.</p>
+          <p class="q">Is a language model computing my numbers?</p>
+          <p class="a">No. A model proposes the ontology and reads messy input into typed observations. You accept the ontology. The transition function and the invariants are code, and nothing downstream of the projection is a model's opinion.</p>
+        </div>
+        <div>
+          <p class="q">What if the proposed ontology is wrong for my business?</p>
+          <p class="a">Then you edit it before it is active, and keep editing it afterwards. Types are open: add the field the proposal missed, or attach your own model behind the plugin harness. The six operators stay closed, which is what makes the rest safe to change.</p>
         </div>
         <div>
           <p class="q">We already A/B test.</p>
-          <p class="a">A/B testing spends real customers and real weeks, and it cannot evaluate a change you only make once. This costs a replay and returns in minutes — and the two compose: use it to decide what is worth testing.</p>
+          <p class="a">A/B testing spends real customers and real weeks, and it cannot evaluate a decision you only make once. A fork costs a branch record. The two compose — use this to decide what is worth testing for real.</p>
         </div>
         <div>
-          <p class="q">Our operational history is a mess.</p>
-          <p class="a">Then start at day one, where the value needs no history: declare the constraints, run the governor, and the log accumulates as a side effect of the thing already paying for itself.</p>
+          <p class="q">Our context is a mess.</p>
+          <p class="a">Then the proposal comes back smaller. It is assembled from the rows and files that are actually present, and a slot with no support arrives empty rather than invented. An empty slot is information about your operation, not a failure of the tool.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="wrap"><div class="col">
-      <p class="eyebrow">Get started</p>
-      <h3>Bring one process and one thing that must never be true.</h3>
-      <p class="lede">A domain is a file: what the state is, what actions exist, how an action changes the state, and what must always hold. Everything else is the same runtime.</p>
-      <a class="cta" href="#">Start with one process &rarr;</a>
-    </div></div>
+  <section id="start">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">07 · Start</p>
+        <h2 class="h">Bring one context and one thing that must never be true.</h2>
+        <p class="lede">An ontology is a record, not a codebase: what the state is, what actions exist, how an observation folds into the state, and what must always hold. Everything else is the same runtime, and the runtime never changes when a domain arrives.</p>
+        <div class="actions">
+          <a class="cta" href="#intake">Point it at a context</a>
+          <a class="cta ghost" href="#trajectory">See the trajectory</a>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <footer>Simulacro &middot; declare it, run it, fork it, prove it</footer>
-</div>
+  <footer>
+    <div class="fwrap">
+      Parallax · point it at a context · accept the ontology · fork it · prove it<br>
+      OPERATORS observe · step · check · rollout · diff · trace<br>
+      CLASSES PINNED · STABLE · RECORDED
+      <p class="note">Every figure on this page comes from the storefront demo world in this repository. There are no customer deployments, no accuracy claims and no benchmark results, because we have none — and inventing them is the exact failure this system exists to make visible.</p>
+    </div>
+  </footer>
+</main>
 
 <script type="module">
   import { createScrollCinema } from "./vendor/index.js";
 
   const SCENES = [
-    ["Every operational change is a bet.", "You ship it, and then you find out."],
-    ["This is where it happened.", "A price, a policy, a promise. One decision, at one moment, on one line of the log."],
-    ["You found out from a customer.", "By the time the damage is legible it has already landed."],
-    ["So go back to it.", "Your operations already run on an append-only history. A history can be forked."],
-    ["Run it again. Change one thing.", "Same customers, same inventory, same hour. One policy different."],
-    ["Now you can see both.", "And every number says how much of it was real."]
+    ["Every operating decision is taken once.", "You choose, the world moves, and the alternative is never observed."],
+    ["The decision has a location.", "One moment, one line of a log, one thing that could have been different."],
+    ["You learn the cost afterwards.", "By the time an outcome is legible, the choice that produced it is far behind you."],
+    ["So point at the context and go back.", "Business data, an agent workspace, a directory on disk. Parallax proposes a model of what is there, and you accept it before it is active."],
+    ["Fork the history. Change one decision.", "Same past, same constraints, one policy different. The log is append-only, so the branch costs nothing to create."],
+    ["Now there are two lines and an angle between them.", "That angle is the measurement. Every number inside it is typed observed or simulated."]
   ];
 
   const clips = [
@@ -260,7 +802,7 @@ byte-identical replay <span class="warn">no longer claimed</span>
     const s = SCENES[i] ?? SCENES[SCENES.length - 1];
     copy.dataset.hidden = "true";
     setTimeout(() => {
-      elN.textContent = String(i + 1).padStart(2, "0") + " / " + String(SCENES.length).padStart(2, "0");
+      elN.textContent = `${String(i + 1).padStart(2, "0")} / ${String(SCENES.length).padStart(2, "0")}`;
       elT.textContent = s[0];
       elB.textContent = s[1];
       copy.dataset.hidden = "false";
@@ -278,6 +820,7 @@ byte-identical replay <span class="warn">no longer claimed</span>
 
   // the cinema owns the viewport; once the reader is past it, get out of the way
   const after = document.querySelector(".after");
+  const brandC = document.getElementById("cine-brand");
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const past = e.isIntersecting;
@@ -285,12 +828,57 @@ byte-identical replay <span class="warn">no longer claimed</span>
       document.querySelector(".veil").style.opacity = past ? "0" : "1";
       copy.style.opacity = past ? "0" : "";
       document.getElementById("cue").style.opacity = past ? "0" : "1";
+      brandC.style.opacity = past ? "0" : "1";
     }
   }, { threshold: 0.02 });
   io.observe(after);
   document.getElementById("stage").style.transition = "opacity 500ms";
   document.querySelector(".veil").style.transition = "opacity 500ms";
   document.getElementById("cue").style.transition = "opacity 300ms";
+
+  // ---- trajectory: scroll progress drives one custom property ----
+  // --p defaults to 1 so the diagram is complete without JS and under reduced motion.
+  const traj = document.getElementById("traj");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (traj && !reduced) {
+    traj.style.setProperty("--p", "0");
+    let queued = false;
+    let watching = false;
+
+    const paint = () => {
+      queued = false;
+      const r = traj.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // start as the figure enters, finish once it has cleared the lower third
+      const span = Math.max(240, vh * 0.30 + r.height);
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / span));
+      traj.style.setProperty("--p", p.toFixed(4));
+    };
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    const vis = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting && !watching) {
+          watching = true;
+          window.addEventListener("scroll", onScroll, { passive: true });
+          window.addEventListener("resize", onScroll, { passive: true });
+          paint();
+        } else if (!e.isIntersecting && watching) {
+          watching = false;
+          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener("resize", onScroll);
+          // leave the diagram in its final state once it has been passed
+          if (e.boundingClientRect.top < 0) traj.style.setProperty("--p", "1");
+        }
+      }
+    }, { rootMargin: "200px 0px 200px 0px" });
+    vis.observe(traj);
+  }
 </script>
 </body>
 </html>
