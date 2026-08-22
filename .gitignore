@@ -4,6 +4,10 @@ node_modules/
 .env
 dist/
 landing/assets/
-landing/assets-real/
 design/parallax-console.html
 out/
+
+# landing/assets-real/ is TRACKED on purpose: GitHub Pages serves the landing
+# page and the hero footage must ship with it. It was ignored, which is why the
+# first deploy returned 404 for every clip and poster while working locally.
+landing/assets-real/raw/
