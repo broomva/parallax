@@ -74,7 +74,7 @@ describe("resolving an accept against the proposal", () => {
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.error.code).toBe("UNANSWERED_BLOCKING");
-      expect((r.error.detail?.slots as string[]).length).toBe(
+      expect((r.error.detail?.slots as string[] | undefined)?.length).toBe(
         p.openQuestions.filter((q) => q.blocking).length,
       );
     }
@@ -85,7 +85,8 @@ describe("resolving an accept against the proposal", () => {
     const blocking = p.openQuestions.filter((q) => q.blocking);
     const r = resolveAccept(parseReply("1. units\nacepto", p.openQuestions), p);
     expect(r.ok).toBe(false);
-    if (!r.ok) expect((r.error.detail?.slots as string[]).length).toBe(blocking.length - 1);
+    if (!r.ok)
+      expect((r.error.detail?.slots as string[] | undefined)?.length).toBe(blocking.length - 1);
   });
 
   test("a rejection is not treated as an accept", () => {

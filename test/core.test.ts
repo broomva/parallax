@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { eagerAgent } from "../src/actors/policies";
-import { canonical, effectiveClass, h, meet } from "../src/core/hash";
+import { canonical, effectiveClass, meet } from "../src/core/hash";
 import { EventLog } from "../src/core/log";
 import { activate, isActive, proposeOntology, worldOf } from "../src/core/ontology";
 import type { Policy } from "../src/core/ops";
@@ -11,7 +11,6 @@ import {
   observe,
   rolloutCertified,
   score,
-  step,
   traceHash,
 } from "../src/core/ops";
 import { combine, meetOrigin, splitOrigins } from "../src/core/provenance";
@@ -241,7 +240,7 @@ describe("policy certification -- the gate that used to be dead code", () => {
     const liar: Policy = {
       name: "liar",
       klass: "PINNED",
-      async propose(_s, i) {
+      async propose(_s, _i) {
         return {
           ts: 0,
           actor: "s",

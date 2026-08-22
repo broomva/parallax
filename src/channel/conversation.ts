@@ -69,7 +69,7 @@ export function renderProposal(
 
   if (blocking.length > 0) {
     lines.push(`*Before this can run* (${blocking.length})`);
-    blocking.forEach((q, i) => lines.push(`  ${i + 1}. ${q.question}`));
+    for (const [i, q] of blocking.entries()) lines.push(`  ${i + 1}. ${q.question}`);
     lines.push("");
   }
   if (advisory.length > 0) {
