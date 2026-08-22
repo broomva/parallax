@@ -74,12 +74,36 @@ export const storefront: TypeRecord = {
   title: "WhatsApp storefront",
   initial,
   actions: [
-    { name: "promise", actor: "sales-agent", params: { order: "string", sku: "string", qty: "number" } },
-    { name: "pay", actor: "customer", params: { order: "string", cents: "number" }, units: { cents: "COP_cents" } },
-    { name: "refund", actor: "sales-agent", params: { order: "string", cents: "number" }, units: { cents: "COP_cents" } },
+    {
+      name: "promise",
+      actor: "sales-agent",
+      params: { order: "string", sku: "string", qty: "number" },
+    },
+    {
+      name: "pay",
+      actor: "customer",
+      params: { order: "string", cents: "number" },
+      units: { cents: "COP_cents" },
+    },
+    {
+      name: "refund",
+      actor: "sales-agent",
+      params: { order: "string", cents: "number" },
+      units: { cents: "COP_cents" },
+    },
     { name: "fulfill", actor: "ops", params: { order: "string" } },
-    { name: "restock", actor: "ops", params: { sku: "string", qty: "number" }, units: { qty: "units" } },
-    { name: "reprice", actor: "sales-agent", params: { sku: "string", cents: "number" }, units: { cents: "COP_cents" } },
+    {
+      name: "restock",
+      actor: "ops",
+      params: { sku: "string", qty: "number" },
+      units: { qty: "units" },
+    },
+    {
+      name: "reprice",
+      actor: "sales-agent",
+      params: { sku: "string", cents: "number" },
+      units: { cents: "COP_cents" },
+    },
   ],
   invariants: [
     {

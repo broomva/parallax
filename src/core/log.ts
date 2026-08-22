@@ -1,6 +1,6 @@
 import { Database } from "bun:sqlite";
-import type { Event } from "./types";
 import type { Klass } from "./hash";
+import type { Event } from "./types";
 
 /**
  * Append-only event log. Past = this log, present = a projection of it,
@@ -47,9 +47,9 @@ export class EventLog {
 
   /** Events visible on a branch = its own events, plus its parent's up to the fork point. */
   read(branch: string): Event[] {
-    const b = this.db.query(`SELECT parent, forked_at FROM branches WHERE name = ?`).get(branch) as
-      | { parent: string | null; forked_at: number | null }
-      | null;
+    const b = this.db
+      .query(`SELECT parent, forked_at FROM branches WHERE name = ?`)
+      .get(branch) as { parent: string | null; forked_at: number | null } | null;
     if (!b) throw new Error(`unknown branch: ${branch}`);
     const inherited =
       b.parent === null ? [] : this.read(b.parent).filter((e) => e.seq <= (b.forked_at ?? 0));

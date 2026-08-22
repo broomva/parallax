@@ -49,7 +49,10 @@ export function eagerAgent(klass: Klass = "PINNED"): Policy {
  * post-state would violate an invariant. This is L2 closing a loop around L1 --
  * the "boss agent" Vending-Bench found helps, expressed as a shield.
  */
-export function governedAgent(inner: Policy, wouldViolate: (e: Omit<Event, "seq" | "branch">) => boolean): Policy {
+export function governedAgent(
+  inner: Policy,
+  wouldViolate: (e: Omit<Event, "seq" | "branch">) => boolean,
+): Policy {
   return {
     name: `governed(${inner.name})`,
     klass: inner.klass,
