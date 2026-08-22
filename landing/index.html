@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulacro — run it again, with one thing changed</title>
+<meta name="description" content="There is no staging environment for the way a business runs. Simulacro forks your operational history and replays it with one policy changed, scored against what actually happened.">
+<style>
+  :root {
+    --ground: #111413; --surface: #191D1B; --surface-alt: #222724;
+    --ink: #E6EAE6; --ink-muted: #97A09B; --ink-faint: #6E7873;
+    --rule: #2C322F; --rule-strong: #414945;
+    --accent: #6FBFB4; --warn: #D5A03F; --crit: #DE8272; --ok: #86BA90;
+    --serif: "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    --measure: 34rem;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--serif); font-size: 1.0625rem; line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--ink); }
+
+  /* ---- cinema ---- */
+  #stage {
+    position: fixed; inset: 0; z-index: 0; background: #0a0c0b; overflow: hidden;
+  }
+  #stage video, #stage img { width: 100%; height: 100%; object-fit: cover; }
+  #track { position: relative; z-index: 1; height: 550vh; }
+  .veil {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, rgba(10,12,11,0.88) 0%, rgba(10,12,11,0.55) 46%, rgba(10,12,11,0.10) 78%);
+  }
+  .copy {
+    position: fixed; z-index: 2; left: max(6vw, 2rem); top: 50%; transform: translateY(-50%);
+    max-width: 30rem; pointer-events: none;
+  }
+  .copy .n {
+    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.18em;
+    color: var(--accent); margin: 0 0 1.25rem;
+  }
+  .copy h2 {
+    font-family: var(--serif); font-size: clamp(2rem, 4.4vw, 3.25rem); line-height: 1.06;
+    letter-spacing: -0.02em; margin: 0 0 1rem; font-weight: 400; text-wrap: pretty;
+  }
+  .copy p { margin: 0; color: var(--ink-muted); font-size: 1.0625rem; line-height: 1.6; text-wrap: pretty; }
+  .copy[data-hidden="true"] { opacity: 0; }
+  .copy { transition: opacity 420ms cubic-bezier(0.22,1,0.36,1); }
+
+  .brand {
+    position: fixed; z-index: 3; top: 1.75rem; left: max(6vw, 2rem);
+    font-family: var(--serif); font-size: 1.125rem; letter-spacing: -0.01em;
+  }
+  .scrollcue {
+    position: fixed; z-index: 3; bottom: 1.75rem; left: max(6vw, 2rem);
+    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.14em;
+    color: var(--ink-faint); text-transform: uppercase;
+  }
+
+  /* ---- prose sections ---- */
+  .after { position: relative; z-index: 2; background: var(--ground); }
+  section { padding: 7rem max(6vw, 2rem); border-top: 1px solid var(--rule); }
+  .wrap { max-width: 62rem; margin: 0 auto; }
+  .col { max-width: var(--measure); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 1.5rem;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    line-height: 1.1; letter-spacing: -0.018em; margin: 0 0 1.5rem; text-wrap: pretty;
+  }
+  p { text-wrap: pretty; }
+  .lede { font-size: 1.1875rem; color: var(--ink-muted); }
+  .grid3 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 3rem;
+  }
+  .cell { background: var(--ground); padding: 2rem 1.75rem 2.25rem; min-width: 0; }
+  .cell .k {
+    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.16em;
+    color: var(--ink-faint); margin: 0 0 0.9rem; text-transform: uppercase;
+  }
+  .cell h4 { font-family: var(--serif); font-weight: 400; font-size: 1.375rem; margin: 0 0 0.65rem; letter-spacing: -0.01em; }
+  .cell p { margin: 0; font-family: var(--sans); font-size: 0.9rem; line-height: 1.58; color: var(--ink-muted); }
+
+  .qa { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 3rem; }
+  .qa > div { background: var(--ground); padding: 1.75rem; }
+  .qa .q { font-family: var(--sans); font-size: 0.9rem; font-weight: 600; color: var(--ink); margin: 0 0 0.6rem; }
+  .qa .a { font-family: var(--sans); font-size: 0.9rem; line-height: 1.6; color: var(--ink-muted); margin: 0; }
+  @media (min-width: 52rem) { .qa { grid-template-columns: 1fr 1fr; } }
+
+  .receipt {
+    font-family: var(--mono); font-size: 0.8125rem; line-height: 1.85;
+    background: var(--surface); border: 1px solid var(--rule); border-left: 2px solid var(--accent);
+    padding: 1.5rem 1.75rem; margin-top: 2.5rem; overflow-x: auto; color: var(--ink-muted);
+  }
+  .receipt b { color: var(--ink); font-weight: 400; }
+  .receipt .ok { color: var(--ok); }
+  .receipt .warn { color: var(--warn); }
+
+  .cta { display: inline-flex; align-items: center; gap: 0.65rem; margin-top: 2.5rem;
+    font-family: var(--sans); font-size: 0.9375rem; font-weight: 600;
+    padding: 0.95rem 1.6rem; min-height: 44px; border: 1px solid var(--ink);
+    background: var(--ink); color: var(--ground); }
+  .cta:hover { background: transparent; color: var(--ink); }
+  footer { padding: 4rem max(6vw, 2rem) 6rem; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 0.75rem; color: var(--ink-faint); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage" aria-hidden="true"></div>
+<div class="veil" aria-hidden="true"></div>
+
+<div class="brand">Simulacro</div>
+<div class="scrollcue" id="cue">scroll — you are scrubbing a log</div>
+
+<div class="copy" id="copy">
+  <p class="n" id="copy-n">01 / 06</p>
+  <h2 id="copy-t">Every operational change is a bet.</h2>
+  <p id="copy-b">You ship it, and then you find out.</p>
+</div>
+
+<div id="track"></div>
+
+<div class="after">
+
+  <section>
+    <div class="wrap"><div class="col">
+      <p class="eyebrow">What it is</p>
+      <h3>Your operations already write an append-only history. We run it again.</h3>
+      <p class="lede">Simulacro forks that history at any moment, replays it forward with one policy changed, and scores the result against what actually happened. One arm of the comparison is not a simulation — it is your own past. That is the whole reason to believe the other arm.</p>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">The receipt</p>
+      <h3 class="col">Every answer states how much of it was real.</h3>
+      <p class="col lede">Most simulators produce confident numbers about a world that does not exist and offer no way to check them. Here reproducibility is carried per branch and withdrawn automatically the moment anything unrepeatable enters the run.</p>
+      <div class="receipt">
+same seed   <b>435b1748860d979af9b4344a008301ec</b>
+            <b>435b1748860d979af9b4344a008301ec</b>   <span class="ok">IDENTICAL</span>
+seed + 1    <b>6d240f8451d14d60af3ac636631e0ffe</b>   <span class="ok">DIVERGED (correct)</span>
+
+branch touched a live customer message  &rarr;  <span class="warn">RECORDED</span>
+byte-identical replay <span class="warn">no longer claimed</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">What you get</p>
+      <h3 class="col">Three things, and the first one needs no simulation at all.</h3>
+      <div class="grid3">
+        <div class="cell">
+          <p class="k">Day one</p>
+          <h4>Catch it before it lands</h4>
+          <p>Declare what must never be true — stock below zero, a fulfilment without a payment, a promise you cannot keep — and the governor refuses the action rather than logging the damage afterwards.</p>
+        </div>
+        <div class="cell">
+          <p class="k">Once there is history</p>
+          <h4>Ask what would have happened</h4>
+          <p>Replay a real week with the pricing rule changed, the escalation threshold moved, the refund policy rewritten. Compare against the week you actually had.</p>
+        </div>
+        <div class="cell">
+          <p class="k">Then</p>
+          <h4>Let it find the change</h4>
+          <p>State an objective and a set of constraints. Simulacro proposes operating policies, evaluates them against your own history, and returns the ones that survive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">The obvious objections</p>
+      <h3 class="col">Reasonable things to distrust about this.</h3>
+      <div class="qa">
+        <div>
+          <p class="q">It is still a simulation. Why would I trust the number?</p>
+          <p class="a">Because the baseline is not simulated. Every counterfactual is scored against the recorded outcome of the same period, so a replay that cannot reproduce what already happened is visibly wrong before it is ever used to predict.</p>
+        </div>
+        <div>
+          <p class="q">Is this a language model guessing at my numbers?</p>
+          <p class="a">No model computes the ledger and no model judges whether a constraint held. Both are code. Models propose actions and read messy inputs into typed facts; everything downstream of that is arithmetic you can audit.</p>
+        </div>
+        <div>
+          <p class="q">We already A/B test.</p>
+          <p class="a">A/B testing spends real customers and real weeks, and it cannot evaluate a change you only make once. This costs a replay and returns in minutes — and the two compose: use it to decide what is worth testing.</p>
+        </div>
+        <div>
+          <p class="q">Our operational history is a mess.</p>
+          <p class="a">Then start at day one, where the value needs no history: declare the constraints, run the governor, and the log accumulates as a side effect of the thing already paying for itself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap"><div class="col">
+      <p class="eyebrow">Get started</p>
+      <h3>Bring one process and one thing that must never be true.</h3>
+      <p class="lede">A domain is a file: what the state is, what actions exist, how an action changes the state, and what must always hold. Everything else is the same runtime.</p>
+      <a class="cta" href="#">Start with one process &rarr;</a>
+    </div></div>
+  </section>
+
+  <footer>Simulacro &middot; declare it, run it, fork it, prove it</footer>
+</div>
+
+<script type="module">
+  import { createScrollCinema } from "./vendor/index.js";
+
+  const SCENES = [
+    ["Every operational change is a bet.", "You ship it, and then you find out."],
+    ["This is where it happened.", "A price, a policy, a promise. One decision, at one moment, on one line of the log."],
+    ["You found out from a customer.", "By the time the damage is legible it has already landed."],
+    ["So go back to it.", "Your operations already run on an append-only history. A history can be forked."],
+    ["Run it again. Change one thing.", "Same customers, same inventory, same hour. One policy different."],
+    ["Now you can see both.", "And every number says how much of it was real."]
+  ];
+
+  const clips = [
+    "assets/video/01-road-to-marker.mp4",
+    "assets/video/02-marker-to-closure.mp4",
+    "assets/video/03-closure-to-return.mp4",
+    "assets/video/04-return-to-fork.mp4",
+    "assets/video/05-fork-to-divergence.mp4"
+  ];
+  const posters = [
+    "assets/stills/01-road.webp",
+    "assets/stills/02-marker.webp",
+    "assets/stills/03-closure.webp",
+    "assets/stills/04-return.webp",
+    "assets/stills/05-fork.webp",
+    "assets/stills/06-divergence.webp"
+  ];
+
+  const copy = document.getElementById("copy");
+  const elN = document.getElementById("copy-n");
+  const elT = document.getElementById("copy-t");
+  const elB = document.getElementById("copy-b");
+  let current = -1;
+
+  function setScene(i) {
+    if (i === current) return;
+    current = i;
+    const s = SCENES[i] ?? SCENES[SCENES.length - 1];
+    copy.dataset.hidden = "true";
+    setTimeout(() => {
+      elN.textContent = String(i + 1).padStart(2, "0") + " / " + String(SCENES.length).padStart(2, "0");
+      elT.textContent = s[0];
+      elB.textContent = s[1];
+      copy.dataset.hidden = "false";
+    }, 200);
+  }
+  setScene(0);
+
+  createScrollCinema({
+    clips,
+    posters,
+    stage: document.getElementById("stage"),
+    track: document.getElementById("track"),
+    onScene: setScene
+  });
+
+  // the cinema owns the viewport; once the reader is past it, get out of the way
+  const after = document.querySelector(".after");
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const past = e.isIntersecting;
+      document.getElementById("stage").style.opacity = past ? "0" : "1";
+      document.querySelector(".veil").style.opacity = past ? "0" : "1";
+      copy.style.opacity = past ? "0" : "";
+      document.getElementById("cue").style.opacity = past ? "0" : "1";
+    }
+  }, { threshold: 0.02 });
+  io.observe(after);
+  document.getElementById("stage").style.transition = "opacity 500ms";
+  document.querySelector(".veil").style.transition = "opacity 500ms";
+  document.getElementById("cue").style.transition = "opacity 300ms";
+</script>
+</body>
+</html>
