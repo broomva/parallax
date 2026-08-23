@@ -531,6 +531,25 @@ export function accept(input: AcceptInput): Result<AcceptValue, HandlerError> {
   if (!merged.ok) return merged;
   const answers = merged.value;
 
+  /**
+   * Persist the merged answers BEFORE any gate can refuse.
+   *
+   * Every refusal below is a two-call flow: the tool description tells the agent
+   * to relay something to the human and call again. Previously the merged
+   * answers were held only in this local and the record was written solely on
+   * the success path, so answers supplied on the call that got refused were
+   * discarded. An agent following the documented flow verbatim would answer
+   * every question, be refused for an unrelated reason, call again with the
+   * acknowledgement, and be told BLOCKING_QUESTIONS_OPEN -- telling the human
+   * they answered nothing immediately after they answered everything.
+   *
+   * Writing here makes answering monotonic: a refusal never costs the human
+   * work they already did.
+   */
+  if (Object.keys(answers).length !== Object.keys(rec.answers).length) {
+    writePending(root, { ...rec, answers });
+  }
+
   const key = input.domain ?? DEFAULT_DOMAIN;
   const domain = resolveDomain(key);
   if (!domain.ok) return domain;
@@ -561,12 +580,25 @@ export function accept(input: AcceptInput): Result<AcceptValue, HandlerError> {
   }
 
   const dHash = domainHash(world);
+  /**
+   * The idempotency key covers the answer VALUES, not just which slots were
+   * answered.
+   *
+   * Keying on slot names alone conflates "the same acceptance, retried" with "a
+   * different acceptance of the same questions". A human correcting an answer --
+   * `kilos` to `units` -- fills the same slots, so the corrected call matched an
+   * existing record, returned `idempotent: true` with the OLD ontologyId, and
+   * left the acceptance record permanently carrying the superseded value while
+   * reporting success. The acceptance record is the audit artifact; an audit
+   * artifact that silently keeps the wrong answer is worse than no record.
+   */
+  const answersKey = h(answers);
   const existing = listAcceptances(root).find(
     (a) =>
       a.proposalId === p.id &&
       a.domainHash === dHash &&
       a.acceptedBy === input.acceptedBy &&
-      a.answered.slice().sort().join(" ") === answered.slice().sort().join(" "),
+      h(a.answers ?? {}) === answersKey,
   );
   if (existing !== undefined) {
     // A retry on a channel with no delivery receipts must not mint twice.
@@ -575,10 +607,13 @@ export function accept(input: AcceptInput): Result<AcceptValue, HandlerError> {
 
   const record: AcceptanceRecord = {
     kind: "parallax.acceptance/v1",
+    // Identity covers the answer VALUES, not only which slots were filled --
+    // two acceptances that differ in what the human actually said are different
+    // acceptances, and must not collide.
     ontologyId: h({
       proposalId: p.id,
       domainHash: dHash,
-      answered,
+      answers,
       acceptedBy: input.acceptedBy,
       acceptedAt,
     }),

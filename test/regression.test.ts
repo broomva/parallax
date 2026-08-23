@@ -124,7 +124,7 @@ describe("regression: confine() must resolve symlinks, not just prefixes", () =>
   ])("%p is refused with %p", (within, code) => {
     const r = propose({ within });
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.error.code).toBe(code);
+    if (!r.ok) expect(String(r.error.code)).toBe(code);
   });
 
   test("CONTROL: a real subdirectory inside the workspace is allowed", () => {
