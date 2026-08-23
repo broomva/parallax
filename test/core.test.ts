@@ -222,7 +222,7 @@ describe("policy certification -- the gate that used to be dead code", () => {
           ts: 0,
           actor: "s",
           action: "promise",
-          params: { order: `O${i}`, sku: "panela", qty: Math.floor(Math.random() * 9) + 1 },
+          params: { order: `O${i}`, sku: "panela", nonce: crypto.randomUUID() },
           derivation: null,
           klass: "PINNED",
         };
@@ -245,7 +245,10 @@ describe("policy certification -- the gate that used to be dead code", () => {
           ts: 0,
           actor: "s",
           action: "restock",
-          params: { sku: "panela", qty: Math.floor(Math.random() * 5) + 1 },
+          // A large output space: a false negative here is ~2^-104, not the 4% a
+          // five-value draw gives at three trials. This test asserts that the
+          // demotion PROPAGATES, so it must not sit on top of the filter's bound.
+          params: { sku: "panela", qty: 1, nonce: crypto.randomUUID() },
           derivation: null,
           klass: "PINNED",
         };
@@ -256,6 +259,56 @@ describe("policy certification -- the gate that used to be dead code", () => {
     const log = new EventLog();
     await rolloutCertified(world, log, "main", liar, cert.value, 4, 42);
     expect(log.branchClass("main")).toBe("STABLE");
+  });
+
+  test("a small output space is a real false-negative bound, not a bug", async () => {
+    // Documents the limit rather than pretending it is absent: with two possible
+    // outputs and three trials, a nondeterministic policy escapes about a
+    // quarter of the time. Certification filters; it does not prove.
+    let escaped = 0;
+    for (let i = 0; i < 40; i++) {
+      const coin: Policy = {
+        name: "coin",
+        klass: "PINNED",
+        async propose() {
+          return {
+            ts: 0,
+            actor: "s",
+            action: "restock",
+            params: { sku: "panela", qty: Math.random() < 0.5 ? 1 : 2 },
+            derivation: null,
+            klass: "PINNED",
+          };
+        },
+      };
+      const c = await certifyPolicy(coin, PROBE);
+      if (c.ok && !c.value.demoted) escaped++;
+    }
+    expect(escaped).toBeGreaterThan(0);
+    expect(escaped).toBeLessThan(40);
+  });
+
+  test("raising trials tightens that bound", async () => {
+    const coin: Policy = {
+      name: "coin",
+      klass: "PINNED",
+      async propose() {
+        return {
+          ts: 0,
+          actor: "s",
+          action: "restock",
+          params: { sku: "panela", qty: Math.random() < 0.5 ? 1 : 2 },
+          derivation: null,
+          klass: "PINNED",
+        };
+      },
+    };
+    let escaped20 = 0;
+    for (let i = 0; i < 40; i++) {
+      const c = await certifyPolicy(coin, PROBE, 20);
+      if (c.ok && !c.value.demoted) escaped20++;
+    }
+    expect(escaped20).toBe(0);
   });
 
   test("a throwing policy is a typed error, not an exception at the call site", async () => {

@@ -107,9 +107,20 @@ export interface Certificate {
  *
  * So: run the policy repeatedly against an identical probe and compare what it
  * produces. A policy that cannot reproduce its own output under a fixed seed is
- * demoted in code however it declares itself. This cannot prove purity -- no
- * finite test can -- but it evicts the case that actually occurs, which is an
- * adapter reaching for a model, a clock, or ambient randomness.
+ * demoted in code however it declares itself.
+ *
+ * This is a FILTER, not a proof, and its false-negative rate is worth stating
+ * rather than hiding. A nondeterministic policy escapes detection whenever all
+ * `trials` draws happen to collide: for a policy with k roughly-equiprobable
+ * outputs that is about k^-(trials-1) -- 4% at k=5, trials=3. Our own test
+ * suite caught this by flaking, which is the correct outcome and the reason the
+ * bound is documented here instead of the default being quietly raised.
+ *
+ * Raise `trials` when the policy's output space is small; the default suits an
+ * adapter reaching for a model, a clock, or ambient randomness, where the
+ * output space is large and one differing draw is nearly certain. A policy that
+ * PASSES certification has not been proven pure -- no finite test can do that.
+ * It has only failed to be caught.
  */
 export async function certifyPolicy(
   policy: Policy,
