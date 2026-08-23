@@ -1,6 +1,6 @@
 # Parallax — the three-minute demo
 
-**Read this on a phone at 09:55.** Hard stop Sun 2026-08-23 09:30 COT; presentations 10:00–13:00.
+**Read this on a phone at 09:55.** Hacking stops Sun 2026-08-23 **09:15** COT; presentations 10:00–13:00.
 
 > The beat sheet in `2026-08-22-simulacro-hackathon-brief.html` §06 is **stale**. It scripts 300
 > synthetic customers, a wall of streaming conversations, and a 62%→84% close rate. That product
@@ -35,7 +35,7 @@ terminal because every frame of it is served from Pages rather than from the hub
 ## Before you walk up
 
 ```bash
-cd ~/broomva/apps/simulacro
+cd ~/broomva/apps/parallax
 scripts/warm-hub.sh             # or: curl -s https://parallax-hub.onrender.com/health
 ```
 
