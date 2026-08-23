@@ -478,11 +478,19 @@
   padding: clamp(10px, 1.6vw, 22px);
 }
 
-.ascii pre {
+.ascii-stack {
+  position: relative;
+}
+
+/* Both layers share the lattice exactly. Any property that changes advance or
+   leading has to be set on BOTH or the two drift apart column by column, which
+   reads as a blur rather than as a bug. */
+.ascii-ground,
+.ascii-paths {
   /* globals.css gives every <pre> a paper-white scroll-shadow treatment via
-     --sx-bg and a light background. On this page that inverts the whole point:
-     glyph density is supposed to read as LIGHT, and dark-on-white reads as ink.
-     Reset the inherited chrome explicitly rather than hoping specificity wins. */
+     --sx-bg. On this page that inverts the whole point: glyph density is meant
+     to read as LIGHT, and dark-on-white reads as ink. Reset it explicitly
+     rather than hoping specificity wins. */
   background: none;
   background-color: transparent;
   border: 0;
@@ -492,16 +500,24 @@
   overflow: visible;
   margin: 0;
   font-family: var(--mono);
-  /* clamp so 150 columns fit a phone and still read on a projector */
   font-size: clamp(3.4px, 0.78vw, 12px);
   line-height: 1.02;
   letter-spacing: 0;
   white-space: pre;
-  color: var(--d-accent);
-  /* The densest glyphs carry the highlights, so a touch of glow reads as light
-     rather than as clutter at small sizes. */
-  text-shadow: 0 0 6px color-mix(in oklch, var(--d-accent) 45%, transparent);
   min-height: 1lh;
+}
+
+/* observed: it already happened, so it does not move and it does not shout */
+.ascii-ground {
+  color: oklch(0.72 0.03 250 / 0.3);
+}
+
+/* simulated: the only thing on this figure that is still undecided */
+.ascii-paths {
+  position: absolute;
+  inset: 0;
+  color: var(--d-accent);
+  text-shadow: 0 0 7px color-mix(in oklch, var(--d-accent) 55%, transparent);
 }
 
 .band-cap {
