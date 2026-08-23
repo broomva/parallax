@@ -425,7 +425,14 @@
 
 @media (max-width: 860px) {
   .gcard {
-    grid-template-columns: 1fr;
+    /* minmax(0, 1fr), matching the two-column rule above rather than bare `1fr`.
+       The base .gcard already spells the floor correctly; this override did not,
+       so collapsing to one column re-introduced exactly the blowout the base rule
+       avoids -- .gcopy and .gmedia carry min-width: auto and resolved to 642px
+       inside a 328px card. The floor has to be repeated in every branch that
+       redeclares the tracks, because a `1fr` written anywhere is a `min-content`
+       floor written everywhere it applies. */
+    grid-template-columns: minmax(0, 1fr);
   }
   .gcard.flip .gcopy {
     order: 0;
