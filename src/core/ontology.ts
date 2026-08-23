@@ -66,11 +66,11 @@ export interface OntologyProposal {
 }
 
 export type ProposeError = ParallaxError<
-  "SOURCE_UNREADABLE" | "SOURCE_EMPTY" | "UNSUPPORTED_SOURCE"
+  "SOURCE_UNREADABLE" | "SOURCE_EMPTY" | "UNSUPPORTED_SOURCE" | "DEGENERATE_CONTEXT"
 >;
 
 export type AcceptError = ParallaxError<
-  "BLOCKING_QUESTIONS_OPEN" | "NO_TRANSITION" | "NO_INVARIANTS"
+  "BLOCKING_QUESTIONS_OPEN" | "NO_TRANSITION" | "NO_INVARIANTS" | "NO_ACTIONS"
 >;
 
 export type OntologyAccessError = ParallaxError<"NOT_ACCEPTED">;
@@ -166,6 +166,27 @@ function proposeFromDirectory(
     blocking: false,
   });
 
+  /**
+   * Fail closed on a context that yielded nothing.
+   *
+   * The entries.length check above runs BEFORE dot entries are filtered, so a
+   * directory holding only dot entries passes it and then produces a proposal
+   * with no state, no actions and -- critically -- no blocking questions. Every
+   * downstream gate is keyed on there being something to ask about, so an empty
+   * proposal walks through all of them and mints an ontology recording that a
+   * named human accepted a model of their own context, with zero human input.
+   *
+   * This is not a contrived input. A freshly provisioned tenant workspace
+   * contains only `.claude`, so the empty reading IS the first-run path.
+   */
+  if (Object.keys(initial).length === 0 && actions.length === 0) {
+    return fail(
+      "DEGENERATE_CONTEXT",
+      `nothing in ${root} could be read as state or actions; ${entries.length} entr${entries.length === 1 ? "y is" : "ies are"} present but all are hidden or unreadable`,
+      { root, entriesSeen: entries.length, visibleEntries: dirs.length + byExt.size },
+    );
+  }
+
   const slug = basename(root) || "context";
   const proposal: OntologyProposal = {
     id: "",
@@ -253,6 +274,13 @@ export function activate(
   }
   if (typeof corrections.transition !== "function") {
     return fail("NO_TRANSITION", "a domain must supply a transition; it is code, never a model");
+  }
+  if (proposal.actions.length === 0) {
+    return fail(
+      "NO_ACTIONS",
+      "this domain has an empty action space, so nothing can happen in it and there is nothing to simulate",
+      { slug: proposal.slug },
+    );
   }
   const invariants = corrections.invariants ?? proposal.invariants;
   if (invariants.length === 0) {

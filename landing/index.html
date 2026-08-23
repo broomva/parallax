@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Parallax — two futures from one past, and the angle between them</title>
-<meta name="description" content="Point Parallax at a context. It proposes an ontology built from what is actually there, you accept it, and it rolls the model forward under candidate decisions. Every answer is typed observed or simulated.">
+<title>Parallax — simulation results you accept before they are active</title>
+<meta name="description" content="Point Parallax at a context. It proposes an ontology built from what is actually there, a human accepts it, and only then does it roll the model forward under candidate decisions. Every answer is typed observed or simulated.">
 <meta name="color-scheme" content="light dark">
 <style>
   /* ------------------------------------------------------------------
      Parallax landing — broomva-blue-axis
      One foreground colour, six alpha steps. One accent, spent twice.
      Two families: system grotesk for human text, mono for all chrome.
+     Mono runs at two sizes and two trackings. Nothing else.
      ------------------------------------------------------------------ */
 
   @property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
@@ -38,10 +39,16 @@
     --sans:  ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     --mono:  ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
 
+    /* two mono sizes, two trackings — the whole chrome scale */
+    --m-micro: 0.6875rem;                 /* uppercase labels only */
+    --m-code:  0.8125rem;                 /* code, tables, chips, transcripts */
+    --tr-lab:  0.14em;
+    --tr-code: 0.01em;
+
     /* the hero sits on dark footage in both themes */
     --cine-fg:  oklch(0.97 0.004 265);
-    --cine-dim: oklch(0.97 0.004 265 / 0.66);
-    --cine-tag: oklch(0.97 0.004 265 / 0.55);
+    --cine-dim: oklch(0.97 0.004 265 / 0.72);
+    --cine-tag: oklch(0.97 0.004 265 / 0.60);
   }
 
   :root {
@@ -58,7 +65,7 @@
       --fg-c: 0.965 0.004 265;            /* Soft ice foreground */
       --bg:     oklch(0.135 0.020 272);   /* Deep current canvas */
       --bg-sub: oklch(0.178 0.021 272);
-      --a1: 0.92; --a2: 0.85; --a3: 0.66; --a4: 0.55; --a5: 0.22; --a6: 0.14;
+      --a1: 0.92; --a2: 0.85; --a3: 0.68; --a4: 0.58; --a5: 0.22; --a6: 0.14;
       --accent:     oklch(0.66 0.13 260);
       --accent-ink: oklch(0.74 0.12 260);
       --accent-btn: oklch(0.68 0.13 260);
@@ -72,7 +79,7 @@
     --fg-c: 0.965 0.004 265;
     --bg:     oklch(0.135 0.020 272);
     --bg-sub: oklch(0.178 0.021 272);
-    --a1: 0.92; --a2: 0.85; --a3: 0.66; --a4: 0.55; --a5: 0.22; --a6: 0.14;
+    --a1: 0.92; --a2: 0.85; --a3: 0.68; --a4: 0.58; --a5: 0.22; --a6: 0.14;
     --accent:     oklch(0.66 0.13 260);
     --accent-ink: oklch(0.74 0.12 260);
     --accent-btn: oklch(0.68 0.13 260);
@@ -99,32 +106,33 @@
   .skip {
     position: fixed; top: 8px; left: 8px; z-index: 40;
     transform: translateY(-200%); transition: transform 150ms cubic-bezier(0.25,0.1,0.25,1);
-    background: var(--bg); color: var(--fg-1); border: 1px solid var(--fg-5);
+    background: var(--bg); color: var(--fg-1); border: 1px solid var(--fg-4);
     padding: 12px 16px; min-height: 44px; display: inline-flex; align-items: center;
-    font-family: var(--mono); font-size: 0.75rem; border-radius: 0.375rem; text-decoration: none;
+    font-family: var(--mono); font-size: var(--m-code); border-radius: 0.375rem; text-decoration: none;
   }
   .skip:focus-visible { transform: translateY(0); }
 
   /* ---------------- cinema (wiring preserved) ---------------- */
   #stage {
-    position: fixed; inset: 0; z-index: 0; background: #0a0c0b; overflow: hidden;
+    position: fixed; inset: 0; z-index: 0; overflow: hidden;
+    background: #0a0c0b url("assets-real/stills/01-road.webp") center / cover no-repeat;
   }
   #stage video, #stage img { width: 100%; height: 100%; object-fit: cover; }
-  #track { position: relative; z-index: 1; height: 550vh; }
+  #track { position: relative; z-index: 1; height: 420vh; }
   .veil {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(90deg, rgba(10,12,11,0.88) 0%, rgba(10,12,11,0.55) 46%, rgba(10,12,11,0.10) 78%);
+    background: linear-gradient(90deg, rgba(10,12,11,0.90) 0%, rgba(10,12,11,0.60) 46%, rgba(10,12,11,0.12) 78%);
   }
   .copy {
     position: fixed; z-index: 2; left: max(6vw, 20px); top: 50%; transform: translateY(-50%);
-    max-width: 32rem; pointer-events: none;
+    max-width: min(34rem, calc(100vw - 40px)); pointer-events: none;
     transition: opacity 420ms cubic-bezier(0.22,1,0.36,1);
   }
   .copy .n {
-    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.18em;
-    color: var(--cine-tag); margin: 0 0 20px;
+    font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab);
+    color: var(--cine-tag); margin: 0 0 20px; text-transform: uppercase;
   }
-  .copy h2 {
+  .copy .ct {
     font-family: var(--sans); font-size: clamp(1.875rem, 4.4vw, 3.25rem); line-height: 1.06;
     letter-spacing: -0.025em; margin: 0 0 16px; font-weight: 500;
     color: var(--cine-fg); text-wrap: pretty;
@@ -134,20 +142,35 @@
 
   .cine-brand {
     position: fixed; z-index: 3; top: 24px; left: max(6vw, 20px);
-    display: flex; align-items: baseline; gap: 12px;
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
     transition: opacity 300ms;
   }
   .cine-brand .w { font-family: var(--sans); font-size: 1.125rem; font-weight: 500; letter-spacing: -0.015em; color: var(--cine-fg); }
-  .cine-brand .id { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--cine-tag); }
+  .cine-brand .id { font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab); color: var(--cine-tag); }
   .scrollcue {
-    position: fixed; z-index: 3; bottom: 24px; left: max(6vw, 20px); margin: 0;
-    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em;
+    position: fixed; z-index: 3; bottom: 26px; left: max(6vw, 20px); margin: 0;
+    font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab);
     color: var(--cine-tag); text-transform: uppercase;
+  }
+  /* a skip affordance a mouse or a thumb can find, not only a keyboard */
+  .jump {
+    position: fixed; z-index: 4; bottom: 20px; right: max(6vw, 20px);
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 0 18px; border-radius: 9999px;
+    font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code);
+    color: var(--cine-fg); background: rgba(10,12,11,0.55);
+    border: 1px solid oklch(0.97 0.004 265 / 0.42); text-decoration: none;
+    transition: opacity 300ms, background 150ms;
+  }
+  .jump:hover { background: rgba(10,12,11,0.8); }
+  @media (max-width: 34rem) {
+    .scrollcue { bottom: 80px; }
+    /* a horizontal scrim leaves the middle of a portrait screen half-lit, and the
+       copy sits in the middle of a portrait screen */
+    .veil { background: linear-gradient(180deg, rgba(10,12,11,0.62) 0%, rgba(10,12,11,0.80) 46%, rgba(10,12,11,0.92) 100%); }
   }
 
   /* ---------------- document ---------------- */
-  /* The grid is step 6 modulated further: a full-bleed hairline covering the
-     whole page needs less weight than the same value used as a stroke. */
   .after {
     position: relative; z-index: 2; background-color: var(--bg);
     --grid: color-mix(in oklab, var(--fg-6), transparent 58%);
@@ -164,52 +187,75 @@
     background: var(--bg); border-bottom: 1px solid var(--fg-5);
   }
   .bar .w { font-family: var(--sans); font-weight: 500; font-size: 1rem; letter-spacing: -0.015em; color: var(--fg-1); }
-  .bar .id { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--fg-4); }
-  @media (max-width: 34rem) { .bar .id { display: none; } }
+  .bar .id { font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab); color: var(--fg-4); }
+  @media (max-width: 46rem) { .bar .id { display: none; } }
 
-  section { padding: 96px max(6vw, 20px); border-top: 1px solid var(--fg-5); }
+  section { padding: 88px max(6vw, 20px); border-top: 1px solid var(--fg-5); }
   section:first-of-type { border-top: 0; }
+  section#trajectory { padding-top: 112px; padding-bottom: 112px; }
   .wrap { max-width: 1000px; margin: 0 auto; position: relative; }
-  .col { max-width: 40rem; }
-
-  /* registration marks */
-  .frame { position: relative; }
-  .frame::before {
-    content: ""; position: absolute; inset: -20px; pointer-events: none;
-    background:
-      linear-gradient(var(--fg-5), var(--fg-5)) 0    0    / 1px 14px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 0    0    / 14px 1px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 100% 0    / 1px 14px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 100% 0    / 14px 1px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 0    100% / 1px 14px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 0    100% / 14px 1px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 100% 100% / 1px 14px no-repeat,
-      linear-gradient(var(--fg-5), var(--fg-5)) 100% 100% / 14px 1px no-repeat;
-  }
+  .col { max-width: 44rem; }
 
   .eyebrow {
-    font-family: var(--mono); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em;
+    font-family: var(--mono); font-size: var(--m-micro); font-weight: 400; letter-spacing: var(--tr-lab);
     text-transform: uppercase; color: var(--fg-4); margin: 0 0 20px;
+  }
+  h1.h1 {
+    font-family: var(--sans); font-weight: 500; font-size: clamp(2.125rem, 5.6vw, 3.75rem);
+    line-height: 1.04; letter-spacing: -0.03em; margin: 0 0 24px; color: var(--fg-1);
+    text-wrap: balance; max-width: 20ch;
   }
   h2.h {
     font-family: var(--sans); font-weight: 500; font-size: clamp(1.75rem, 3.2vw, 2.5rem);
     line-height: 1.12; letter-spacing: -0.022em; margin: 0 0 20px; color: var(--fg-1);
     text-wrap: pretty; scroll-margin-top: 72px;
   }
-  h3 { font-family: var(--sans); font-weight: 500; font-size: 1.125rem; line-height: 1.3;
+  h3 { font-family: var(--sans); font-weight: 500; font-size: 1.0625rem; line-height: 1.35;
        letter-spacing: -0.012em; margin: 0 0 8px; color: var(--fg-1); }
+  /* the micro label is a heading LEVEL question, not a size question: it is spelled
+     h2 or h3 according to where it sits, and this class only styles it. */
+  .mlab { font-family: var(--mono); font-weight: 400; font-size: var(--m-micro); letter-spacing: var(--tr-lab);
+          text-transform: uppercase; color: var(--fg-4); margin: 0 0 12px; line-height: 1.5; }
   p { text-wrap: pretty; }
-  .lede { font-size: 1.125rem; line-height: 1.55; color: var(--fg-3); margin: 0 0 8px; max-width: 40rem; }
-  .body { font-size: 1rem; color: var(--fg-3); max-width: 40rem; }
+  :not(pre) > code {
+    font-family: var(--mono); font-size: 0.9em; letter-spacing: var(--tr-code);
+    color: var(--fg-2); background: var(--bg-sub);
+    border: 1px solid var(--fg-6); border-radius: 0.25rem; padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  .lede { font-size: 1.0625rem; line-height: 1.6; color: var(--fg-2); margin: 0 0 8px; max-width: 44rem; }
+  .body { font-size: 1rem; color: var(--fg-3); max-width: 44rem; }
+  .body + .body { margin-top: 16px; }
 
-  /* verdict — the plain-language line under every metric block */
+  /* verdict — spent twice on the whole page, on the two claims that carry it */
   .verdict {
-    display: flex; gap: 12px; align-items: baseline; margin: 16px 0 0;
-    font-size: 0.9375rem; line-height: 1.5; color: var(--fg-2); max-width: 44rem;
+    display: flex; gap: 12px; align-items: baseline; margin: 24px 0 0;
+    font-size: 0.9375rem; line-height: 1.55; color: var(--fg-2); max-width: 46rem;
   }
   .verdict::before {
-    content: "VERDICT"; flex: none; font-family: var(--mono); font-size: 0.75rem;
-    letter-spacing: 0.14em; color: var(--fg-4); transform: translateY(-1px);
+    content: "VERDICT"; flex: none; font-family: var(--mono); font-size: var(--m-micro);
+    letter-spacing: var(--tr-lab); color: var(--fg-4); transform: translateY(-1px);
+  }
+
+  /* the spine — five steps, one of them the product */
+  .spine {
+    display: grid; gap: 1px; background: var(--fg-5); list-style: none;
+    border: 1px solid var(--fg-5); border-radius: 0.75rem; overflow: hidden;
+    margin: 40px 0 0; padding: 0;
+  }
+  .spine > li { background: var(--bg); padding: 18px 20px; display: grid; gap: 4px 18px;
+                grid-template-columns: 2.25rem minmax(0,7rem) 1fr; align-items: baseline; }
+  .spine .s-n { font-family: var(--mono); font-size: var(--m-code); color: var(--fg-4); }
+  .spine .s-k { font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-lab);
+                text-transform: uppercase; color: var(--fg-1); }
+  .spine .s-t { font-size: 0.9375rem; color: var(--fg-3); grid-column: 3; }
+  .spine > li.gate { background: color-mix(in oklab, var(--accent) 9%, var(--bg)); }
+  .spine > li.gate .s-k, .spine > li.gate .s-n { color: var(--accent-ink); }
+  .spine > li.gate .s-t { color: var(--fg-2); }
+  .spine .s-lead { color: var(--accent-ink); font-weight: 500; }
+  @media (max-width: 40rem) {
+    .spine > li { grid-template-columns: 2.25rem 1fr; }
+    .spine .s-t { grid-column: 2; }
   }
 
   /* three-up cells */
@@ -220,31 +266,75 @@
   }
   .cell { background: var(--bg); padding: 24px 24px 28px; min-width: 0; }
   .cell .k {
-    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em;
+    font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab);
     color: var(--fg-4); margin: 0 0 16px; text-transform: uppercase;
   }
-  .cell p.t { margin: 0; font-size: 0.875rem; line-height: 1.6; color: var(--fg-3); }
+  .cell p.t { margin: 0; font-size: 0.9375rem; line-height: 1.6; color: var(--fg-3); }
+
+  /* the build-state panel — what runs, what does not */
+  .state2 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
+    border-radius: 0.75rem; overflow: hidden; margin-top: 24px;
+  }
+  .state2 > div { background: var(--bg); padding: 22px 24px 26px; min-width: 0; }
+  .state2 ul { margin: 0; padding: 0; list-style: none; }
+  .state2 li { font-size: 0.9375rem; line-height: 1.55; color: var(--fg-3); padding: 5px 0 5px 22px; position: relative; }
+  .state2 li::before {
+    position: absolute; left: 0; top: 5px; font-family: var(--mono); font-size: var(--m-code);
+  }
+  .state2 .runs li::before   { content: "\002713"; color: var(--ok); }
+  .state2 .plan li::before   { content: "\0000B7"; color: var(--fg-4); }
+  .state2 .none li::before   { content: "\002014"; color: var(--warn); }
+
+  /* Hoisted above `.chip b` / `.legend b`: these are (0,0,2) and those are (0,1,1),
+     so leaving them at the end of the sheet is a descending-specificity trap. Nothing
+     else targets `caption b`, `pre b` or `pre .c`, so the position cannot change
+     rendering -- only the order in which a reader meets them. */
+  caption b { color: var(--fg-2); font-weight: 400; letter-spacing: var(--tr-lab); font-size: var(--m-micro); }
+  pre b { color: var(--fg-1); font-weight: 400; }
+  pre .c { color: var(--fg-4); }
 
   /* mono id chips */
-  .id-row { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 16px; }
+  .id-row { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 20px; }
   .chip {
-    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--fg-4);
-    border: 1px solid var(--fg-5); border-radius: 0.375rem; padding: 4px 8px;
+    font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code); color: var(--fg-4);
+    border: 1px solid var(--fg-5); border-radius: 0.375rem; padding: 5px 9px;
     white-space: nowrap;
   }
   .chip b { color: var(--fg-2); font-weight: 400; }
+  .codes { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
+  .codes .chip { color: var(--fg-2); }
+
+  /* horizontally scrolling exhibits get a visible edge affordance */
+  .scrollx, .msg .bub, pre {
+    --sx-bg: var(--bg);
+    background-image:
+      linear-gradient(to right, var(--sx-bg) 30%, transparent),
+      linear-gradient(to left,  var(--sx-bg) 30%, transparent),
+      linear-gradient(to right, var(--fg-5), transparent 12px),
+      linear-gradient(to left,  var(--fg-5), transparent 12px);
+    background-position: 0 0, 100% 0, 0 0, 100% 0;
+    background-repeat: no-repeat;
+    background-size: 44px 100%, 44px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+  .scrollx {
+    overflow-x: auto; border: 1px solid var(--fg-5); border-radius: 0.75rem;
+    background-color: var(--bg);
+  }
 
   /* tables */
-  .tblwrap { overflow-x: auto; margin-top: 24px; border: 1px solid var(--fg-5); border-radius: 0.75rem; background: var(--bg); }
-  table { border-collapse: collapse; width: 100%; min-width: 640px; font-family: var(--mono); font-size: 0.8125rem; }
+  .tblwrap { margin-top: 24px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code); }
   caption {
-    caption-side: top; text-align: left; padding: 16px 20px 0;
-    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em;
-    color: var(--fg-4);
+    caption-side: top; text-align: left; padding: 16px 20px 4px;
+    font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code);
+    color: var(--fg-4); line-height: 1.6;
   }
   th, td { text-align: left; padding: 10px 20px; border-top: 1px solid var(--fg-5); vertical-align: top; }
   thead th {
-    border-top: 0; font-weight: 400; font-size: 0.75rem; letter-spacing: 0.12em;
+    border-top: 0; font-weight: 400; font-size: var(--m-micro); letter-spacing: var(--tr-lab);
     text-transform: uppercase; color: var(--fg-4); padding-top: 12px; padding-bottom: 12px;
   }
   tbody th { font-weight: 400; color: var(--fg-1); white-space: nowrap; }
@@ -255,56 +345,93 @@
   .st-ok   { color: var(--ok); }
   .st-warn { color: var(--warn); }
   .st-crit { color: var(--crit); }
+  .st-none { color: var(--fg-4); font-style: normal; }
 
   /* code */
   pre {
+    --sx-bg: var(--bg-sub);
     margin: 24px 0 0; padding: 20px; overflow-x: auto;
-    background: var(--bg-sub); border: 1px solid var(--fg-5); border-radius: 0.75rem;
-    font-family: var(--mono); font-size: 0.8125rem; line-height: 1.85; color: var(--fg-3);
+    background-color: var(--bg-sub); border: 1px solid var(--fg-5); border-radius: 0.75rem;
+    font-family: var(--mono); font-size: var(--m-code); line-height: 1.8; color: var(--fg-3);
+    letter-spacing: var(--tr-code);
   }
-  pre .k { color: var(--fg-2); }
+  pre .hl { color: var(--fg-2); }
   pre .j { color: var(--fg-4); }
+
+  /* the thread */
+  /* one explicit minmax(0,...) track: an `auto` track is max-content sized, and a
+     transcript with long lines would then blow the grid past the viewport instead
+     of scrolling inside its own bubble. */
+  .thread { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .msg { max-width: min(46rem, 100%); min-width: 0; }
+  .msg .who {
+    font-family: var(--mono); font-size: var(--m-micro); letter-spacing: var(--tr-lab);
+    text-transform: uppercase; color: var(--fg-4); margin: 0 0 6px;
+  }
+  .msg .bub {
+    border: 1px solid var(--fg-5); border-radius: 0.75rem; background-color: var(--bg);
+    padding: 14px 16px; overflow-x: auto;
+  }
+  .msg .bub pre { margin: 0; padding: 0; border: 0; background: none; overflow-x: visible;
+                  line-height: 1.65; color: var(--fg-2); }
+  .msg.them { justify-self: end; text-align: right; }
+  .msg.them .who { text-align: right; }
+  .msg.them .bub { background-color: var(--bg-sub); --sx-bg: var(--bg-sub); text-align: left; }
+  .msg.bot .bub { border-left: 2px solid var(--accent); }
+  .msg .rcpt { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
 
   /* the trajectory figure */
   .figure { margin: 40px 0 0; }
-  .figscroll { overflow-x: auto; border: 1px solid var(--fg-5); border-radius: 0.75rem; background: var(--bg); }
-  .traj { display: block; width: 100%; min-width: 760px; height: auto; }
+  .traj { display: block; width: 100%; min-width: 720px; height: auto; }
 
   .traj .grid  { stroke: var(--fg-6); stroke-width: 1; }
-  .traj .nowline { stroke: var(--fg-5); stroke-width: 1; stroke-dasharray: 2 6; }
-  .traj .hist  { fill: none; stroke: var(--fg-2); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; }
-  .traj .ray   { fill: none; stroke-linecap: butt; }
-  .traj .recorded { stroke: var(--fg-2); stroke-width: 2; }
-  .traj .stable   { stroke: var(--fg-3); stroke-width: 2; stroke-dasharray: 10 8; }
-  .traj .pinned   { stroke: var(--fg-3); stroke-width: 1.6; stroke-dasharray: 1.5 6; stroke-linecap: round; }
-  .traj .chosen   { stroke: var(--accent); stroke-width: 2.75; }
-  .traj .dot   { fill: var(--fg-4); }
+  .traj .axis  { stroke: var(--fg-5); stroke-width: 1; }
+  .traj .ray   { fill: none; stroke-linecap: round; }
+  .traj .recorded { stroke: var(--fg-2); stroke-width: 2.4; }
+  .traj .stable   { stroke: var(--fg-3); stroke-width: 2.4; stroke-dasharray: 11 8; stroke-linecap: butt; }
+  .traj .pinned   { stroke: var(--fg-2); stroke-width: 2.6; stroke-dasharray: 2 7; }
+  .traj .chosen   { stroke: var(--accent); stroke-width: 3; }
+  .traj .dot   { fill: var(--fg-2); }
   .traj .dot-a { fill: var(--accent); }
   .traj .forkdot  { fill: var(--bg); stroke: var(--fg-1); stroke-width: 2.25; }
   .traj .forkring { fill: none; stroke: var(--fg-5); stroke-width: 1; }
-  .traj .arc   { fill: none; stroke: var(--accent); stroke-width: 1.25; }
-  .traj text   { font-family: var(--mono); }
-  .traj .tag   { font-size: 13px; letter-spacing: 0.12em; fill: var(--fg-4); }
-  .traj .name  { font-size: 14px; fill: var(--fg-1); }
+  .traj .arc   { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+  .traj .wedge { fill: color-mix(in oklab, var(--accent) 15%, transparent); stroke: none; }
+  .traj text   { font-family: var(--mono); letter-spacing: var(--tr-code); }
+  .traj .tag   { font-size: 12px; letter-spacing: 0.14em; fill: var(--fg-4); }
+  .traj .name  { font-size: 15px; fill: var(--fg-1); }
   .traj .name.a { fill: var(--accent-ink); }
-  .traj .meta  { font-size: 12px; fill: var(--fg-4); }
-  .traj .delta { font-size: 18px; fill: var(--accent-ink); }
+  .traj .meta  { font-size: 12.5px; fill: var(--fg-4); }
+  .traj .val   { font-size: 14px; fill: var(--fg-1); }
+  .traj .val.a { fill: var(--accent-ink); }
+  .traj .delta { font-size: 16px; fill: var(--accent-ink); }
 
-  .sweep { width: calc(1280px * var(--p)); }
+  .sweep { width: calc(1120px * var(--p)); }
   .lab { opacity: clamp(0, calc((var(--p) - 0.45) * 4), 1); }
 
-  .legend {
-    display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 20px 0 0;
-    font-family: var(--mono); font-size: 0.75rem; color: var(--fg-4);
+  .legend { display: grid; gap: 20px 40px; margin: 24px 0 0; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .legend .mlab { margin-bottom: 10px; }
+  .legend ul { margin: 0; padding: 0; list-style: none;
+               font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code); color: var(--fg-4); }
+  .legend li { display: grid; grid-template-columns: 34px 5.5rem 1fr;
+               align-items: center; gap: 4px 10px; padding: 6px 0; }
+  .legend li > span:last-child { min-width: 0; }
+  @media (max-width: 30rem) {
+    .legend li { grid-template-columns: 34px 1fr; }
+    .legend li > span:last-child { grid-column: 2; }
   }
-  .legend > div { display: flex; align-items: center; gap: 10px; }
-  .legend b { color: var(--fg-2); font-weight: 400; letter-spacing: 0.1em; }
+  .legend b { color: var(--fg-2); font-weight: 400; letter-spacing: 0.1em; flex: none; }
   .legend svg { flex: none; }
-  .legend .l-rec { stroke: var(--fg-2); stroke-width: 2; }
-  .legend .l-sta { stroke: var(--fg-3); stroke-width: 2; stroke-dasharray: 10 8; }
-  .legend .l-pin { stroke: var(--fg-3); stroke-width: 1.6; stroke-dasharray: 1.5 6; stroke-linecap: round; }
+  .legend .l-rec { stroke: var(--fg-2); stroke-width: 2.4; }
+  .legend .l-sta { stroke: var(--fg-3); stroke-width: 2.4; stroke-dasharray: 11 8; }
+  .legend .l-pin { stroke: var(--fg-2); stroke-width: 2.6; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .legend .sw { flex: none; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--fg-4); }
+  .legend .sw.o { background: color-mix(in oklab, var(--ok) 55%, transparent); }
+  .legend .sw.s { background: color-mix(in oklab, var(--accent) 55%, transparent); }
+  .legend .absent { color: var(--fg-4); }
 
-  figcaption { margin: 16px 0 0; font-size: 0.9375rem; color: var(--fg-4); max-width: 44rem; }
+  figcaption { margin: 20px 0 0; font-size: 0.9375rem; line-height: 1.6; color: var(--fg-3); max-width: 46rem; }
+  figcaption + figcaption { margin-top: 12px; }
 
   /* objections */
   .qa { display: grid; gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
@@ -328,54 +455,59 @@
     transition: opacity 150ms cubic-bezier(0.25,0.1,0.25,1);
   }
   .cta:hover { opacity: 0.88; }
-  .cta.ghost { background: transparent; color: var(--fg-1); border-color: var(--fg-5); }
-  .cta.ghost:hover { border-color: var(--fg-4); opacity: 1; }
+  .cta.ghost { background: transparent; color: var(--fg-1); border-color: var(--fg-4); }
+  .cta.ghost:hover { border-color: var(--fg-2); opacity: 1; }
 
   footer {
     padding: 48px max(6vw, 20px) 80px; border-top: 1px solid var(--fg-5);
-    font-family: var(--mono); font-size: 0.75rem; line-height: 2; color: var(--fg-4);
-    background: var(--bg);
+    font-family: var(--mono); font-size: var(--m-code); line-height: 2; color: var(--fg-4);
+    background: var(--bg); letter-spacing: var(--tr-code);
   }
   footer .fwrap { max-width: 1000px; margin: 0 auto; }
-  footer .note { max-width: 44rem; margin: 16px 0 0; color: var(--fg-4); }
+  footer .note { max-width: 46rem; margin: 16px 0 0; color: var(--fg-4); line-height: 1.7; }
   footer a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px;
              display: inline-flex; align-items: center; min-height: 44px; }
   footer a:hover { color: var(--fg-1); }
 
   @media (prefers-reduced-motion: reduce) {
-    .copy, .cine-brand, .skip, .cta { transition: none; }
+    .copy, .cine-brand, .skip, .cta, .jump { transition: none; }
     .traj { --p: 1; }
     .lab { opacity: 1; }
+    #track { height: 200vh; }
   }
 
-  /* moved last: these are descendant rules whose only conflict was source order.
-     Nothing else targets caption b / pre b / pre .c, so relocating cannot change
-     rendering -- and descending specificity is the exact shape that produced the
-     value-vs-violation colour collision in the run receipt earlier today. */
-  caption b { color: var(--fg-2); font-weight: 400; letter-spacing: 0.14em; }
-  pre b { color: var(--fg-1); font-weight: 400; }
-  pre .c { color: var(--fg-4); }
 </style>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip the opening sequence</a>
-<h1 class="vh">Parallax — simulation results you accept before they are active</h1>
 
 <div id="stage" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 
 <div class="cine-brand" id="cine-brand">
   <span class="w">Parallax</span>
-  <span class="id">BRANCH main@seq12</span>
+  <span class="id">run bef312a9 · class PINNED</span>
 </div>
 <p class="scrollcue" id="cue">scroll — you are scrubbing a log</p>
+<a class="jump" id="jump" href="#main">Skip to the product</a>
 
 <div class="copy" id="copy">
   <p class="n" id="copy-n">01 / 06</p>
-  <h2 id="copy-t">Every operating decision is taken once.</h2>
-  <p class="b" id="copy-b">You choose, the world moves, and the alternative is never observed.</p>
+  <p class="ct" id="copy-t"></p>
+  <p class="b" id="copy-b"></p>
 </div>
+
+<!-- The six scene texts live in the document, not in a JS array, so they exist
+     for a reader with no JavaScript and for anything that reads the served HTML. -->
+<ol class="vh" id="scenes">
+  <li><b>Every operating decision is taken once.</b><span>You choose, the world moves, and the alternative is never observed.</span></li>
+  <li><b>Parallax gives you the one you did not take.</b><span>Point it at a context. It proposes a model of what is actually in there, and hands it to you before anything runs.</span></li>
+  <li><b>You accept it, or nothing happens.</b><span>A model nobody reviewed should not be able to produce numbers that look authoritative. While a blocking question is open, it refuses to activate.</span></li>
+  <li><b>Then fork the history and change one decision.</b><span>Same initial state, same seed, one policy different. The log is append-only, so a branch costs nothing to create.</span></li>
+  <li><b>Two lines out of one baseline.</b><span>The angle between them is the measurement. That is what the word parallax means.</span></li>
+  <li><b>And every number says how much of it was real.</b><span>Typed observed or simulated at birth, carried into the receipt and into the API.</span></li>
+</ol>
 
 <div id="track"></div>
 
@@ -383,231 +515,396 @@
 
   <header class="bar">
     <span class="w">Parallax</span>
-    <span class="id">TRACE 435b1748 · CLASS STABLE</span>
+    <span class="id">run bef312a9 · class PINNED · 12 simulated · 0 observed</span>
   </header>
+
+  <section id="what">
+    <div class="wrap">
+      <p class="eyebrow">Parallax · Apache-2.0 · Platanus Hack 26 · track Simulations</p>
+      <h1 class="h1">Simulation results you accept before they are active.</h1>
+      <p class="lede">There is no staging environment for the way a business operates. You change a price, a refund policy, an escalation threshold — and you find out what happened once it has already happened, usually because a customer told you.</p>
+      <p class="lede" style="margin-top:16px">Parallax proposes a model of your context built from what is actually in it, waits for a human to accept that model, and only then rolls it forward under the decisions you are considering. The goal is not a simulator that is right. It is a simulator that cannot lie about being a simulator.</p>
+
+      <ol class="spine">
+        <li><span class="s-n">01</span><span class="s-k">Point</span><span class="s-t">At a directory, an agent's own workspace, or a set of business tables.</span></li>
+        <li><span class="s-n">02</span><span class="s-k">Propose</span><span class="s-t">An ontology assembled from what is in there — state, actions, and the questions it could not answer. Slots it cannot support come back empty.</span></li>
+        <li class="gate"><span class="s-n">03</span><span class="s-k">Accept</span><span class="s-t"><b class="s-lead">A human answers the blocking questions and accepts.</b> This is the product, not a formality. Nothing runs before it, and the accepted object is minted behind a module-private symbol that is checked at runtime — so it cannot be forged and does not survive a JSON round-trip.</span></li>
+        <li><span class="s-n">04</span><span class="s-k">Roll</span><span class="s-t">Fork the log at a point, change one decision, replay the same steps under the new policy.</span></li>
+        <li><span class="s-n">05</span><span class="s-k">Type</span><span class="s-t">Every value carries observed or simulated, plus a class saying whether it can be re-derived at all.</span></li>
+      </ol>
+
+      <h2 class="mlab" style="margin-top:48px">Reproduce every number on this page</h2>
+      <pre><code>$ git clone https://github.com/broomva/parallax &amp;&amp; cd parallax
+$ bun install
+$ <b>bun run demo</b>            <span class="c"># the operators: run, observe, check, fork, prove</span>
+$ <b>bun run demo:whatsapp</b>   <span class="c"># the same thing as one thread, ending in a receipt file</span>
+$ <b>bun run src/cli.ts help</b> <span class="c"># the same capabilities at a terminal</span>
+$ <b>bun run src/hub/serve.ts</b> <span class="c"># the same capabilities over HTTP</span></code></pre>
+      <p class="verdict">Every figure below is printed by one of those two commands at seed 42 over a horizon of 12 steps. There are no customer deployments, no accuracy claims and no benchmark numbers on this page, because we have none.</p>
+
+      <h2 class="mlab" style="margin-top:48px">Build state, stated plainly</h2>
+      <div class="state2">
+        <div>
+          <h3 class="mlab">Runs today</h3>
+          <ul class="runs">
+            <li>The runtime and its six operators</li>
+            <li>Append-only log with copy-on-write forking</li>
+            <li>The reproducibility lattice, and the policy certifier that enforces it</li>
+            <li>Conservation and safety invariant checking</li>
+            <li>The accept gate, brand-checked at runtime</li>
+            <li>The conversation layer as pure functions</li>
+            <li>The self-contained run receipt</li>
+            <li>A CLI, an HTTP hub and a tool surface over the same handlers</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="mlab">Designed, not built</h3>
+          <ul class="plan">
+            <li>The LLM adapter — today's actors are seeded and pure</li>
+            <li>A second domain beyond the storefront</li>
+            <li>The web console</li>
+            <li>A live WhatsApp number; the channel layer is pure functions with no transport attached</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="mlab">Not measured</h3>
+          <ul class="none">
+            <li>Nothing here is calibrated against a real business</li>
+            <li>No accuracy percentage, because we cannot support one</li>
+            <li>No customer results, because there are no customers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="intake">
     <div class="wrap">
       <p class="eyebrow">01 · Intake</p>
       <h2 class="h">Point it at a context.</h2>
-      <p class="lede">Three context classes, one intake. Parallax reads what is already there. It does not ask you to model your operation first, because the model is the thing it is supposed to produce.</p>
+      <p class="lede">Three context classes, one intake, a separate proposer for each. Parallax reads what is already there. It does not ask you to model your operation first, because the model is the thing it is supposed to produce.</p>
       <div class="grid3">
         <div class="cell">
           <p class="k">Class 01 — business data</p>
           <h3>A schema and its rows</h3>
-          <p class="t">Orders, ledgers, inventory, tickets, payroll. The conservation identity is usually already in there: money, stock, hours, seats. Finding it is the first act of declaring a domain.</p>
+          <p class="t">Orders, ledgers, inventory, tickets. One state field and one insert action per table, and a blocking question per numeric parameter: rows, items, or currency. The conservation identity is usually already in there — money, stock, hours, seats.</p>
         </div>
         <div class="cell">
           <p class="k">Class 02 — agent workspace</p>
-          <h3>An agent's own history</h3>
-          <p class="t">Tool calls, messages, model contexts. High-dimensional and partly unserialisable, so it is projected into typed observations rather than checked directly. Agent state is never the world state.</p>
+          <h3>An agent's own directory</h3>
+          <p class="t">The session is spawned with its working directory already set to the tenant's own folder, and the confinement keys off exactly that. Passing a derived path instead is denied, and a denied read looks like an empty directory rather than an error — so the default is to pass no path at all.</p>
         </div>
         <div class="cell">
           <p class="k">Class 03 — local filesystem</p>
           <h3>An arbitrary directory</h3>
-          <p class="t">Files, commits, exports, logs. No integration and no schema agreed in advance. Each class ships a seed template — a starting proposal you edit down rather than a blank page.</p>
+          <p class="t">Files, commits, exports, logs. No integration and no schema agreed in advance. Same proposer as the workspace class; the difference is who is allowed to name the root.</p>
         </div>
       </div>
-      <p class="verdict">Nothing is inferred from a category name. The proposal is assembled from the rows and files that are actually present.</p>
-    </div>
-  </section>
 
-  <section id="proposal">
-    <div class="wrap">
-      <p class="eyebrow">02 · Proposal</p>
-      <h2 class="h">It proposes an ontology. You accept it.</h2>
-      <p class="lede">A model's only job on the dynamics path is reading a mess into typed observations. What it proposes arrives as a diff over six declaration slots, each line carrying where it came from. Nothing is active until you accept it, and you can accept part of it.</p>
-      <div class="tblwrap">
+      <h3 class="mlab" style="margin-top:48px">What the proposer actually does</h3>
+      <p class="body">One non-recursive directory read, then one <code>stat</code> per entry. It never opens a file. Entries beginning with a dot are skipped. From that it emits one state field per top-level directory, one per file extension, one action per directory, and one blocking question for every numeric parameter, because a numeric parameter with no unit fails closed at materialisation and the proposer cannot invent the unit.</p>
+
+      <div class="tblwrap scrollx">
         <table>
-          <caption><b>PROPOSAL</b> ont-9c41f0 · fs:/srv/ops · 1,284 files read · awaiting review</caption>
+          <caption><b>PROPOSAL</b> — what <code>bun run demo:whatsapp</code> emitted when pointed at this repository</caption>
           <thead>
             <tr>
-              <th scope="col"><span class="vh">Change</span></th>
               <th scope="col">Slot</th>
-              <th scope="col">Proposed</th>
-              <th scope="col">Derived from</th>
-              <th scope="col">Your call</th>
+              <th scope="col">Emitted</th>
+              <th scope="col">Read from</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="mk">+</td>
               <th scope="row">state</th>
-              <td class="v">inventory · price · cash_cents · promised[]</td>
-              <td>ledger.csv, stock.csv</td>
-              <td class="st-ok">ACCEPTED</td>
+              <td class="v">14 fields</td>
+              <td>7 top-level directories, 7 distinct file extensions</td>
             </tr>
             <tr>
-              <td class="mk">+</td>
               <th scope="row">actions</th>
-              <td class="v">promise · pay · refund · fulfill · restock · reprice</td>
-              <td>orders.csv, 6 distinct verbs</td>
-              <td class="st-ok">ACCEPTED</td>
+              <td class="v">7</td>
+              <td>one per top-level directory, actor <code>operator</code></td>
             </tr>
             <tr>
-              <td class="mk">+</td>
-              <th scope="row">project</th>
-              <td class="v">message &rarr; typed order</td>
-              <td>inbox/*.eml, model, schema-validated</td>
-              <td class="st-warn">EDITED</td>
-            </tr>
-            <tr>
-              <td class="mk">+</td>
-              <th scope="row">transition</th>
-              <td class="v">fold an action into stock and cash</td>
-              <td>code, never a model</td>
-              <td class="st-ok">ACCEPTED</td>
-            </tr>
-            <tr>
-              <td class="mk">+</td>
               <th scope="row">invariants</th>
-              <td class="v">inventory_nonneg · cash_conserved · no_unpaid_fulfillment</td>
-              <td>conservation, 2 found · safety, 1 added</td>
-              <td class="st-ok">ACCEPTED</td>
+              <td class="st-none">— empty —</td>
+              <td>nothing in a directory listing implies a conservation law</td>
             </tr>
             <tr>
-              <td class="mk">~</td>
-              <th scope="row">objectives</th>
-              <td class="v">&mdash; empty &mdash;</td>
-              <td>nothing in the context implies one</td>
-              <td class="st-crit">DECLINED</td>
+              <th scope="row">blocking questions</th>
+              <td class="v st-warn">7</td>
+              <td>every numeric parameter needs a unit before this can run</td>
+            </tr>
+            <tr>
+              <th scope="row">advisory questions</th>
+              <td class="v">1</td>
+              <td>"Which quantity here is conserved?"</td>
+            </tr>
+            <tr>
+              <th scope="row">transition</th>
+              <td class="st-none">— you supply it —</td>
+              <td>code, never a model; <code>activate</code> refuses without one</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p class="body" style="margin-top:24px">Those counts are a reading, not a specification. The row above said twelve fields and six actions this morning; a <code>scripts/</code> directory and a <code>render.yaml</code> landed in the repository during the afternoon and it now says fourteen and seven, with a different proposal id. Re-run it after your next commit and it will disagree with this page again. That is the proposer working, not drifting — and it is why an acceptance is bound to the exact proposal it was given rather than to a name.</p>
       <p class="verdict">You are approving a model of your own operation, not a model's opinion of it. An empty slot is the correct answer when the context does not support one; a plausible guess is not.</p>
-      <p class="body" style="margin-top:24px">Slots are open. Add a field the proposal missed, replace the projection with your own model behind the plugin harness, bring a third-party forecaster in as a policy. The six operators do not change, and that is precisely what makes everything above them safe to change.</p>
+    </div>
+  </section>
+
+  <section id="gate">
+    <div class="wrap">
+      <p class="eyebrow">02 · The gate</p>
+      <h2 class="h">You accept it, on your phone, before anything runs.</h2>
+      <p class="lede">WhatsApp because it is where Latin America already operates. It is a channel, not the product: <code>renderProposal</code>, <code>parseReply</code> and <code>resolveAccept</code> are pure functions over a proposal with no transport imported at all. A capability reachable by only one transport is a feature of that transport, so the CLI and the HTTP hub call these same three.</p>
+
+      <div class="thread">
+        <div class="msg them">
+          <p class="who">+57 301 775 8620</p>
+          <div class="bub"><pre>hola, quiero simular un cambio de precio antes de aplicarlo</pre></div>
+        </div>
+
+        <div class="msg bot">
+          <p class="who">Parallax — the proposal, as sent</p>
+          <div class="bub"><pre>*simulacro (proposed from agent-workspace)*
+Read from your workspace. Nothing runs until you accept it.
+
+*State* (14 fields)
+  design_count = 0  &lt;- directory design/
+  landing_count = 0  &lt;- directory landing/
+  test_count = 0  &lt;- directory test/
+  out_count = 0  &lt;- directory out/
+  node_modules_count = 0  &lt;- directory node_modules/
+  scripts_count = 0  &lt;- directory scripts/
+  src_count = 0  &lt;- directory src/
+  files_md = 6  &lt;- 6 file(s) with extension .md
+  files_yaml = 1  &lt;- 1 file(s) with extension .yaml
+  files_none_ = 1  &lt;- 1 file(s) with extension (none)
+  files_jsonc = 1  &lt;- 1 file(s) with extension .jsonc
+  files_lock = 1  &lt;- 1 file(s) with extension .lock
+  files_json = 3  &lt;- 3 file(s) with extension .json
+  files_png = 1  &lt;- 1 file(s) with extension .png
+
+*Actions* (7)
+  add_to_design(count)  by operator
+  add_to_landing(count)  by operator
+  add_to_test(count)  by operator
+  add_to_out(count)  by operator
+  add_to_node_modules(count)  by operator
+  add_to_scripts(count)  by operator
+  add_to_src(count)  by operator
+
+*Before this can run* (7)
+  1. What unit is "count" measured in for add_to_design? Materialisation fails closed without it.
+  2. What unit is "count" measured in for add_to_landing? Materialisation fails closed without it.
+  3. What unit is "count" measured in for add_to_test? Materialisation fails closed without it.
+  4. What unit is "count" measured in for add_to_out? Materialisation fails closed without it.
+  5. What unit is "count" measured in for add_to_node_modules? Materialisation fails closed without it.
+  6. What unit is "count" measured in for add_to_scripts? Materialisation fails closed without it.
+  7. What unit is "count" measured in for add_to_src? Materialisation fails closed without it.
+
+*Worth answering*
+  - Which quantity here is conserved? A conservation invariant is the cheapest oracle available and this proposal has none.
+
+Reply with the numbered answers, then ACCEPT. Reply REJECT to discard.
+ref 8e59eea705cc</pre></div>
+        </div>
+
+        <div class="msg them">
+          <p class="who">+57 301 775 8620</p>
+          <div class="bub"><pre>1. unidades
+2. unidades
+3. unidades
+4. unidades
+5. unidades
+6. unidades
+7. unidades
+sí, dale</pre></div>
+        </div>
+
+        <div class="msg bot">
+          <p class="who">Parallax</p>
+          <div class="bub"><pre>aceptado. nada corrió hasta ahora.</pre></div>
+        </div>
+
+        <div class="msg bot">
+          <p class="who">Parallax — the ungoverned run</p>
+          <div class="bub"><pre>corrí 12 pasos. 10 violaciones.</pre></div>
+        </div>
+
+        <div class="msg bot">
+          <p class="who">Parallax — the same history, one thing changed</p>
+          <div class="bub"><pre>con el gobernador: 10 -&gt; 0 violaciones.</pre></div>
+        </div>
+
+        <div class="msg bot">
+          <p class="who">Parallax</p>
+          <div class="bub"><pre>listo. el recibo: <span class="rcpt">https://parallax.broomva.tech/r/bef312a9</span></pre></div>
+        </div>
+      </div>
+
+      <figcaption>Captured verbatim from <code>bun run demo:whatsapp</code> run against this repository. The state fields are read from the directory itself, so the counts and the <code>ref</code> move whenever the repository does; the storefront numbers further down do not, because they come from a fixed domain at a fixed seed. The proposal is titled <code>simulacro</code> because that is still the name of the directory on disk — the proposer reports what it found, not what we would prefer it were called.</figcaption>
+
+      <div class="grid3">
+        <div class="cell">
+          <p class="k">Reading a human reply</p>
+          <h3>Reject wins over accept</h3>
+          <p class="t">A reply containing both an acceptance word and a rejection word is a rejection, because the safe reading is the one that does not start running things. Bare <code>no</code> anywhere in the message counts. And <code>\b</code> is unreliable next to accented characters, so the matcher classes codepoints instead — otherwise <code>sí</code> silently never matches and one language's acceptance word disappears.</p>
+        </div>
+        <div class="cell">
+          <p class="k">What acceptance produces</p>
+          <h3>An object you cannot forge</h3>
+          <p class="t"><code>activate</code> is the only way to mint an accepted ontology, and the brand is a module-private symbol checked at runtime rather than a structural field. It deliberately does not survive a JSON round-trip: trust cannot be serialised, it has to be re-minted in the process that will execute it.</p>
+        </div>
+        <div class="cell">
+          <p class="k">What comes back</p>
+          <h3>A receipt, not a number</h3>
+          <p class="t">The run writes <code>out/run-bef312a9.html</code>, 10.0 KB, self-contained by construction — no external CSS, fonts, scripts or images, because anything it fetched at view time would be a claim the reader cannot check.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section id="trajectory">
-    <div class="wrap frame">
+    <div class="wrap">
       <p class="eyebrow">03 · Trajectory</p>
-      <h2 class="h">Roll it forward under candidate decisions.</h2>
-      <p class="lede">The log is append-only, so a fork is a branch record with a parent and a fork point. Creating a future costs nothing. Only evaluating one costs anything. Two branches that share a past can be compared, because a tick means the same thing on both.</p>
+      <h2 class="h">Roll it forward, then fork it and change one thing.</h2>
+      <p class="lede">The log is append-only, so a fork is a branch record with a parent and a fork point, and creating a future costs nothing. Only evaluating one costs anything. Two branches that share a past can be compared, because a tick means the same thing on both.</p>
+      <p class="body" style="margin-top:16px">Here both branches replay the same twelve steps from the same initial state at the same seed. The only difference is a shield installed in front of the policy, which refuses an action whose post-state would violate an invariant.</p>
 
       <figure class="figure">
         <div class="id-row">
-          <span class="chip">EXAMPLE RUN <b>storefront demo world</b></span>
-          <span class="chip">FORK <b>main@seq12</b></span>
-          <span class="chip">HORIZON <b>28</b></span>
-          <span class="chip">SEED <b>7</b></span>
+          <span class="chip">WORLD <b>whatsapp-storefront</b></span>
+          <span class="chip">FORK <b>main@seq0</b></span>
+          <span class="chip">HORIZON <b>12</b></span>
+          <span class="chip">SEED <b>42</b></span>
+          <span class="chip">POLICY <b>eager-agent</b></span>
+          <span class="chip">VIOLATIONS <b>main 10 &rarr; governed 0</b></span>
         </div>
-        <div class="figscroll">
-          <svg id="traj" class="traj" viewBox="0 0 1280 412" role="img"
+        <div class="scrollx">
+          <svg id="traj" class="traj" viewBox="0 0 1120 440" role="img"
                aria-labelledby="traj-t traj-d" preserveAspectRatio="xMidYMid meet">
-            <title id="traj-t">Recorded history forking into simulated branches</title>
-            <desc id="traj-d">A solid line runs in from the left: recorded history on branch main, from sequence zero to sequence twelve. At a fork node marked NOW it divides into four straight rays. Two dashed rays are STABLE branches; one, drawn in the accent colour, is the chosen candidate and the other is main continued with nothing changed. The angle between those two rays is annotated with a delta and is the measurement. A fine dotted ray is a PINNED branch that replays byte-identically. A solid ray is a RECORDED branch that touched a live customer message and can never be re-derived.</desc>
+            <title id="traj-t">Two branches out of one accepted baseline, and the angle between them</title>
+            <desc id="traj-d">A vertical axis on the left measures violations accumulated, from zero at the bottom to twelve at the top. A horizontal axis measures the twelve steps of the run. Both branches start from the same point: the accepted ontology at sequence zero, with zero violations. The branch named main rises to ten violations by step twelve. The branch named governed, drawn in the accent colour, stays flat on zero for the whole run. Because both rays start at the same point and end at step twelve, the angle between them is exactly the difference between ten and zero, which is the measurement. Both rays are drawn dotted, which is the stroke for the PINNED reproducibility class, because that is the class both branches actually demonstrated.</desc>
             <defs>
               <clipPath id="sweep" clipPathUnits="userSpaceOnUse">
-                <rect class="sweep" x="0" y="0" width="1280" height="412"></rect>
+                <rect class="sweep" x="0" y="0" width="1120" height="440"></rect>
               </clipPath>
             </defs>
 
+            <g class="lab">
+              <text class="tag" x="34" y="76">VIOLATIONS</text>
+              <text class="tag" x="34" y="94">ACCUMULATED</text>
+              <text class="meta" x="168" y="146" text-anchor="end">10</text>
+              <text class="meta" x="168" y="250" text-anchor="end">5</text>
+              <text class="meta" x="168" y="354" text-anchor="end">0</text>
+              <text class="meta" x="180" y="376" text-anchor="middle">0</text>
+              <text class="meta" x="530" y="376" text-anchor="middle">6</text>
+              <text class="meta" x="880" y="376" text-anchor="middle">12</text>
+              <text class="tag" x="180" y="404">STEP</text>
+              <text class="meta" x="240" y="404">horizon 12 · seed 42 · same policy, one shield</text>
+            </g>
+
+            <line class="axis" x1="180" y1="96" x2="180" y2="358"></line>
+            <line class="grid" x1="180" y1="141.7" x2="880" y2="141.7"></line>
+            <line class="grid" x1="180" y1="245.8" x2="880" y2="245.8"></line>
+
             <g clip-path="url(#sweep)">
-              <line class="nowline" x1="500" y1="38" x2="500" y2="376"></line>
+              <path class="wedge" d="M 180 350 L 880 141.7 L 880 350 Z"></path>
+              <line class="ray pinned"        x1="180" y1="350" x2="880" y2="141.7"></line>
+              <line class="ray pinned chosen" x1="180" y1="350" x2="880" y2="350"></line>
 
-              <polyline class="hist" points="48,258 108,252 166,263 224,245 282,255 340,239 398,247 452,233 500,236"></polyline>
-              <circle class="dot" cx="48" cy="258" r="2.5"></circle>
-              <circle class="dot" cx="166" cy="263" r="2.5"></circle>
-              <circle class="dot" cx="282" cy="255" r="2.5"></circle>
-              <circle class="dot" cx="398" cy="247" r="2.5"></circle>
+              <path class="arc" d="M 430 350 A 250 250 0 0 0 419.6 278.6"></path>
 
-              <line class="ray stable chosen" x1="500" y1="236" x2="1000" y2="84"></line>
-              <line class="ray stable"        x1="500" y1="236" x2="1000" y2="202"></line>
-              <line class="ray pinned"        x1="500" y1="236" x2="1000" y2="292"></line>
-              <line class="ray recorded"      x1="500" y1="236" x2="1000" y2="358"></line>
+              <circle class="dot"   cx="880" cy="141.7" r="4"></circle>
+              <circle class="dot-a" cx="880" cy="350"   r="5"></circle>
 
-              <path class="arc" d="M 633.95 195.30 A 140 140 0 0 1 639.68 226.50"></path>
-
-              <circle class="dot-a" cx="1000" cy="84"  r="4"></circle>
-              <circle class="dot"   cx="1000" cy="202" r="3"></circle>
-              <circle class="dot"   cx="1000" cy="292" r="3"></circle>
-              <circle class="dot"   cx="1000" cy="358" r="3"></circle>
-
-              <circle class="forkring" cx="500" cy="236" r="11"></circle>
-              <circle class="forkdot"  cx="500" cy="236" r="5"></circle>
+              <circle class="forkring" cx="180" cy="350" r="11"></circle>
+              <circle class="forkdot"  cx="180" cy="350" r="5"></circle>
             </g>
 
             <g class="lab">
-              <text class="tag"  x="48" y="200">RECORDED</text>
-              <text class="meta" x="48" y="220">main@seq0 … seq12 — what actually happened</text>
-              <text class="meta" x="48" y="288">seq0</text>
+              <text class="tag" x="196" y="92">ACCEPTED ONTOLOGY · seq 0 · initial state</text>
 
-              <text class="tag"  x="500" y="24" text-anchor="middle">NOW</text>
-              <text class="meta" x="500" y="400" text-anchor="middle">fork at main@seq12 — copy-on-write, O(1)</text>
+              <text class="delta" x="466" y="306">&#916; 10 violations</text>
 
-              <text class="delta" x="664" y="214">&#916;</text>
+              <text class="name" x="900" y="136">main</text>
+              <text class="val"  x="900" y="157">10 violations</text>
+              <text class="meta" x="900" y="176">PINNED · simulated</text>
 
-              <text class="name a" x="1016" y="80">fork/price-hold</text>
-              <text class="meta"   x="1016" y="98">STABLE · chosen candidate</text>
-
-              <text class="name" x="1016" y="198">main@continued</text>
-              <text class="meta" x="1016" y="216">STABLE · change nothing</text>
-
-              <text class="name" x="1016" y="288">fork/seeded-sweep</text>
-              <text class="meta" x="1016" y="306">PINNED · seeded, local</text>
-
-              <text class="name" x="1016" y="354">fork/live-desk</text>
-              <text class="meta" x="1016" y="372">RECORDED · live message</text>
+              <text class="name a" x="900" y="344">governed</text>
+              <text class="val a"  x="900" y="365">0 violations</text>
+              <text class="meta"   x="900" y="384">PINNED · simulated</text>
             </g>
           </svg>
         </div>
 
         <div class="legend">
-          <div><svg width="36" height="10" aria-hidden="true"><line class="l-rec" x1="0" y1="5" x2="36" y2="5"></line></svg><b>RECORDED</b> happened, or touched something unrepeatable</div>
-          <div><svg width="36" height="10" aria-hidden="true"><line class="l-sta" x1="0" y1="5" x2="36" y2="5"></line></svg><b>STABLE</b> reproducible in distribution, not in bytes</div>
-          <div><svg width="36" height="10" aria-hidden="true"><line class="l-pin" x1="0" y1="5" x2="36" y2="5"></line></svg><b>PINNED</b> byte-identical on replay</div>
+          <div>
+            <h3 class="mlab">Stroke — reproducibility class</h3>
+            <ul>
+              <li><svg width="34" height="10" aria-hidden="true"><line class="l-rec" x1="1" y1="5" x2="33" y2="5"></line></svg><b>RECORDED</b><span class="absent">happened, or unrepeatable — not produced by this run</span></li>
+              <li><svg width="34" height="10" aria-hidden="true"><line class="l-sta" x1="1" y1="5" x2="33" y2="5"></line></svg><b>STABLE</b><span class="absent">reproducible in distribution, not in bytes</span></li>
+              <li><svg width="34" height="10" aria-hidden="true"><line class="l-pin" x1="1" y1="5" x2="33" y2="5"></line></svg><b>PINNED</b><span>byte-identical on replay — both branches above</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="mlab">Tag — origin</h3>
+            <ul>
+              <li><span class="sw o" aria-hidden="true"></span><b>observed</b><span class="absent">came from the referent — 0 of 12 steps here</span></li>
+              <li><span class="sw s" aria-hidden="true"></span><b>simulated</b><span>we generated it — 12 of 12 steps here</span></li>
+            </ul>
+          </div>
         </div>
 
-        <figcaption>Stroke is not decoration. Solid, dashed and dotted are the three reproducibility classes, so how a line is drawn states how much of it can be re-derived. Two rays from a shared baseline, and the angle between them as the measurement, is what the word parallax means.</figcaption>
+        <figcaption>The two axes are deliberately not the same axis, and collapsing them loses one. <b>Stroke</b> answers "if we run it again, do we get the same thing?" <b>Tag</b> answers "did this come from the referent, or did we generate it?" A real customer message is observed and unrepeatable; a seeded scripted actor is simulated and perfectly repeatable. Neither predicts the other.</figcaption>
+
+        <figcaption>Both rays leave the same point and both end at step 12, so the angle you see is exactly the difference between the two endpoint numbers — 10 and 0 — at the same scale the y axis is labelled with. Nothing about the angle is chosen for the drawing. Two of the three strokes are shown in the legend and drawn nowhere, because this run did not produce a RECORDED or a STABLE branch, and drawing one to fill out the figure is the failure this page exists to refuse.</figcaption>
       </figure>
 
-      <div class="tblwrap">
+      <div class="tblwrap scrollx">
         <table>
-          <caption><b>BRANCHES</b> off main@seq12 · storefront demo world · not a customer result</caption>
+          <caption><b>BRANCHES</b> — printed by <code>bun run demo:whatsapp</code>, storefront demo world, not a customer result</caption>
           <thead>
             <tr>
               <th scope="col">Branch</th>
+              <th scope="col">Policy</th>
               <th scope="col">Class</th>
-              <th scope="col">Candidate decision</th>
-              <th scope="col">Margin</th>
-              <th scope="col">Separation</th>
+              <th scope="col">Steps</th>
+              <th scope="col">Violations</th>
+              <th scope="col">Trace</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">main@continued</th>
-              <td>STABLE</td>
-              <td>change nothing</td>
-              <td class="v">14.2%</td>
-              <td>baseline</td>
+              <th scope="row">main</th>
+              <td>eager-agent</td>
+              <td>PINNED</td>
+              <td class="v">12</td>
+              <td class="v st-crit">10</td>
+              <td>435b1748860d</td>
             </tr>
             <tr class="is-chosen">
-              <th scope="row">fork/price-hold</th>
-              <td>STABLE</td>
-              <td>hold list price for 28 days</td>
-              <td class="v">16.9%</td>
-              <td>+2.7 pp</td>
-            </tr>
-            <tr>
-              <th scope="row">fork/seeded-sweep</th>
+              <th scope="row">governed</th>
+              <td>governed(eager-agent)</td>
               <td>PINNED</td>
-              <td>sweep discount 0–12%</td>
-              <td class="v">12.4%</td>
-              <td>−1.8 pp</td>
-            </tr>
-            <tr>
-              <th scope="row">fork/live-desk</th>
-              <td>RECORDED</td>
-              <td>route to the human desk</td>
-              <td class="v">15.1%</td>
-              <td class="st-warn">not re-derivable</td>
+              <td class="v">12</td>
+              <td class="v">0</td>
+              <td>c20ae410b61c</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="verdict">The angle in the figure is drawn from the difference the run measured. It is a rendering of the number, not the number — and the number itself is only as trustworthy as the class beside it.</p>
+
+      <h3 class="mlab" style="margin-top:48px">What the fork changed, verbatim</h3>
+<pre><code><span class="c"># the diff between the two end states</span>
+inventory: <span class="c">{"arepa_kit":10,"cafe_500g":3,"panela":-1}</span> -&gt; <b>{"arepa_kit":10,"cafe_500g":3,"panela":0}</b>
+promised:  <span class="c">ORD-000, ORD-003, ORD-006, ORD-009</span> -&gt; <b>ORD-000, ORD-003, ORD-009</b>
+
+<span class="c"># step 006 of the governed branch, from the receipt's own trajectory table</span>
+006  governor  <b>refuse</b>  {"blocked":"promise","order":"ORD-006","sku":"panela","qty":1}  <span class="hl">simulated</span></code></pre>
+      <p class="body" style="margin-top:24px">The ungoverned agent promises panela it does not have, and every step after that carries the consequence: <code>no_phantom_promise</code> from sequence 7 onward, then <code>inventory_nonneg</code> from sequence 9 once the fulfilment lands. Ten violations across twelve steps. The governed branch refuses the promise at step 6 and finishes with none, at the cost of one order it did not take.</p>
     </div>
   </section>
 
@@ -615,96 +912,134 @@
     <div class="wrap">
       <p class="eyebrow">04 · Typing</p>
       <h2 class="h">Every answer is typed observed or simulated.</h2>
-      <p class="lede">A figure that came out of your history and a figure that came out of a projection are not the same kind of thing. A system that renders them identically is lying by layout. So the type travels with the value, everywhere, including into the API.</p>
+      <p class="lede">A figure that came out of your history and a figure that came out of a projection are not the same kind of thing, and a system that renders them identically is lying by layout. So the type is attached at birth and travels with the value. An untagged value can never be separated later, because the information needed to do it was discarded when the value was created.</p>
 
-      <div class="tblwrap">
+      <h3 class="mlab" style="margin-top:40px">What the receipt says about itself, unprompted</h3>
+<pre><code><span class="c"># out/run-bef312a9.html, verbatim</span>
+<b>Every invariant held for the whole run. Nothing here was observed;
+the entire trajectory is simulated. Against what actually happened:
+10 fewer violations.</b>
+
+How much of this was real
+<b>0 observed · 12 simulated</b> — a value derived from anything simulated is
+simulated, however much observed data went in beside it.</code></pre>
+      <p class="body" style="margin-top:24px">Zero percent observed is not a flattering number and the receipt leads with it. That is the whole design: contamination flows one way, so the honest report of a fully simulated run is that it is a fully simulated run.</p>
+
+      <div class="tblwrap scrollx">
         <table>
-          <caption><b>COMPARE</b> main@continued ↔ fork/price-hold · storefront demo world</caption>
+          <caption><b>OBJECTIVES</b> — the receipt's own scoring table for run bef312a9</caption>
           <thead>
             <tr>
-              <th scope="col">Field</th>
+              <th scope="col">Objective</th>
               <th scope="col">Value</th>
-              <th scope="col">Type</th>
-              <th scope="col">Class</th>
-              <th scope="col">Provenance</th>
+              <th scope="col">Constraint</th>
+              <th scope="col">Origin</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">units_sold</th>
-              <td class="v">418</td>
-              <td>observed</td>
-              <td>RECORDED</td>
-              <td>main@seq0…seq12</td>
-            </tr>
-            <tr>
-              <th scope="row">cash_cents</th>
-              <td class="v">11,284,000</td>
-              <td>observed</td>
-              <td>RECORDED</td>
-              <td>main@seq0…seq12</td>
-            </tr>
-            <tr>
-              <th scope="row">margin_pct</th>
-              <td class="v">16.9%</td>
+              <th scope="row">orders_promised</th>
+              <td class="v">3</td>
+              <td class="st-ok">admissible</td>
               <td>simulated</td>
-              <td>STABLE</td>
-              <td>fork/price-hold@seq12…seq40, seed 7</td>
             </tr>
             <tr>
-              <th scope="row">separation</th>
-              <td class="v">+2.7 pp</td>
+              <th scope="row">violations</th>
+              <td class="v">0</td>
+              <td class="st-ok">admissible</td>
               <td>simulated</td>
-              <td>STABLE</td>
-              <td>weakest input governs the pair</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="verdict">A branch is only as reproducible as its weakest input. The class is computed as the meet of the branch's own class and every input it consumed, so it can only ever fall — and an adapter is never allowed to certify its own class.</p>
+      <p class="body" style="margin-top:24px">Constraints are hard, so admissibility sits beside the score rather than inside it: a trajectory with any violation comes back marked inadmissible, and the number cannot be quoted as though it were achievable.</p>
 
-<pre><code><span class="c"># replay is a hash comparison, not a claim</span>
-TRACE  fork/price-hold  seed 7   <b>435b1748860d979af9b4344a008301ec</b>
-REPLAY fork/price-hold  seed 7   <b>435b1748860d979af9b4344a008301ec</b>   <span class="st-ok">IDENTICAL</span>
-REPLAY fork/price-hold  seed 8   <b>6d240f8451d14d60af3ac636631e0ffe</b>   <span class="st-ok">DIVERGED (correct)</span>
+      <h3 class="mlab" style="margin-top:48px">Replay is a hash comparison, not a claim</h3>
+<pre><code><span class="c"># bun run demo</span>
+main  seed 42   <b>435b1748860d979af9b4344a008301ec</b>
+main  seed 42   <b>435b1748860d979af9b4344a008301ec</b>   <span class="st-ok">IDENTICAL</span>
+main  seed 43   <b>6d240f8451d14d60af3ac636631e0ffe</b>   <span class="st-ok">DIVERGED (correct)</span>
 
-<span class="c"># and the moment a branch touches something unrepeatable</span>
-fork/live-desk  read a live customer message   &rarr;   <span class="st-warn">class demoted to RECORDED</span>
-                byte-identical replay          &rarr;   <span class="st-warn">no longer claimed</span></code></pre>
-      <p class="verdict">The claim is withdrawn by the runtime, not by a person remembering to withdraw it. That is the only version of this guarantee worth having.</p>
+<span class="c"># bun run demo:whatsapp</span>
+trace  main=<b>435b1748860d</b>   governed=<b>c20ae410b61c</b></code></pre>
+
+      <h3 class="mlab" style="margin-top:48px">A policy is not allowed to certify itself</h3>
+<pre><code><span class="c"># bun run demo:whatsapp — the eviction test, before anything is trusted</span>
+declared PINNED  -&gt;  demonstrated PINNED   <span class="st-ok">holds</span>
+produced an identical proposal across 3 trials at seed 42
+
+<span class="c"># bun run demo — swap in an actor that is not pinned</span>
+unpinned actor -&gt; branch class <b>STABLE</b> - the replay claim is withdrawn automatically</code></pre>
+      <p class="body" style="margin-top:24px">A class a policy declares about itself is not evidence, so it is measured: run the policy repeatedly against an identical probe and compare what comes out. A policy that cannot reproduce its own proposal under a fixed seed is demoted in code, whatever it declared. The floor is STABLE — the gate refuses an unearned PINNED, it does not invent a RECORDED.</p>
+      <p class="body">And this is a filter, not a proof, with a miss rate worth stating rather than hiding. A nondeterministic policy escapes whenever all trials happen to collide: for a policy with <em>k</em> roughly equiprobable outputs that is about <em>k</em><sup>&minus;(trials&minus;1)</sup>, which is 4% at k=5 over 3 trials. The source says so in the function's own comment: a policy that passes certification has not been proven pure. No finite test can do that. It has only failed to be caught.</p>
+      <p class="verdict">The claim is withdrawn by the runtime, not by a person remembering to withdraw it. That is the only version of this guarantee worth having — and stating the bound is part of it, because a guarantee whose failure rate is hidden is a claim about a claim.</p>
     </div>
   </section>
 
   <section id="surface">
-    <div class="wrap frame">
+    <div class="wrap">
       <p class="eyebrow">05 · Surface</p>
       <h2 class="h">The agent is a user, not a client library.</h2>
-      <p class="lede">Every capability a human can reach, an agent reaches through the same surface, with the same authorisation, and with errors that are typed rather than narrated. There is no privileged human path and no second-class programmatic one.</p>
+      <p class="lede">Every capability a human can reach, an agent reaches through the same functions, with the same authorisation, and with failures that are values rather than sentences to parse. Nothing throws. Error types are per-operation and never one global union, because a caller cannot recover from what it cannot distinguish.</p>
 
-<pre><code><span class="c"># the same three moves a person makes in the console</span>
-$ parallax <b>fork</b> main --at seq12 --as fork/price-hold
-BRANCH fork/price-hold   parent main@seq12   class STABLE
-
-$ parallax <b>rollout</b> fork/price-hold --policy hold-price --horizon 28 --seed 7
-ROLLOUT 28 events   violations 0   class STABLE
-
-$ parallax <b>diff</b> main@continued fork/price-hold --typed
-margin_pct   14.2% <span class="k">observed</span>  &rarr;  16.9% <span class="k">simulated</span>   +2.7 pp
-
-$ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7</code></pre>
-
-<pre><code><span class="c">// a refusal is a value with a shape, not a sentence to parse</span>
+<pre><code><span class="c">// a refusal is a value with a shape, and the shape is the same everywhere</span>
 {
-  <span class="j">"error"</span>: <b>"invariant_violated"</b>,
-  <span class="j">"branch"</span>: <b>"fork/discount-10"</b>,
-  <span class="j">"class"</span>: <b>"STABLE"</b>,
-  <span class="j">"violations"</span>: [
-    { <span class="j">"invariant"</span>: <b>"inventory_nonneg"</b>, <span class="j">"seq"</span>: <b>41</b>, <span class="j">"message"</span>: <b>"oversold panela: -1"</b> },
-    { <span class="j">"invariant"</span>: <b>"no_phantom_promise"</b>, <span class="j">"seq"</span>: <b>41</b>, <span class="j">"message"</span>: <b>"ORD-006/panela"</b> }
-  ],
-  <span class="j">"recoverable"</span>: <b>false</b>
+  <span class="j">"ok"</span>: <b>false</b>,
+  <span class="j">"error"</span>: {
+    <span class="j">"code"</span>: <b>"BLOCKING_QUESTIONS_OPEN"</b>,
+    <span class="j">"reason"</span>: <b>"7 blocking question(s) must be answered before this ontology can run"</b>,
+    <span class="j">"detail"</span>: { <span class="j">"slots"</span>: [<b>"action.add_to_design.count"</b>, <b>"action.add_to_landing.count"</b>, <span class="c">/* … */</span>] }
+  }
 }</code></pre>
-      <p class="verdict">An error a model has to read prose to understand is an error it will guess about. The governor refuses the action before it lands rather than logging the damage after it does.</p>
+
+      <p class="body" style="margin-top:24px">That is what <code>activate</code> returns when the human has not answered. The <code>detail</code> names the exact slots, so the bot can ask again for the one thing it lacks rather than restarting the conversation. These are the codes the core, the accept gate and the conversation layer can return:</p>
+
+      <div class="codes">
+        <span class="chip">SOURCE_UNREADABLE</span>
+        <span class="chip">SOURCE_EMPTY</span>
+        <span class="chip">UNSUPPORTED_SOURCE</span>
+        <span class="chip">BLOCKING_QUESTIONS_OPEN</span>
+        <span class="chip">NO_TRANSITION</span>
+        <span class="chip">NO_INVARIANTS</span>
+        <span class="chip">NOT_ACCEPTED</span>
+        <span class="chip">POLICY_THREW</span>
+        <span class="chip">POLICY_EMPTY</span>
+        <span class="chip">EMPTY_TRAJECTORY</span>
+        <span class="chip">OBJECTIVE_THREW</span>
+        <span class="chip">UNANSWERED_BLOCKING</span>
+        <span class="chip">UNKNOWN_QUESTION</span>
+        <span class="chip">EMPTY_REPLY</span>
+      </div>
+
+      <p class="body" style="margin-top:32px">Two of them are the gate itself. <code>NOT_ACCEPTED</code> is returned by the only supported way to read the world out of an ontology, and the brand is checked there at runtime rather than only by the type system — a compile-time-only brand is documentation, and <code>as any</code>, plain JavaScript, or a value crossing a deserialisation boundary all walk straight past it. <code>NO_INVARIANTS</code> reads, in full:</p>
+
+<pre><code><b>"a domain with no invariants has no verifier, and an unverifiable
+ simulation is the thing this system exists to refuse"</b></code></pre>
+
+      <p class="body" style="margin-top:24px">The hub and the tool surface add their own codes in the same shape: a stable code, a reason a human can read, and a <code>detail</code> a machine can branch on. There is no second error vocabulary for the programmatic path, because there is no second path.</p>
+
+      <h3 class="mlab" style="margin-top:48px">The same capabilities, three ways in</h3>
+<pre><code><span class="c"># at a terminal — a typed refusal exits 2, an unexpected throw exits 1,
+# and a script can branch on the code rather than on a message</span>
+$ bun run src/cli.ts <b>accept</b>
+{"code":<b>"MISSING_FLAG"</b>,"reason":<b>"accept needs --proposal"</b>,
+ "detail":{"command":"accept","flag":"proposal","usage":"parallax accept --proposal &lt;id&gt; …"}}
+<span class="c">exit 2</span>
+
+<span class="c"># over HTTP — same values, same codes, no translation layer</span>
+$ PORT=8791 bun run src/hub/serve.ts
+parallax hub 0.1.0 listening on http://0.0.0.0:8791 (health: /health)
+
+$ curl -s localhost:8791/health
+{"ok":<b>true</b>,"version":<b>"0.1.0"</b>,"uptimeSeconds":<b>2</b>}
+
+$ curl -s -X POST localhost:8791/api/ontology/accept \
+       -d '{"proposalId":"nope","answers":{},"acceptedBy":"you"}'
+{"code":<b>"UNKNOWN_PROPOSAL"</b>,
+ "reason":<b>"this hub has no proposal with that id; propose again and accept the proposal you get back"</b>,
+ "detail":{"proposalId":"nope"}}</code></pre>
+      <p class="body" style="margin-top:24px">The hub answers <code>/health</code>, <code>/api/ontology/propose</code>, <code>/api/ontology/accept</code>, <code>/api/run</code>, <code>/api/whatsapp/turn</code> and <code>/r/:id</code>, and serves this page from the same process. The refusal body above also repeats the same object under an <code>error</code> key. The CLI's subcommands are <code>propose</code>, <code>accept</code>, <code>run</code>, <code>receipt</code>, <code>status</code> and <code>reject</code>, over the same handler functions the tool surface calls.</p>
+      <p class="body">The one place the surfaces deliberately diverge is <code>--root</code>. An arbitrary absolute root is safe at a terminal, because the person typing the path is the confinement. It is absent from every tool schema, because inside a sandboxed session a derived path is denied and a denied read comes back as an empty directory rather than an error — so a wrong path would look like an empty workspace. Same capability, different confinement, and the difference is stated rather than assumed.</p>
     </div>
   </section>
 
@@ -715,23 +1050,23 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
       <div class="qa">
         <div>
           <p class="q">It is still a simulation. Why would I trust the number?</p>
-          <p class="a">Because one arm of the comparison is not simulated. Every branch is scored against the recorded history it forked from, so a replay that cannot reproduce what already happened is visibly wrong long before anyone uses it to predict.</p>
+          <p class="a">Do not trust the number. Check what it says about itself. This run reports 0 of 12 steps observed in its own receipt, unprompted. Its policy's declared class was measured against a repeated probe instead of believed. And the filter doing the measuring publishes its own miss rate — about 4% at k=5 over 3 trials. Nothing here is calibrated against a real business, and there is no accuracy figure on this page because we cannot support one.</p>
         </div>
         <div>
           <p class="q">Is a language model computing my numbers?</p>
-          <p class="a">No. A model proposes the ontology and reads messy input into typed observations. You accept the ontology. The transition function and the invariants are code, and nothing downstream of the projection is a model's opinion.</p>
+          <p class="a">No. The transition function and the invariants are code — <code>activate</code> refuses an ontology that supplies neither. A model's only job is reading a mess into typed observations, and nothing downstream of that projection is a model's opinion. Today the actors are seeded and pure; the LLM adapter is designed and not built.</p>
         </div>
         <div>
           <p class="q">What if the proposed ontology is wrong for my business?</p>
-          <p class="a">Then you edit it before it is active, and keep editing it afterwards. Types are open: add the field the proposal missed, or attach your own model behind the plugin harness. The six operators stay closed, which is what makes the rest safe to change.</p>
+          <p class="a">Then you answer the questions differently, or reject it, and nothing activates while a blocking question is open. What you cannot do today is accept part of it: acceptance is all-or-nothing plus the set of answered slots. Editing a proposal produces a new proposal with a new hash, which is the honest behaviour and also the more annoying one.</p>
         </div>
         <div>
           <p class="q">We already A/B test.</p>
-          <p class="a">A/B testing spends real customers and real weeks, and it cannot evaluate a decision you only make once. A fork costs a branch record. The two compose — use this to decide what is worth testing for real.</p>
+          <p class="a">A/B testing spends real customers and real weeks, and it cannot evaluate a decision you only make once. A fork is a branch record. The two compose: use this to decide what is worth testing for real.</p>
         </div>
         <div>
           <p class="q">Our context is a mess.</p>
-          <p class="a">Then the proposal comes back smaller. It is assembled from the rows and files that are actually present, and a slot with no support arrives empty rather than invented. An empty slot is information about your operation, not a failure of the tool.</p>
+          <p class="a">Then the proposal comes back smaller and emptier. The one it made of this very repository proposed zero invariants and seven blocking questions, and said so in the message rather than filling the gaps with something plausible. An empty slot is information about your context, not a failure of the tool.</p>
         </div>
       </div>
     </div>
@@ -742,11 +1077,17 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
       <div class="col">
         <p class="eyebrow">07 · Start</p>
         <h2 class="h">Bring one context and one thing that must never be true.</h2>
-        <p class="lede">An ontology is a record, not a codebase: what the state is, what actions exist, how an observation folds into the state, and what must always hold. Everything else is the same runtime, and the runtime never changes when a domain arrives.</p>
+        <p class="lede">An ontology is a record, not a codebase: what the state is, what actions exist, how an event folds into the state, and what must always hold. Two of those four are code and always will be. Everything else is the same runtime, and the runtime does not change when a domain arrives.</p>
+        <p class="body" style="margin-top:24px">What comes back is the receipt: a plain-language verdict, the branch class, what the policy declared against what it demonstrated, the violation count, the observed-versus-simulated split, per-objective admissibility, the full step-by-step trajectory, and the trace hash you replay it with.</p>
         <div class="actions">
-          <a class="cta" href="#intake">Point it at a context</a>
-          <a class="cta ghost" href="#trajectory">See the trajectory</a>
+          <a class="cta" href="https://github.com/broomva/parallax" rel="noopener">Read the source</a>
+          <a class="cta ghost" href="#gate">See the accept gate</a>
         </div>
+<pre><code>$ git clone https://github.com/broomva/parallax &amp;&amp; cd parallax
+$ bun install &amp;&amp; <b>bun run demo:whatsapp</b>
+<span class="c"># writes out/run-bef312a9.html — open it, it is the receipt above</span>
+$ <b>bun run src/hub/serve.ts</b>
+<span class="c"># serves this page, /health, the four /api routes and /r/:id</span></code></pre>
       </div>
     </div>
   </section>
@@ -754,9 +1095,10 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
   <footer>
     <div class="fwrap">
       Parallax · point it at a context · accept the ontology · fork it · prove it<br>
-      OPERATORS observe · step · check · rollout · diff · trace<br>
-      CLASSES PINNED · STABLE · RECORDED
-      <p class="note">Every figure on this page comes from the storefront demo world in this repository. There are no customer deployments, no accuracy claims and no benchmark results, because we have none — and inventing them is the exact failure this system exists to make visible.</p>
+      OPERATORS step · observe · check · rollout · diff · trace<br>
+      CLASSES PINNED · STABLE · RECORDED &nbsp;·&nbsp; ORIGINS observed · simulated<br>
+      <a href="https://github.com/broomva/parallax" rel="noopener">github.com/broomva/parallax</a> · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
+      <p class="note">Every number on this page is printed by <code>bun run demo</code> or <code>bun run demo:whatsapp</code> in this repository, at seed 42 over a horizon of 12 steps, and every quoted string is copied from that output or from the source file named beside it. The proposal transcript is a live reading of this repository's own directory, so its counts and its ref change when the repository does. There are no customer deployments, no accuracy claims and no benchmark results, because we have none — and inventing them is the exact failure this system exists to make visible.</p>
     </div>
   </footer>
 </main>
@@ -764,14 +1106,12 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
 <script type="module">
   import { createScrollCinema } from "./vendor/index.js";
 
-  const SCENES = [
-    ["Every operating decision is taken once.", "You choose, the world moves, and the alternative is never observed."],
-    ["The decision has a location.", "One moment, one line of a log, one thing that could have been different."],
-    ["You learn the cost afterwards.", "By the time an outcome is legible, the choice that produced it is far behind you."],
-    ["So point at the context and go back.", "Business data, an agent workspace, a directory on disk. Parallax proposes a model of what is there, and you accept it before it is active."],
-    ["Fork the history. Change one decision.", "Same past, same constraints, one policy different. The log is append-only, so the branch costs nothing to create."],
-    ["Now there are two lines and an angle between them.", "That angle is the measurement. Every number inside it is typed observed or simulated."]
-  ];
+  // The scene copy is read out of the document rather than declared here, so a
+  // reader with no JavaScript still gets all six lines in the served HTML.
+  const SCENES = [...document.querySelectorAll("#scenes > li")].map((li) => [
+    li.querySelector("b")?.textContent ?? "",
+    li.querySelector("span")?.textContent ?? ""
+  ]);
 
   const clips = [
     "assets-real/video/01-road-to-marker.mp4",
@@ -820,6 +1160,7 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
   // the cinema owns the viewport; once the reader is past it, get out of the way
   const after = document.querySelector(".after");
   const brandC = document.getElementById("cine-brand");
+  const jump = document.getElementById("jump");
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const past = e.isIntersecting;
@@ -828,6 +1169,8 @@ $ parallax <b>rollout</b> fork/discount-10 --policy cut-10 --horizon 28 --seed 7
       copy.style.opacity = past ? "0" : "";
       document.getElementById("cue").style.opacity = past ? "0" : "1";
       brandC.style.opacity = past ? "0" : "1";
+      jump.style.opacity = past ? "0" : "1";
+      jump.style.pointerEvents = past ? "none" : "auto";
     }
   }, { threshold: 0.02 });
   io.observe(after);
