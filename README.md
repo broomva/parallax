@@ -91,6 +91,21 @@ claim: the same seed produces an identical trace hash, a different seed
 diverges, and an unpinned actor causes the branch to withdraw its own
 reproducibility claim.
 
+## Drive it from an agent
+
+This repo ships its own agent skill at [`skills/parallax/`](./skills/parallax/). It
+teaches an agent when to reach for Parallax, the nine-command flow, and what each of
+the 46 error codes actually means — several have remedies a plain reading of the
+`reason` will not produce.
+
+```bash
+npx skills add broomva/parallax --skill parallax -g -a claude-code
+```
+
+It is vendored into [`broomva/skills`](https://github.com/broomva/skills) as well, so
+`npx skills add broomva/skills@parallax` installs the same bytes. A CI gate asserts
+the two copies are byte-identical; they cannot drift without going red.
+
 ## The shape of it
 
 A domain arrives as data. The runtime never changes.

@@ -1,0 +1,67 @@
+name: skill
+
+# The agent skill lives in THIS repo, at skills/parallax/, and is vendored into
+# broomva/skills. Canonical means the tests run here: a skill whose only gate is
+# in the repo that copies it is a skill nobody tests before shipping.
+#
+# Python in a bun repo is deliberate. The skill's deterministic core is a lookup
+# table over Parallax's error codes and its state machine, and nothing about that
+# wants a bundler. It is path-filtered so it never runs on a normal source change.
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - '.github/workflows/skill.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - '.github/workflows/skill.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: skill-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: pytest (canonical copy)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skills/parallax
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: python3 -m pip install --upgrade pytest pyyaml
+
+      - name: Test
+        # PYTHONDONTWRITEBYTECODE because a same-size edit inside one second reuses
+        # stale bytecode (CPython invalidates on mtime+size), which reports a mutant
+        # as SURVIVED without ever running it.
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m pytest tests/ -q
+
+      - name: The live-CLI suite must SKIP here, not silently vanish
+        # `parallax` is not on PATH on a bare runner, so those 7 tests skip. If
+        # someone deletes the file or its skip marker this notices: a suite that
+        # disappears and a suite that passes look identical in a summary line.
+        run: |
+          out=$(python3 -m pytest tests/test_integration_live_cli.py -q -rs 2>&1)
+          echo "$out"
+          echo "$out" | grep -q "skipped" || {
+            echo "::error::the live-CLI suite did not report as skipped"; exit 1; }
+
+      - name: SKILL.md's claims about itself must hold
+        # The defect this repo already shipped once: a documented command that
+        # fails when copied. Its own line rather than one dot in a summary.
+        run: python3 -m pytest tests/test_skill_md_claims.py -q
