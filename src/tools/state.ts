@@ -37,8 +37,49 @@ export function stateRoot(cwd: string = process.cwd()): string {
 
 /** Reads never create directories. Only writes do -- so a failed lookup leaves no trace. */
 function ensureDirs(root: string): void {
-  for (const d of ["pending", "accepted", "rejected", "runs"]) {
-    mkdirSync(join(root, d), { recursive: true });
+  guardWrite(root, () => {
+    for (const d of ["pending", "accepted", "rejected", "runs"]) {
+      mkdirSync(join(root, d), { recursive: true });
+    }
+  });
+}
+
+/**
+ * Raised when the workspace cannot be written to.
+ *
+ * A read-only workspace is a legitimate, expectable condition -- it is the
+ * confinement posture this whole design assumes, and a tenant on a read-only
+ * bind mount hits it on the first call. It was surfacing as UNEXPECTED, which
+ * the CLI's own contract defines as "a defect, the backstop that should never
+ * fire". So the operator was told Parallax is broken when the accurate answer
+ * was that their directory is not writable, and the two have completely
+ * different remedies.
+ *
+ * Carried as a distinct class rather than a raw fs error so the adapter layer
+ * can map exactly this to a typed code and let every other throw keep going to
+ * the backstop, where it belongs.
+ */
+export class WorkspaceNotWritableError extends Error {
+  readonly root: string;
+  readonly cause?: string;
+  constructor(root: string, cause: string) {
+    super(`the workspace is not writable: ${cause}`);
+    this.name = "WorkspaceNotWritableError";
+    this.root = root;
+    this.cause = cause;
+  }
+}
+
+/** Every write in this module goes through here, so the mapping cannot be bypassed. */
+function guardWrite<T>(root: string, f: () => T): T {
+  try {
+    return f();
+  } catch (e) {
+    const code = (e as NodeJS.ErrnoException)?.code;
+    if (code === "EACCES" || code === "EROFS" || code === "EPERM" || code === "ENOSPC") {
+      throw new WorkspaceNotWritableError(root, e instanceof Error ? e.message : String(e));
+    }
+    throw e;
   }
 }
 
@@ -47,9 +88,11 @@ function ensureDirs(root: string): void {
  * reader silently accepts as a smaller version of the truth.
  */
 function writeJson(path: string, value: unknown): void {
-  const tmp = `${path}.tmp-${process.pid}-${Date.now()}`;
-  writeFileSync(tmp, `${JSON.stringify(value, null, 2)}\n`);
-  renameSync(tmp, path);
+  guardWrite(path, () => {
+    const tmp = `${path}.tmp-${process.pid}-${Date.now()}`;
+    writeFileSync(tmp, `${JSON.stringify(value, null, 2)}\n`);
+    renameSync(tmp, path);
+  });
 }
 
 function readJson<T>(path: string): T | null {
@@ -130,8 +173,10 @@ export function writeHead(root: string, proposalId: string | null): void {
     return;
   }
   const tmp = `${path}.tmp-${process.pid}-${Date.now()}`;
-  writeFileSync(tmp, `${proposalId}\n`);
-  renameSync(tmp, path);
+  guardWrite(path, () => {
+    writeFileSync(tmp, `${proposalId}\n`);
+    renameSync(tmp, path);
+  });
 }
 
 export interface RejectionRecord {
@@ -257,8 +302,10 @@ export function writeRun(root: string, rec: RunRecord, html: string): void {
   writeJson(join(root, "runs", `${rec.runId}.json`), rec);
   const path = join(root, "runs", `${rec.runId}.html`);
   const tmp = `${path}.tmp-${process.pid}-${Date.now()}`;
-  writeFileSync(tmp, html);
-  renameSync(tmp, path);
+  guardWrite(path, () => {
+    writeFileSync(tmp, html);
+    renameSync(tmp, path);
+  });
 }
 
 export function readRun(root: string, runId: string): RunRecord | null {

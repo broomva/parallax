@@ -1,6 +1,7 @@
 import { DEFAULT_DOMAIN, DOMAIN_KEYS } from "./tools/domains";
 import { type AnyErrorCode, fail, ok, type ParallaxError, type Result } from "./tools/errors";
 import * as handlers from "./tools/handlers";
+import { WorkspaceNotWritableError } from "./tools/state";
 
 /**
  * Parallax at a terminal.
@@ -482,6 +483,23 @@ export async function runCli(argv: readonly string[], io: Io = stdio): Promise<n
   try {
     return await main(argv, io);
   } catch (e) {
+    // A workspace that cannot be written to is an expectable condition, not a
+    // defect in this program -- and it is the confinement posture the design
+    // assumes, so it is the FIRST thing a tenant on a read-only mount hits.
+    // Reporting it as UNEXPECTED told the operator Parallax is broken when the
+    // accurate answer was that their directory is not writable; the two have
+    // completely different remedies. Exit 2 (a typed refusal), not 1 (a defect).
+    if (e instanceof WorkspaceNotWritableError) {
+      io.err(
+        `${JSON.stringify({
+          code: "WORKSPACE_NOT_WRITABLE",
+          reason:
+            "Parallax needs to write its thread state to .parallax/ in this directory, and the directory is not writable",
+          detail: { root: e.root, cause: e.cause },
+        })}\n`,
+      );
+      return 2;
+    }
     io.err(
       `${JSON.stringify({
         code: "UNEXPECTED",

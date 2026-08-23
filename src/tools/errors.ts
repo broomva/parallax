@@ -24,6 +24,7 @@ export type ToolErrorCode =
   | "WORKSPACE_UNREADABLE"
   | "ROOT_NOT_ALLOWED"
   | "WORKSPACE_DENIED"
+  | "WORKSPACE_NOT_WRITABLE"
   | "TABLES_REQUIRED"
   // pending-proposal addressing
   | "NO_PENDING_PROPOSAL"

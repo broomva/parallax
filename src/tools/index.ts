@@ -10,6 +10,7 @@ import {
   type ZodLike,
   type ZodTypeLike,
 } from "./schemas";
+import { WorkspaceNotWritableError } from "./state";
 
 /**
  * Parallax as a set of tools an agent calls.
@@ -399,6 +400,22 @@ async function runTool(
     if (!checked.ok) return checked;
     return await handler(checked.value);
   } catch (e) {
+    // Same mapping as the CLI backstop, for the same reason: a workspace that
+    // cannot be written to is an expectable condition, not a defect in this
+    // program. Both surfaces must name it identically -- a condition that is a
+    // typed refusal on one surface and a crash on the other is exactly the
+    // divergence the "agent is a user" claim rules out.
+    if (e instanceof WorkspaceNotWritableError) {
+      return {
+        ok: false,
+        error: {
+          code: "WORKSPACE_NOT_WRITABLE",
+          reason:
+            "Parallax needs to write its thread state to .parallax/ in this directory, and the directory is not writable",
+          detail: { root: e.root, cause: e.cause },
+        },
+      };
+    }
     return {
       ok: false,
       error: {
