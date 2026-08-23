@@ -41,5 +41,12 @@ jobs:
       - name: Test
         run: bun test
 
+      - name: Spec citations resolve
+        # A spec's `file.ts:123` is a claim about code that moves underneath it.
+        # Precision is not accuracy and only one of the two is checkable, so the
+        # cited line is checked and the bare path -- a file the spec PROPOSES --
+        # deliberately is not.
+        run: bun run scripts/check-spec-citations.ts
+
       - name: Demo smoke test
         run: bun run demo
