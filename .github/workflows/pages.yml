@@ -77,7 +77,15 @@ jobs:
           posters=$(ls out/cinema/*.webp 2>/dev/null | wc -l | tr -d ' ')
           [ "$clips" = "5" ] || { echo "::error::expected 5 clips in out/cinema, found $clips"; exit 1; }
           [ "$posters" = "6" ] || { echo "::error::expected 6 posters in out/cinema, found $posters"; exit 1; }
-          echo "export ok: $(find out -type f | wc -l) files, $clips clips, $posters posters"
+          test -f out/scroll-cinema/index.html || { echo "::error::out/scroll-cinema/index.html missing"; exit 1; }
+          # /scroll-cinema plays six clips against seven boundary posters.
+          # The scrubber requires exactly clips+1 and throws below that,
+          # which on a static export is a black stage and no error.
+          sc_clips=$(ls out/scroll-cinema/*.mp4 2>/dev/null | wc -l | tr -d ' ')
+          sc_posters=$(ls out/scroll-cinema/p*.webp 2>/dev/null | wc -l | tr -d ' ')
+          [ "$sc_clips" = "6" ] || { echo "::error::expected 6 clips in out/scroll-cinema, found $sc_clips"; exit 1; }
+          [ "$sc_posters" = "7" ] || { echo "::error::expected 7 posters in out/scroll-cinema, found $sc_posters"; exit 1; }
+          echo "export ok: $(find out -type f | wc -l) files, $clips clips, $posters posters, $sc_clips scroll-cinema clips"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

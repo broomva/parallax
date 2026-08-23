@@ -3,6 +3,7 @@ const LINKS: Array<[string, string]> = [
   ["Guarantees", "#guarantees"],
   ["For agents", "#surface"],
   ["Use case", "use-cases/"],
+  ["Cinema", "scroll-cinema/"],
   ["Proof", "proof/"],
   ["Demo", "demo/"],
 ];

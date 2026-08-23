@@ -15,7 +15,8 @@
     "video:capture": "bun run scripts/video/capture.ts",
     "video": "bun run scripts/video/render.ts",
     "typecheck": "tsc --noEmit",
-    "mutants": "bun run scripts/mutants.ts"
+    "mutants": "bun run scripts/mutants.ts",
+    "veo": "bun run scripts/veo/generate.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",

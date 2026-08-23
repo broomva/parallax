@@ -18,3 +18,4 @@ web/tsconfig.tsbuildinfo
 # .jpg stills are ~40MB of regenerable middle. Note `dist/` and `out/` above are
 # BARE patterns, so anything named that anywhere in this tree vanishes silently.
 web/cinema/assets/
+out/veo-raw/
