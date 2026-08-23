@@ -6,6 +6,32 @@
 > synthetic customers, a wall of streaming conversations, and a 62%→84% close rate. That product
 > was never built. This is the beat sheet for the product that exists.
 
+## What the organisers actually specified
+
+From the official *cómo hacer un buen demo* deck, because two of these were assumed wrong
+earlier in this arc:
+
+- **3 minutes, and the hard stop is 3:01.** Then 2 min of questions, then 1:30 while the judges
+  score. The beat sheet below is already 3 minutes. Do not stretch it.
+- **Stop hacking 09:15**, demos 10:00, evaluation ends 13:00. (An earlier handoff said 09:30.)
+- **Judged on five weighted axes:** aspecto técnico **25%** · ambición **20%** · ejecución **20%** ·
+  impacto **20%** · originalidad **15%**. Technical is the single heaviest, and ambición+impacto
+  together are 40% -- so the honest-status beat and the generality claim are not modesty, they are
+  the two heaviest categories being answered directly.
+- **Suggested shape:** problema ~20s · solución/impacto/ambición ~20-30s · demo ~125-140s.
+- **Dark mode**, explicitly so it survives the restream. Titles must carry a message rather than
+  name a section.
+- **The demo is recorded and published during the week.** What is said on stage outlives the room.
+
+## The companion surface
+
+`https://broomva.github.io/parallax/demo/` is the pitch page: the whole idea as scroll cinema,
+then the four guarantees, then what is built against what is not. It is linked from the landing
+nav. **It is not the demo** -- the demo is the terminal, live, against the deployed hub. Use the
+page for the QR/link at the end and for anyone who asks "where can I see this again", and if the
+venue network dies before `demo:live` runs, it is a better fallback than talking over a dead
+terminal because every frame of it is served from Pages rather than from the hub.
+
 ## Before you walk up
 
 ```bash
