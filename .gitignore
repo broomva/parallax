@@ -19,3 +19,6 @@ web/tsconfig.tsbuildinfo
 # BARE patterns, so anything named that anywhere in this tree vanishes silently.
 web/cinema/assets/
 out/veo-raw/
+
+# unslop scan output: regenerable from the scripts, not source.
+.unslop/

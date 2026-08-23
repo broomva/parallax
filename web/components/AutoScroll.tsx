@@ -235,9 +235,27 @@ export function AutoScroll({ totalSeconds = 180 }: { totalSeconds?: number }) {
         onClick={toggle}
         type="button"
       >
-        <span aria-hidden="true" className="auto-ico">
-          {playing ? "❚❚" : "▶"}
-        </span>
+        {/* Drawn, not typed. A literal ▶/❚❚ is a font glyph: its weight, its
+            baseline and its very presence vary by platform, and on the one
+            machine that lacks it the control renders as a tofu box. Two paths
+            cost nothing and look the same everywhere. */}
+        <svg
+          aria-hidden="true"
+          className="auto-ico"
+          fill="currentColor"
+          height="10"
+          viewBox="0 0 10 10"
+          width="10"
+        >
+          {playing ? (
+            <>
+              <rect height="10" width="3" x="0.5" y="0" />
+              <rect height="10" width="3" x="6.5" y="0" />
+            </>
+          ) : (
+            <path d="M1 0 L10 5 L1 10 Z" />
+          )}
+        </svg>
         <span className="auto-t">{playing ? mmss : "3:00"}</span>
       </button>
       <div className="auto-bar">

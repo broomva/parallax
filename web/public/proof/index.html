@@ -17,6 +17,17 @@
   @property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
 
   :root {
+    /* The same radius scale as web/app/globals.css, redeclared rather than
+       imported: this page is deliberately self-contained and opens with no
+       server and no build step, so it cannot consume the app's tokens. Keep
+       the two in step by hand; see DESIGN.md. */
+    --r-hair: 2px;
+    --r-xs: 0.25rem;
+    --r-sm: 0.375rem;
+    --r-md: 0.5rem;
+    --r-lg: 0.75rem;
+    --r-pill: 9999px;
+    --r-circle: 50%;
     color-scheme: light dark;
 
     /* the single foreground, as oklch channels */
@@ -97,7 +108,7 @@
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
   :focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px;
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-hair);
   }
   .vh {
     position: absolute; width: 1px; height: 1px; margin: -1px;
@@ -108,7 +119,7 @@
     transform: translateY(-200%); transition: transform 150ms cubic-bezier(0.25,0.1,0.25,1);
     background: var(--bg); color: var(--fg-1); border: 1px solid var(--fg-4);
     padding: 12px 16px; min-height: 44px; display: inline-flex; align-items: center;
-    font-family: var(--mono); font-size: var(--m-code); border-radius: 0.375rem; text-decoration: none;
+    font-family: var(--mono); font-size: var(--m-code); border-radius: var(--r-sm); text-decoration: none;
   }
   .skip:focus-visible { transform: translateY(0); }
 
@@ -219,7 +230,7 @@
   .jump {
     position: fixed; z-index: 4; bottom: 20px; right: max(6vw, 20px);
     display: inline-flex; align-items: center; gap: 8px;
-    min-height: 44px; padding: 0 18px; border-radius: 9999px;
+    min-height: 44px; padding: 0 18px; border-radius: var(--r-pill);
     font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code);
     color: var(--cine-fg); background: rgba(10,12,11,0.55);
     border: 1px solid oklch(0.97 0.004 265 / 0.42); text-decoration: none;
@@ -304,7 +315,7 @@
   :not(pre) > code {
     font-family: var(--mono); font-size: 0.9em; letter-spacing: var(--tr-code);
     color: var(--fg-2); background: var(--bg-sub);
-    border: 1px solid var(--fg-6); border-radius: 0.25rem; padding: 1px 5px;
+    border: 1px solid var(--fg-6); border-radius: var(--r-xs); padding: 1px 5px;
     overflow-wrap: anywhere;
   }
   .lede { font-size: 1.0625rem; line-height: 1.6; color: var(--fg-2); margin: 0 0 8px; max-width: 44rem; }
@@ -324,7 +335,7 @@
   /* the spine — five steps, one of them the product */
   .spine {
     display: grid; gap: 1px; background: var(--fg-5); list-style: none;
-    border: 1px solid var(--fg-5); border-radius: 0.75rem; overflow: hidden;
+    border: 1px solid var(--fg-5); border-radius: var(--r-lg); overflow: hidden;
     margin: 40px 0 0; padding: 0;
   }
   .spine > li { background: var(--bg); padding: 18px 20px; display: grid; gap: 4px 18px;
@@ -346,7 +357,7 @@
   .grid3 {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
-    border-radius: 0.75rem; overflow: hidden; margin-top: 40px;
+    border-radius: var(--r-lg); overflow: hidden; margin-top: 40px;
   }
   .cell { background: var(--bg); padding: 24px 24px 28px; min-width: 0; }
   .cell .k {
@@ -359,7 +370,7 @@
   .state2 {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
     gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
-    border-radius: 0.75rem; overflow: hidden; margin-top: 24px;
+    border-radius: var(--r-lg); overflow: hidden; margin-top: 24px;
   }
   .state2 > div { background: var(--bg); padding: 22px 24px 26px; min-width: 0; }
   .state2 ul { margin: 0; padding: 0; list-style: none; }
@@ -383,7 +394,7 @@
   .id-row { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 20px; }
   .chip {
     font-family: var(--mono); font-size: var(--m-code); letter-spacing: var(--tr-code); color: var(--fg-4);
-    border: 1px solid var(--fg-5); border-radius: 0.375rem; padding: 5px 9px;
+    border: 1px solid var(--fg-5); border-radius: var(--r-sm); padding: 5px 9px;
     white-space: nowrap;
   }
   .chip b { color: var(--fg-2); font-weight: 400; }
@@ -404,7 +415,7 @@
     background-attachment: local, local, scroll, scroll;
   }
   .scrollx {
-    overflow-x: auto; border: 1px solid var(--fg-5); border-radius: 0.75rem;
+    overflow-x: auto; border: 1px solid var(--fg-5); border-radius: var(--r-lg);
     background-color: var(--bg);
   }
 
@@ -435,7 +446,7 @@
   pre {
     --sx-bg: var(--bg-sub);
     margin: 24px 0 0; padding: 20px; overflow-x: auto;
-    background-color: var(--bg-sub); border: 1px solid var(--fg-5); border-radius: 0.75rem;
+    background-color: var(--bg-sub); border: 1px solid var(--fg-5); border-radius: var(--r-lg);
     font-family: var(--mono); font-size: var(--m-code); line-height: 1.8; color: var(--fg-3);
     letter-spacing: var(--tr-code);
   }
@@ -453,7 +464,7 @@
     text-transform: uppercase; color: var(--fg-4); margin: 0 0 6px;
   }
   .msg .bub {
-    border: 1px solid var(--fg-5); border-radius: 0.75rem; background-color: var(--bg);
+    border: 1px solid var(--fg-5); border-radius: var(--r-lg); background-color: var(--bg);
     padding: 14px 16px; overflow-x: auto;
   }
   .msg .bub pre { margin: 0; padding: 0; border: 0; background: none; overflow-x: visible;
@@ -509,7 +520,7 @@
   .legend .l-rec { stroke: var(--fg-2); stroke-width: 2.4; }
   .legend .l-sta { stroke: var(--fg-3); stroke-width: 2.4; stroke-dasharray: 11 8; }
   .legend .l-pin { stroke: var(--fg-2); stroke-width: 2.6; stroke-dasharray: 2 7; stroke-linecap: round; }
-  .legend .sw { flex: none; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--fg-4); }
+  .legend .sw { flex: none; width: 12px; height: 12px; border-radius: var(--r-hair); border: 1px solid var(--fg-4); }
   .legend .sw.o { background: color-mix(in oklab, var(--ok) 55%, transparent); }
   .legend .sw.s { background: color-mix(in oklab, var(--accent) 55%, transparent); }
   .legend .absent { color: var(--fg-4); }
@@ -519,7 +530,7 @@
 
   /* objections */
   .qa { display: grid; gap: 1px; background: var(--fg-5); border: 1px solid var(--fg-5);
-        border-radius: 0.75rem; overflow: hidden; margin-top: 40px; }
+        border-radius: var(--r-lg); overflow: hidden; margin-top: 40px; }
   .qa > div { background: var(--bg); padding: 24px; }
   .qa .q { font-size: 0.9375rem; font-weight: 600; color: var(--fg-1); margin: 0 0 8px; }
   .qa .a { font-size: 0.9375rem; line-height: 1.6; color: var(--fg-3); margin: 0; }
@@ -533,7 +544,7 @@
   .cta {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--sans); font-size: 0.9375rem; font-weight: 500;
-    padding: 0 24px; min-height: 44px; border-radius: 9999px;
+    padding: 0 24px; min-height: 44px; border-radius: var(--r-pill);
     background: var(--accent-btn); color: var(--accent-btn-fg);
     border: 1px solid transparent; text-decoration: none;
     transition: opacity 150ms cubic-bezier(0.25,0.1,0.25,1);

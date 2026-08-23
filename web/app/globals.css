@@ -55,6 +55,17 @@
   --tr-lab: 0.14em;
   --tr-code: 0.01em;
 
+  /* the radius vocabulary — extracted 2026-08-23 from nine literals across 28
+     sites that had no token at all. Values are the incumbent ones, so adopting
+     the scale changed no rendering; see DESIGN.md for the collapse still owed. */
+  --r-hair: 2px;
+  --r-xs: 0.25rem;
+  --r-sm: 0.375rem;
+  --r-md: 0.5rem;
+  --r-lg: 0.75rem;
+  --r-pill: 9999px;
+  --r-circle: 50%;
+
   /* the hero sits on dark footage in both themes */
   --cine-fg: oklch(0.97 0.004 265);
   --cine-dim: oklch(0.97 0.004 265 / 0.72);
@@ -128,7 +139,7 @@ body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--r-hair);
 }
 .vh {
   position: absolute;
@@ -157,7 +168,7 @@ body {
   align-items: center;
   font-family: var(--mono);
   font-size: var(--m-code);
-  border-radius: 0.375rem;
+  border-radius: var(--r-sm);
   text-decoration: none;
 }
 .skip:focus-visible {
@@ -422,7 +433,7 @@ body {
   gap: 8px;
   min-height: 44px;
   padding: 0 18px;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   font-family: var(--mono);
   font-size: var(--m-code);
   letter-spacing: var(--tr-code);
@@ -622,7 +633,7 @@ p {
   color: var(--fg-2);
   background: var(--bg-sub);
   border: 1px solid var(--fg-6);
-  border-radius: 0.25rem;
+  border-radius: var(--r-xs);
   padding: 1px 5px;
   overflow-wrap: anywhere;
 }
@@ -676,7 +687,7 @@ p {
   background: var(--fg-5);
   list-style: none;
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin: 40px 0 0;
   padding: 0;
@@ -736,7 +747,7 @@ p {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-top: 40px;
 }
@@ -767,7 +778,7 @@ p {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-top: 24px;
 }
@@ -839,7 +850,7 @@ pre .c {
   letter-spacing: var(--tr-code);
   color: var(--fg-4);
   border: 1px solid var(--fg-5);
-  border-radius: 0.375rem;
+  border-radius: var(--r-sm);
   padding: 5px 9px;
   white-space: nowrap;
 }
@@ -883,7 +894,7 @@ pre {
 .scrollx {
   overflow-x: auto;
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   background-color: var(--bg);
 }
 
@@ -966,7 +977,7 @@ pre {
   overflow-x: auto;
   background-color: var(--bg-sub);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   font-family: var(--mono);
   font-size: var(--m-code);
   line-height: 1.8;
@@ -1004,7 +1015,7 @@ pre .j {
 }
 .msg .bub {
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   background-color: var(--bg);
   padding: 14px 16px;
   overflow-x: auto;
@@ -1209,7 +1220,7 @@ pre .j {
   flex: none;
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: var(--r-hair);
   border: 1px solid var(--fg-4);
 }
 .legend .sw.o {
@@ -1239,7 +1250,7 @@ figcaption + figcaption {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-top: 40px;
 }
@@ -1290,7 +1301,7 @@ figcaption + figcaption {
   font-weight: 500;
   padding: 0 24px;
   min-height: 44px;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   background: var(--accent-btn);
   color: var(--accent-btn-fg);
   border: 1px solid transparent;
@@ -1417,7 +1428,7 @@ footer a:hover {
   font-weight: 500;
   color: var(--fg-3);
   text-decoration: none;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   transition:
     color 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
     background 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -1431,7 +1442,7 @@ footer a:hover {
   align-items: center;
   min-height: 36px;
   padding: 0 16px;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   font-size: 0.875rem;
   font-weight: 500;
   background: var(--accent-btn);
@@ -1469,7 +1480,7 @@ footer a:hover {
   text-transform: uppercase;
   color: var(--fg-4);
   border: 1px solid var(--fg-5);
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   padding: 5px 12px;
 }
 .badge.live {
@@ -1479,7 +1490,7 @@ footer a:hover {
 .badge .dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: var(--r-circle);
   background: currentColor;
   flex: none;
 }
@@ -1507,7 +1518,7 @@ footer a:hover {
 .hero .install code {
   background: var(--bg-sub);
   border: 1px solid var(--fg-5);
-  border-radius: 0.375rem;
+  border-radius: var(--r-sm);
   padding: 8px 12px;
   color: var(--fg-2);
 }
@@ -1519,7 +1530,7 @@ footer a:hover {
      twice and checked twice. Same decision the hero already made. */
 .panel {
   position: relative;
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   background: #0b0e12;
   border: 1px solid var(--fg-5);
@@ -1691,7 +1702,7 @@ pre {
   gap: 4px;
   flex-wrap: wrap;
   border: 1px solid var(--fg-5);
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   padding: 4px;
   width: max-content;
   max-width: 100%;
@@ -1708,7 +1719,7 @@ pre {
   color: var(--fg-4);
   min-height: 36px;
   padding: 0 16px;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   transition:
     color 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
     background 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -1738,7 +1749,7 @@ pre {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-top: 40px;
 }
@@ -1864,7 +1875,7 @@ pre {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
@@ -1912,7 +1923,7 @@ pre {
   content: "";
   width: 7px;
   height: 7px;
-  border-radius: 50%;
+  border-radius: var(--r-circle);
   background: currentColor;
 }
 .hops .st.live {
@@ -1958,7 +1969,7 @@ pre {
   gap: 1px;
   background: var(--fg-5);
   border: 1px solid var(--fg-5);
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   overflow: hidden;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   margin-top: 40px;
@@ -1994,7 +2005,7 @@ pre {
 .quote {
   margin: 40px 0 0;
   padding: 24px 26px;
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   background: var(--bg-sub);
   border: 1px solid var(--fg-5);
   font-size: 1.0625rem;
