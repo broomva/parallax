@@ -135,7 +135,9 @@
   /* SOLID = RECORDED. Drawn with dashoffset because its finished state is solid. */
   .cine-trunk {
     fill: none; stroke: var(--cine-fg); stroke-width: 3; stroke-linecap: round;
-    stroke-dasharray: 620; stroke-dashoffset: calc(620px * (1 - clamp(0, var(--p) / 0.28, 1)));
+    /* Floor at 0.18, not 0: the recorded past PREDATES the page. Opening on a
+       black field would say the history begins when the reader arrives. */
+    stroke-dasharray: 620; stroke-dashoffset: calc(620px * (1 - clamp(0.18, var(--p) / 0.28, 1)));
   }
   /* DOTTED = PINNED. A dashed stroke cannot also be drawn ON with dashoffset --
      the two uses of the same property fight -- so the branches are revealed by
@@ -171,7 +173,9 @@
 
   /* Each beat fades in over its own slice of --p. Numbers are the scene
      boundaries: 6 scenes, so scene n owns [n/6, (n+1)/6). */
-  .b-trunk { opacity: clamp(0, (var(--p) - 0.06) * 9, 1); }
+  .b-trunk { opacity: 1; }
+  /* the label waits until the line has actually reached it */
+  .b-rec   { opacity: clamp(0, (var(--p) - 0.11) * 9, 1); }
   .b-now   { opacity: clamp(0, (var(--p) - 0.20) * 9, 1); }
   .b-gate  { opacity: calc(clamp(0, (var(--p) - 0.34) * 10, 1) * (1 - clamp(0, (var(--p) - 0.50) * 10, 1))); }
   .b-fork  { opacity: clamp(0, (var(--p) - 0.50) * 9, 1); }
@@ -222,11 +226,6 @@
     transition: opacity 300ms, background 150ms;
   }
   .jump:hover { background: rgba(10,12,11,0.8); }
-  @media (prefers-reduced-motion: reduce) {
-    /* --p stays at 1, so the figure is already complete; 420vh of scroll behind
-       a static drawing would be 3 screens of nothing. */
-    #track { height: 100vh; }
-  }
   /* The figure scales with the viewport (preserveAspectRatio="meet"); the copy
      does not. So as the screen narrows the fork walks leftward INTO the copy's
      column. Measured at 1024x768: the NOW label landed inside the copy box.
@@ -241,9 +240,12 @@
      becomes a SHAPE; the copy beside it and the SVG's own <desc> still carry
      every word, so nothing is lost but the pretence of a readable diagram. */
   @media (max-width: 44rem) {
-    #cine { transform: translateY(24%) scale(1.5); }
+    /* The viewBox itself is re-cropped in script; a transform cannot do this
+       job, because scaling up to make the shape legible also pushes the rays
+       off the right edge. */
+    #cine { transform: translateY(27%); }
     #cine text { display: none; }
-    .copy { top: 30%; }
+    .copy { top: 28%; }
   }
   @media (max-width: 34rem) {
     .scrollcue { bottom: 80px; }
@@ -553,7 +555,11 @@
 
   @media (prefers-reduced-motion: reduce) {
     .copy, .cine-brand, .skip, .cta, .jump { transition: none; }
-    .traj { --p: 1; }
+    /* Both figures pin to their finished state. The script already refuses to
+       drive --p under reduced motion, so this is the belt to that braces --
+       and it lives HERE, in the one reduced-motion block, because a second
+       block earlier in the sheet is a rule that silently never applies. */
+    .traj, #cine { --p: 1; }
     .lab { opacity: 1; }
     #track { height: 200vh; }
   }
@@ -602,7 +608,7 @@
          off-frame rather than beginning from nowhere: the history predates the view. -->
     <g class="b-trunk">
       <path class="cine-trunk" d="M 300 630 L 920 630" mask="url(#cine-past)"></path>
-      <text class="cine-tag"       x="700" y="676">RECORDED</text>
+      <text class="cine-tag b-rec"  x="700" y="676">RECORDED</text>
       <text class="cine-meta b-typed" x="700" y="702">observed · it happened</text>
     </g>
 
@@ -1307,6 +1313,18 @@ $ <b>bun run src/hub/serve.ts</b>
   const track = document.getElementById("track");
   const reducedCine = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // A portrait screen renders the full 1600x900 box at about 0.24 scale, where
+  // the figure is a smudge at the bottom of the frame. Re-crop the viewBox to
+  // the part that carries the argument -- the tail of the trunk, the fork, and
+  // both rays -- so the shape reads at phone width instead of merely fitting.
+  const NARROW = window.matchMedia("(max-width: 44rem)");
+  const fitCine = () => {
+    if (!cine) return;
+    cine.setAttribute("viewBox", NARROW.matches ? "620 415 840 300" : "0 0 1600 900");
+  };
+  fitCine();
+  NARROW.addEventListener("change", fitCine);
+
   if (cine && track && !reducedCine) {
     cine.style.setProperty("--p", "0");
     let queued = false;
@@ -1325,7 +1343,7 @@ $ <b>bun run src/hub/serve.ts</b>
       requestAnimationFrame(paint);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", () => { fitCine(); onScroll(); }, { passive: true });
     paint();
   }
   // Reduced motion and no-JS both land on --p: 1 (the @property initial value),
