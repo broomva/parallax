@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { type Io, main, parseArgs, runCli } from "../src/cli";
+import { COMMANDS, type Io, main, parseArgs, runCli } from "../src/cli";
 import {
   createParallaxTools,
   parallaxTools,
@@ -263,6 +263,124 @@ describe("the exit-code contract", () => {
 });
 
 // ---------------------------------------------------------------------------
+
+/**
+ * The tool <-> command correspondence, written down ONCE and asserted below.
+ *
+ * The landing page and the README both claim `--root` is the ONE deliberate
+ * divergence between the two surfaces. That claim used to live only in prose,
+ * and prose does not fail when someone adds a tenth tool and no command for it.
+ * Three tools shipped with no CLI counterpart at all -- render, parse-reply and
+ * answer -- while the claim read as though the surfaces already matched.
+ *
+ * So the claim is a fixture now. Adding a tool without a command, or a command
+ * without a tool, or a flag with no field behind it, goes red here.
+ */
+const TOOL_TO_COMMAND: Readonly<Record<string, string>> = {
+  parallax_status: "status",
+  parallax_propose_ontology: "propose",
+  parallax_render_proposal: "render",
+  parallax_parse_reply: "parse-reply",
+  parallax_answer_questions: "answer",
+  parallax_accept_ontology: "accept",
+  parallax_reject_proposal: "reject",
+  parallax_run: "run",
+  parallax_receipt: "receipt",
+};
+
+/** `help` prints the command list; there is nothing for a tool to print it to. */
+const CLI_ONLY_COMMANDS = new Set(["help"]);
+
+/**
+ * CLI flag -> tool schema field, where the two surfaces spell one thing twice.
+ * A rename is not a divergence; a MISSING field is, and that is what is asserted.
+ */
+const FLAG_TO_FIELD: Readonly<Record<string, string>> = {
+  proposal: "ref",
+  ontology: "ontologyId",
+  run: "runId",
+  by: "acceptedBy",
+  "chunk-chars": "chunkChars",
+  "acknowledge-unmapped": "acknowledgeUnmapped",
+  table: "tables",
+  answer: "answers",
+  "no-governed": "governed",
+};
+
+/**
+ * Flags that exist on the CLI and deliberately have no tool field.
+ *
+ * Each one is a CONFINEMENT or FRAMING difference, never a capability:
+ *   --json  how the same values are printed.
+ *   --root  the documented divergence. An arbitrary root is safe at a terminal
+ *           because the person typing the path is the confinement; inside a
+ *           sandboxed session a derived path is denied and reads back as an
+ *           empty directory, so it is absent from every tool schema.
+ *   --out   writes the receipt to a path. The tool returns paths and never the
+ *           page itself, on purpose: a receipt is tens of kilobytes.
+ */
+const CLI_ONLY_FLAGS: Readonly<Record<string, readonly string[]>> = {
+  "*": ["json"],
+  propose: ["root"],
+  receipt: ["out"],
+};
+
+describe("the agent is a user: the capability sets correspond", () => {
+  test("every tool has exactly one CLI command, and it exists", () => {
+    const seen = new Set<string>();
+    for (const s of toolSpecs()) {
+      const command = TOOL_TO_COMMAND[s.name];
+      expect(command, `${s.name} has no CLI command`).toBeDefined();
+      expect(COMMANDS[command as string], `no command "${command}"`).toBeDefined();
+      expect(seen.has(command as string), `${command} claimed twice`).toBe(false);
+      seen.add(command as string);
+    }
+  });
+
+  test("every CLI command is a tool, or is declared CLI-only", () => {
+    const mapped = new Set(Object.values(TOOL_TO_COMMAND));
+    for (const name of Object.keys(COMMANDS)) {
+      if (CLI_ONLY_COMMANDS.has(name)) continue;
+      expect(mapped.has(name), `command "${name}" has no tool behind it`).toBe(true);
+    }
+  });
+
+  test("every CLI flag is a tool field, a rename of one, or a declared divergence", () => {
+    for (const [toolName, command] of Object.entries(TOOL_TO_COMMAND)) {
+      const schema = toolJsonSchema(toolName);
+      const fields = new Set(Object.keys(schema?.properties ?? {}));
+      const allowedHere = new Set([
+        ...(CLI_ONLY_FLAGS["*"] ?? []),
+        ...(CLI_ONLY_FLAGS[command] ?? []),
+      ]);
+      for (const flag of COMMANDS[command]?.allowed ?? []) {
+        if (allowedHere.has(flag)) continue;
+        const field = FLAG_TO_FIELD[flag] ?? flag;
+        expect(fields.has(field), `--${flag} on "${command}" has no field on ${toolName}`).toBe(
+          true,
+        );
+      }
+    }
+  });
+
+  test("--root is the only capability-shaped divergence, and only on propose", () => {
+    // Pinning the CONTENT of the allow-list, not just its use. Adding a third
+    // entry here is a change to the claim the landing page makes, so it should
+    // require editing a test that says so.
+    const capabilityDivergences = Object.entries(CLI_ONLY_FLAGS)
+      .filter(([command]) => command !== "*")
+      .flatMap(([command, flags]) => flags.map((f) => `${command}:${f}`));
+    expect(capabilityDivergences.sort()).toEqual(["propose:root", "receipt:out"]);
+  });
+
+  test("a command a human can reach records answers WITHOUT accepting", () => {
+    // The capability `accept --answer` cannot express, and the reason `answer`
+    // is a command rather than a flag: answering must not imply consent.
+    expect(COMMANDS.answer).toBeDefined();
+    expect(COMMANDS.answer?.allowed).not.toContain("by");
+    expect(COMMANDS.accept?.required).toContain("by");
+  });
+});
 
 describe("the agent is a user: one capability set, two surfaces", () => {
   test("every tool name is legal as both an AI SDK and an MCP tool name", () => {
