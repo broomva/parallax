@@ -13,6 +13,13 @@ cd ~/broomva/apps/simulacro
 scripts/warm-hub.sh             # or: curl -s https://parallax-hub.onrender.com/health
 ```
 
+If it prints **`local HEAD is N commit(s) ahead of what is deployed`**, the opening beat gets weaker
+— you would be saying "this is the code in the repo" while showing an older commit. Either redeploy
+(`./scripts/deploy-render.sh --deploy`, about three minutes, wait for `health check 200`) or say
+plainly that the hub is running the last deployed commit. Do not skip the line and hope. The backup
+video shows the commit that was deployed when it was recorded, so a mismatch there is expected and
+harmless.
+
 Render's free tier spins down after 15 minutes idle. Measured cold start: **12.4s**. Warm: **0.22s**.
 Warm it within 10 minutes of going on stage, and again while the team before you is presenting.
 
