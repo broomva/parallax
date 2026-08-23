@@ -79,10 +79,15 @@ const COMMANDS: Record<string, CommandSpec> = {
   },
   run: {
     summary: "Roll an accepted ontology forward and write a run receipt.",
+    // --ontology is optional here for the same reason `ontologyId` is optional
+    // on parallax_run: omitted means the most recent acceptance. It was
+    // required, which made "the agent is a user" false at the one place it is
+    // cheapest to check, and left --root as the only DOCUMENTED divergence
+    // while a second, undocumented one sat next to it.
     usage:
-      "parallax run --ontology <id> [--horizon N] [--seed N] [--governed|--no-governed] [--trials N] [--json]",
+      "parallax run [--ontology <id>] [--horizon N] [--seed N] [--governed|--no-governed] [--trials N] [--json]",
     allowed: ["ontology", "horizon", "seed", "governed", "no-governed", "trials", "json"],
-    required: ["ontology"],
+    required: [],
   },
   receipt: {
     summary: "Print or export the receipt for a run.",
@@ -401,6 +406,8 @@ export async function main(argv: readonly string[], io: Io = stdio): Promise<num
         );
       }
       const r = await handlers.run({
+        // "" and undefined both mean "the newest acceptance" to findAcceptance,
+        // so this stays a plain pass-through.
         ontologyId: one(a, "ontology") ?? "",
         ...(horizon.value === undefined ? {} : { horizon: horizon.value }),
         ...(seed.value === undefined ? {} : { seed: seed.value }),

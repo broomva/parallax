@@ -138,13 +138,27 @@ describe("cli argument parsing", () => {
   });
 
   test("a missing required flag names the flag and shows the usage", () => {
-    const r = parseArgs(["run"]);
+    // `receipt`, not `run`: --ontology is deliberately optional on run, so
+    // using it here would test the divergence rather than the refusal.
+    const r = parseArgs(["receipt"]);
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.error.code).toBe("MISSING_FLAG");
-      expect(r.error.detail?.flag).toBe("ontology");
-      expect(String(r.error.detail?.usage)).toContain("--ontology");
+      expect(r.error.detail?.flag).toBe("run");
+      expect(String(r.error.detail?.usage)).toContain("--run");
     }
+  });
+
+  test("run without --ontology parses, because the tool surface allows it too", () => {
+    // parallax_run declares ontologyId optional -- "Omit for the most recent
+    // acceptance." The CLI required it, which made "the agent is a user, not a
+    // client library" false at the cheapest place to check it. The pair: the
+    // optional flag parses, and a genuinely required one still refuses.
+    const r = parseArgs(["run"]);
+    expect(r.ok).toBe(true);
+    const withId = parseArgs(["run", "--ontology", "abc"]);
+    expect(withId.ok).toBe(true);
+    expect(parseArgs(["receipt"]).ok).toBe(false);
   });
 
   test("repeated flags accumulate in the order they were given", () => {
@@ -194,7 +208,7 @@ describe("the exit-code contract", () => {
 
   test("a typed refusal is 2 and prints a parseable error, not a stack trace", async () => {
     const io = collector();
-    expect(await main(["run"], io)).toBe(2);
+    expect(await main(["receipt"], io)).toBe(2);
     const e = parseRefusal(io.stderr);
     expect(e.code).toBe("MISSING_FLAG");
     expect(io.stdout).toBe("");
