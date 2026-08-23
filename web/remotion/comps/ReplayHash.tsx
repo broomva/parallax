@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { at, C, Caption, ease, H, Mono, Rail, Stage, Tag, W } from "../kit";
+import { at, C, Caption, ease, Mono, Rail, Stage, Tag, W } from "../kit";
 
 /**
  * Claim 4 — a policy cannot certify its own reproducibility.
@@ -58,6 +58,10 @@ const PROBES: Probe[] = [
   },
 ];
 
+const HASH = {
+  font: `400 42px ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace`,
+} as const;
+
 const ROW_Y = [274, 464, 654];
 const START = [26, 96, 166];
 
@@ -93,28 +97,29 @@ export const ReplayHash: React.FC = () => {
                 {p.note}
               </Mono>
 
-              {[p.a, p.b].map((h, rowIdx) => (
-                <g key={rowIdx}>
-                  {[...h].map((ch, k) => {
-                    const bad = firstBad >= 0 && k >= firstBad;
-                    const on = k < resolved;
-                    return (
-                      <text
-                        key={k}
-                        x={HX + k * ADV}
-                        y={y - 12 + rowIdx * 42}
-                        fill={!on ? C.faint : bad ? p.tone : C.fg}
-                        opacity={on ? 1 : 0.25}
-                        style={{
-                          font: `400 42px ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace`,
-                        }}
-                      >
-                        {ch}
+              {/* Two text runs per hash, not one node per character: the
+                  stack is monospace, so a run starting at HX + firstBad * ADV
+                  lands exactly where the character-by-character version put
+                  it, and the reveal is a slice rather than a per-glyph
+                  opacity. Fewer nodes, and no key derived from an index. */}
+              {[p.a, p.b].map((h, rowIdx) => {
+                const cut = firstBad < 0 ? h.length : firstBad;
+                const ok = h.slice(0, Math.min(resolved, cut));
+                const bad = resolved > cut ? h.slice(cut, resolved) : "";
+                const y2 = y - 12 + rowIdx * 42;
+                return (
+                  <g key={rowIdx === 0 ? "probe-a" : "probe-b"}>
+                    <text x={HX} y={y2} fill={C.fg} style={HASH}>
+                      {ok}
+                    </text>
+                    {bad ? (
+                      <text x={HX + cut * ADV} y={y2} fill={p.tone} style={HASH}>
+                        {bad}
                       </text>
-                    );
-                  })}
-                </g>
-              ))}
+                    ) : null}
+                  </g>
+                );
+              })}
 
               {/* the underline marks where the two stopped agreeing */}
               {firstBad >= 0 && settled ? (
@@ -126,9 +131,7 @@ export const ReplayHash: React.FC = () => {
                   stroke={p.tone}
                   strokeWidth={2}
                   strokeDasharray={(p.a.length - firstBad) * ADV}
-                  strokeDashoffset={
-                    (p.a.length - firstBad) * ADV * (1 - ease(f, s + 54, 14))
-                  }
+                  strokeDashoffset={(p.a.length - firstBad) * ADV * (1 - ease(f, s + 54, 14))}
                 />
               ) : null}
 
@@ -163,9 +166,7 @@ export const ReplayHash: React.FC = () => {
           </Mono>
         </g>
 
-        <Caption from={262}>
-          The system withdrew its own claim. Nobody had to notice.
-        </Caption>
+        <Caption from={262}>The system withdrew its own claim. Nobody had to notice.</Caption>
       </Stage>
     </AbsoluteFill>
   );

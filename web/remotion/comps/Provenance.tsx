@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { at, C, Caption, ease, H, Mono, Rail, Stage, Tag, W } from "../kit";
+import { at, C, Caption, ease, Mono, Rail, Stage, Tag } from "../kit";
 
 /**
  * Claim 3 — nothing in the system can produce a number without saying how
@@ -50,10 +50,7 @@ export const Provenance: React.FC = () => {
   return (
     <AbsoluteFill>
       <Stage>
-        <Rail
-          left="OPERATOR · observe → receipt"
-          right="every value carries its origin"
-        />
+        <Rail left="OPERATOR · observe → receipt" right="every value carries its origin" />
 
         {/* ---- the key, stated before it is used ---- */}
         <g opacity={at(f, 4)}>
@@ -178,9 +175,7 @@ export const Provenance: React.FC = () => {
           />
         </g>
 
-        <Caption from={236}>
-          The tag is welded on at birth and travels with the number.
-        </Caption>
+        <Caption from={236}>The tag is welded on at birth and travels with the number.</Caption>
       </Stage>
     </AbsoluteFill>
   );

@@ -36,7 +36,7 @@ const HUB_SEED = 42;
 const CERT_TRIALS = 3;
 
 export interface HubOptions {
-  /** Directory served as static content. Defaults to the repo's `landing/`. */
+  /** Directory served as static content. Defaults to the repo's `hub-static/`. */
   readonly landingDir?: string;
   /** The context that `propose` reads. Defaults to the process working directory. */
   readonly contextRoot?: string;
@@ -51,7 +51,11 @@ export interface Hub {
 }
 
 const HERE = fileURLToPath(new URL(".", import.meta.url));
-const DEFAULT_LANDING = resolve(HERE, "..", "..", "landing");
+// The product page is a Next export served by GitHub Pages; the hub serves its
+// OWN front door instead. Two hosts serving the same marketing page out of two
+// sources is a page that drifts, and this one has a job the Pages artifact
+// cannot do: it reports the commit this instance is running.
+const DEFAULT_LANDING = resolve(HERE, "..", "..", "hub-static");
 const PKG = resolve(HERE, "..", "..", "package.json");
 
 function readVersion(): string {

@@ -1,8 +1,8 @@
 import { Cinema } from "../components/Cinema";
 import { MotionPanel } from "../components/MotionPanel";
-import { Verdict } from "../components/Verdict";
 import { Nav } from "../components/Nav";
 import { Surface } from "../components/Surface";
+import { Verdict } from "../components/Verdict";
 import { Wiring } from "../components/Wiring";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -29,9 +29,9 @@ const FEATURES = [
     ],
     note: (
       <>
-        <b>activate()</b> → BLOCKING_QUESTIONS_OPEN. The accepted object is
-        minted behind a module-private symbol and checked at runtime, so it
-        cannot be forged and does not survive a JSON round-trip.
+        <b>activate()</b> → BLOCKING_QUESTIONS_OPEN. The accepted object is minted behind a
+        module-private symbol and checked at runtime, so it cannot be forged and does not survive a
+        JSON round-trip.
       </>
     ),
     alt: "A proposal with six slots stands on the left. Seven blocking questions are open, and a run attempt bounces off a closed gate with the code BLOCKING_QUESTIONS_OPEN. The questions are answered one at a time until the count reaches zero, the gate retracts, and an active ontology is minted on the far side carrying a runtime-checked brand.",
@@ -48,10 +48,9 @@ const FEATURES = [
     ],
     note: (
       <>
-        Under an ungoverned sales agent the storefront oversells stock it does
-        not have <b>ten times</b> in twelve steps. Forked at the step before the
-        damage, with a governor installed, the same twelve steps produce{" "}
-        <b>zero</b>.
+        Under an ungoverned sales agent the storefront oversells stock it does not have{" "}
+        <b>ten times</b> in twelve steps. Forked at the step before the damage, with a governor
+        installed, the same twelve steps produce <b>zero</b>.
       </>
     ),
     alt: "A solid recorded trunk arrives at a fork. Past the fork two dotted branches replay the same twelve steps. The branch named main climbs to ten violations; the branch named governed stays flat on zero. A wedge between the two endpoints marks the difference of ten as the measurement.",
@@ -68,9 +67,8 @@ const FEATURES = [
     ],
     note: (
       <>
-        The receipt states its own split unprompted — this run reports{" "}
-        <b>0 of 12 steps observed</b> — alongside the branch class and what the
-        policy declared against what it demonstrated.
+        The receipt states its own split unprompted — this run reports <b>0 of 12 steps observed</b>{" "}
+        — alongside the branch class and what the policy declared against what it demonstrated.
       </>
     ),
     alt: "Five quantities arrive one at a time, each stamped observed or simulated, and travel into a run receipt. An origin split bar fills as they land. The total at the bottom is computed as the join of every input tag and comes out simulated, because one simulated input makes the answer simulated.",
@@ -87,9 +85,9 @@ const FEATURES = [
     ],
     note: (
       <>
-        Same seed → identical hash. Different seed → diverges, which is a
-        different world and not a defect. An unpinned actor → the branch{" "}
-        <b>withdraws its own reproducibility claim</b>, PINNED down to STABLE.
+        Same seed → identical hash. Different seed → diverges, which is a different world and not a
+        defect. An unpinned actor → the branch <b>withdraws its own reproducibility claim</b>,
+        PINNED down to STABLE.
       </>
     ),
     alt: "Three probes run against an identical input. The first pair of trace hashes matches character for character and PINNED holds. The second, under a different seed, diverges immediately, which is expected. The third diverges at character eleven under an unpinned actor, and the branch record is rewritten from class PINNED to class STABLE.",
@@ -142,14 +140,11 @@ export default function Home() {
                 <span className="dot" /> hub deployed
               </span>
             </div>
-            <h1 className="h1">
-              Simulation results you accept before they are active.
-            </h1>
+            <h1 className="h1">Simulation results you accept before they are active.</h1>
             <p className="sub">
-              Point Parallax at a context. It proposes a model built from what is
-              actually in there, waits for a human to accept it, and only then
-              rolls it forward under the decisions you are considering. Every
-              answer is typed observed or simulated.
+              Point Parallax at a context. It proposes a model built from what is actually in there,
+              waits for a human to accept it, and only then rolls it forward under the decisions you
+              are considering. Every answer is typed observed or simulated.
             </p>
             <div className="actions">
               <a className="cta" href={REPO} rel="noopener">
@@ -165,10 +160,9 @@ export default function Home() {
               <code>bun install &amp;&amp; bun run demo</code>
             </p>
             <Verdict>
-              The design target is not a simulator that is right. It is a
-              simulator that cannot lie about being a simulator — and all three
-              of the things that follow from that are enforced in code, not in
-              documentation.
+              The design target is not a simulator that is right. It is a simulator that cannot lie
+              about being a simulator — and all three of the things that follow from that are
+              enforced in code, not in documentation.
             </Verdict>
           </div>
         </section>
@@ -177,22 +171,16 @@ export default function Home() {
         <section id="guarantees">
           <div className="wrap wide">
             <p className="eyebrow">What it enforces</p>
-            <h2 className="h">
-              Four guarantees, each one a runtime check rather than a promise.
-            </h2>
+            <h2 className="h">Four guarantees, each one a runtime check rather than a promise.</h2>
             <p className="lede">
-              A simulator&rsquo;s output is unfalsifiable by default: it produces
-              confident numbers about a world that does not exist. The usual
-              response is to claim more fidelity, which cannot be checked inside
-              a three-minute conversation. These four can.
+              A simulator&rsquo;s output is unfalsifiable by default: it produces confident numbers
+              about a world that does not exist. The usual response is to claim more fidelity, which
+              cannot be checked inside a three-minute conversation. These four can.
             </p>
 
             <div className="featlist">
               {FEATURES.map((f, i) => (
-                <div
-                  className={`feature${i % 2 === 1 ? " flip" : ""}`}
-                  key={f.id}
-                >
+                <div className={`feature${i % 2 === 1 ? " flip" : ""}`} key={f.id}>
                   <div className="f-copy">
                     <p className="eyebrow">
                       {f.n} · {f.kicker}
@@ -223,9 +211,8 @@ export default function Home() {
             <p className="eyebrow">How it works</p>
             <h2 className="h">Five steps, and one of them is the product.</h2>
             <p className="lede">
-              Parallax reads what is already there. It does not ask you to model
-              your operation first, because the model is the thing it is
-              supposed to produce.
+              Parallax reads what is already there. It does not ask you to model your operation
+              first, because the model is the thing it is supposed to produce.
             </p>
 
             <ol className="spine">
@@ -233,43 +220,39 @@ export default function Home() {
                 <span className="s-n">01</span>
                 <span className="s-k">Point</span>
                 <span className="s-t">
-                  At a directory, an agent&rsquo;s own workspace, or a set of
-                  business tables.
+                  At a directory, an agent&rsquo;s own workspace, or a set of business tables.
                 </span>
               </li>
               <li>
                 <span className="s-n">02</span>
                 <span className="s-k">Propose</span>
                 <span className="s-t">
-                  An ontology assembled from what is in there — state, actions,
-                  and the questions it could not answer. Slots it cannot support
-                  come back empty.
+                  An ontology assembled from what is in there — state, actions, and the questions it
+                  could not answer. Slots it cannot support come back empty.
                 </span>
               </li>
               <li className="gate">
                 <span className="s-n">03</span>
                 <span className="s-k">Accept</span>
                 <span className="s-t">
-                  <b className="s-lead">
-                    A human answers the blocking questions and accepts.
-                  </b>{" "}
-                  This is the product, not a formality. Nothing runs before it.
+                  <b className="s-lead">A human answers the blocking questions and accepts.</b> This
+                  is the product, not a formality. Nothing runs before it.
                 </span>
               </li>
               <li>
                 <span className="s-n">04</span>
                 <span className="s-k">Roll</span>
                 <span className="s-t">
-                  Fork the log at a point, change one decision, replay the same
-                  steps under the new policy.
+                  Fork the log at a point, change one decision, replay the same steps under the new
+                  policy.
                 </span>
               </li>
               <li>
                 <span className="s-n">05</span>
                 <span className="s-k">Type</span>
                 <span className="s-t">
-                  Every value carries observed or simulated, plus a class saying
-                  whether it can be re-derived at all.
+                  Every value carries observed or simulated, plus a class saying whether it can be
+                  re-derived at all.
                 </span>
               </li>
             </ol>
@@ -282,36 +265,35 @@ export default function Home() {
                 <p className="k">Class 01 — business data</p>
                 <h3>A schema and its rows</h3>
                 <p className="t">
-                  Orders, ledgers, inventory, tickets. One state field and one
-                  insert action per table, and a blocking question per numeric
-                  parameter. The conservation identity is usually already in
-                  there — money, stock, hours, seats.
+                  Orders, ledgers, inventory, tickets. One state field and one insert action per
+                  table, and a blocking question per numeric parameter. The conservation identity is
+                  usually already in there — money, stock, hours, seats.
                 </p>
               </div>
               <div className="cell">
                 <p className="k">Class 02 — agent workspace</p>
                 <h3>An agent&rsquo;s own directory</h3>
                 <p className="t">
-                  The session is spawned with its working directory already set
-                  to the tenant&rsquo;s own folder, and the confinement keys off
-                  exactly that. Passing a derived path instead is denied.
+                  The session is spawned with its working directory already set to the
+                  tenant&rsquo;s own folder, and the confinement keys off exactly that. Passing a
+                  derived path instead is denied.
                 </p>
               </div>
               <div className="cell">
                 <p className="k">Class 03 — local filesystem</p>
                 <h3>An arbitrary directory</h3>
                 <p className="t">
-                  Files, commits, exports, logs. No integration and no schema
-                  agreed in advance. Same proposer as the workspace class; the
-                  difference is who is allowed to name the root.
+                  Files, commits, exports, logs. No integration and no schema agreed in advance.
+                  Same proposer as the workspace class; the difference is who is allowed to name the
+                  root.
                 </p>
               </div>
             </div>
 
             <Verdict>
-              You are approving a model of your own operation, not a
-              model&rsquo;s opinion of it. An empty slot is the correct answer
-              when the context does not support one; a plausible guess is not.
+              You are approving a model of your own operation, not a model&rsquo;s opinion of it. An
+              empty slot is the correct answer when the context does not support one; a plausible
+              guess is not.
             </Verdict>
           </div>
         </section>
@@ -322,24 +304,20 @@ export default function Home() {
             <p className="eyebrow">For agents</p>
             <h2 className="h">The agent is a user, not a client library.</h2>
             <p className="lede">
-              Every capability a human can reach is reachable programmatically,
-              over the same handler functions. Every failure is a value with a
-              stable machine-readable code rather than a thrown string a caller
-              has to parse, and the error types are per-operation: a plugin
-              failure inside a rollout carries a partial trajectory, the same
-              failure at registration carries nothing, and a single error type
-              cannot express that difference.
+              Every capability a human can reach is reachable programmatically, over the same
+              handler functions. Every failure is a value with a stable machine-readable code rather
+              than a thrown string a caller has to parse, and the error types are per-operation: a
+              plugin failure inside a rollout carries a partial trajectory, the same failure at
+              registration carries nothing, and a single error type cannot express that difference.
             </p>
             <Surface />
             <p className="body" style={{ marginTop: 32 }}>
-              The one place the surfaces deliberately diverge is{" "}
-              <code>--root</code>. An arbitrary absolute root is safe at a
-              terminal, because the person typing the path is the confinement. It
-              is absent from every tool schema, because inside a sandboxed
-              session a derived path is denied and a denied read comes back as an
-              empty directory rather than an error — so a wrong path would look
-              like an empty workspace. Same capability, different confinement,
-              and the difference is stated rather than assumed.
+              The one place the surfaces deliberately diverge is <code>--root</code>. An arbitrary
+              absolute root is safe at a terminal, because the person typing the path is the
+              confinement. It is absent from every tool schema, because inside a sandboxed session a
+              derived path is denied and a denied read comes back as an empty directory rather than
+              an error — so a wrong path would look like an empty workspace. Same capability,
+              different confinement, and the difference is stated rather than assumed.
             </p>
           </div>
         </section>
@@ -348,15 +326,12 @@ export default function Home() {
         <section id="channel">
           <div className="wrap">
             <p className="eyebrow">The channel</p>
-            <h2 className="h">
-              It reaches people where the business already runs.
-            </h2>
+            <h2 className="h">It reaches people where the business already runs.</h2>
             <p className="lede">
-              An operator does not open a console. A real WhatsApp message
-              already runs an agent turn in a confined workspace on our own
-              hardware, and the hub already answers the route that turn calls.
-              Each hop below carries its own status, because three of the four
-              run today and the fourth does not.
+              An operator does not open a console. A real WhatsApp message already runs an agent
+              turn in a confined workspace on our own hardware, and the hub already answers the
+              route that turn calls. Each hop below carries its own status, because three of the
+              four run today and the fourth does not.
             </p>
             <Wiring />
             <a className="f-link" href={`${base}/use-cases/`}>
@@ -371,19 +346,17 @@ export default function Home() {
             <p className="eyebrow">Domains</p>
             <h2 className="h">A domain arrives as data. The runtime never changes.</h2>
             <p className="lede">
-              Six operators are closed over one record — <code>step</code>,{" "}
-              <code>observe</code>, <code>check</code>, <code>rollout</code>,{" "}
-              <code>diff</code>, <code>traceHash</code>. Adding a domain adds a
-              record. Adding a capability adds an operator, and there are six of
-              those. That asymmetry is what separates a simulation runtime from a
-              pile of bespoke simulators.
+              Six operators are closed over one record — <code>step</code>, <code>observe</code>,{" "}
+              <code>check</code>, <code>rollout</code>, <code>diff</code>, <code>traceHash</code>.
+              Adding a domain adds a record. Adding a capability adds an operator, and there are six
+              of those. That asymmetry is what separates a simulation runtime from a pile of bespoke
+              simulators.
             </p>
 
             <div className="tblwrap scrollx">
               <table>
                 <caption>
-                  <b>ONTOLOGY</b> — the five slots, and who is allowed to compute
-                  each one
+                  <b>ONTOLOGY</b> — the five slots, and who is allowed to compute each one
                 </caption>
                 <thead>
                   <tr>
@@ -427,20 +400,18 @@ export default function Home() {
                 <p className="k">Domain 01 — storefront</p>
                 <h3>A WhatsApp storefront under a sales agent</h3>
                 <p className="t">
-                  Stock and money conserve. The demo runs it ungoverned, catches
-                  it overselling inventory it does not have, forks the history at
-                  the moment before the damage and replays with a governor
-                  installed.
+                  Stock and money conserve. The demo runs it ungoverned, catches it overselling
+                  inventory it does not have, forks the history at the moment before the damage and
+                  replays with a governor installed.
                 </p>
               </div>
               <div className="cell">
                 <p className="k">Domain 02 — clinic</p>
                 <h3>An appointment desk, and the generality proof</h3>
                 <p className="t">
-                  Its own transition, its own conservation law, its own fourteen
-                  tests. It is the answer to &ldquo;does this only work for your
-                  toy storefront?&rdquo; — the runtime did not change to accept
-                  it.
+                  Its own transition, its own conservation law, its own fourteen tests. It is the
+                  answer to &ldquo;does this only work for your toy storefront?&rdquo; — the runtime
+                  did not change to accept it.
                 </p>
               </div>
             </div>
@@ -451,13 +422,11 @@ export default function Home() {
         <section id="uses">
           <div className="wrap">
             <p className="eyebrow">Where it fits</p>
-            <h2 className="h">
-              Bring one context and one thing that must never be true.
-            </h2>
+            <h2 className="h">Bring one context and one thing that must never be true.</h2>
             <p className="lede">
-              An ontology is a record, not a codebase: what the state is, what
-              actions exist, how an event folds into the state, and what must
-              always hold. Two of those four are code and always will be.
+              An ontology is a record, not a codebase: what the state is, what actions exist, how an
+              event folds into the state, and what must always hold. Two of those four are code and
+              always will be.
             </p>
             <div className="uses">
               {USES.map((u) => (
@@ -470,8 +439,7 @@ export default function Home() {
               ))}
             </div>
             <a className="f-link" href={`${base}/use-cases/`}>
-              The one we have worked out in full: an operating twin for a
-              multi-site business →
+              The one we have worked out in full: an operating twin for a multi-site business →
             </a>
           </div>
         </section>
@@ -482,10 +450,9 @@ export default function Home() {
             <p className="eyebrow">Build state</p>
             <h2 className="h">What runs, what does not, and what is unmeasured.</h2>
             <p className="lede">
-              Every figure on this page is printed by a command in the repository
-              at seed 42 over a horizon of 12 steps. There are no customer
-              deployments, no accuracy claims and no benchmark numbers here,
-              because we have none.
+              Every figure on this page is printed by a command in the repository at seed 42 over a
+              horizon of 12 steps. There are no customer deployments, no accuracy claims and no
+              benchmark numbers here, because we have none.
             </p>
             <div className="state2">
               <div>
@@ -493,17 +460,12 @@ export default function Home() {
                 <ul className="runs">
                   <li>The runtime and its six operators</li>
                   <li>Append-only log with copy-on-write forking</li>
-                  <li>
-                    The reproducibility lattice, and the policy certifier that
-                    enforces it
-                  </li>
+                  <li>The reproducibility lattice, and the policy certifier that enforces it</li>
                   <li>Conservation and safety invariant checking</li>
                   <li>The accept gate, brand-checked at runtime</li>
                   <li>The conversation layer as pure functions</li>
                   <li>The self-contained run receipt</li>
-                  <li>
-                    A CLI, an HTTP hub and a tool surface over the same handlers
-                  </li>
+                  <li>A CLI, an HTTP hub and a tool surface over the same handlers</li>
                   <li>A second domain — the clinic, the generality proof</li>
                 </ul>
               </div>
@@ -511,14 +473,11 @@ export default function Home() {
                 <h3 className="mlab">Designed, not built</h3>
                 <ul className="plan">
                   <li>The LLM adapter — today&rsquo;s actors are seeded and pure</li>
-                  <li>
-                    A third domain, and a domain supplied by someone who is not
-                    us
-                  </li>
+                  <li>A third domain, and a domain supplied by someone who is not us</li>
                   <li>The web console</li>
                   <li>
-                    A live WhatsApp number; the channel layer is pure functions
-                    with no transport attached
+                    A live WhatsApp number; the channel layer is pure functions with no transport
+                    attached
                   </li>
                 </ul>
               </div>
@@ -532,9 +491,8 @@ export default function Home() {
               </div>
             </div>
             <Verdict>
-              We would rather say that than publish an accuracy number we cannot
-              support. It is the oldest open item in this project and it cannot
-              be closed by writing code.
+              We would rather say that than publish an accuracy number we cannot support. It is the
+              oldest open item in this project and it cannot be closed by writing code.
             </Verdict>
           </div>
         </section>
@@ -546,45 +504,39 @@ export default function Home() {
             <h2 className="h">Reasonable things to distrust about this.</h2>
             <div className="qa">
               <div>
-                <p className="q">
-                  It is still a simulation. Why would I trust the number?
-                </p>
+                <p className="q">It is still a simulation. Why would I trust the number?</p>
                 <p className="a">
-                  Do not trust the number. Check what it says about itself. This
-                  run reports 0 of 12 steps observed in its own receipt,
-                  unprompted, and its policy&rsquo;s declared class was measured
-                  against a repeated probe instead of believed. Nothing here is
-                  calibrated against a real business, and there is no accuracy
-                  figure on this page because we cannot support one.
+                  Do not trust the number. Check what it says about itself. This run reports 0 of 12
+                  steps observed in its own receipt, unprompted, and its policy&rsquo;s declared
+                  class was measured against a repeated probe instead of believed. Nothing here is
+                  calibrated against a real business, and there is no accuracy figure on this page
+                  because we cannot support one.
                 </p>
               </div>
               <div>
                 <p className="q">Is a language model computing my numbers?</p>
                 <p className="a">
-                  No. The transition function and the invariants are code —{" "}
-                  <code>activate</code> refuses an ontology that supplies
-                  neither. A model&rsquo;s only job is reading a mess into typed
-                  observations, and nothing downstream of that projection is a
+                  No. The transition function and the invariants are code — <code>activate</code>{" "}
+                  refuses an ontology that supplies neither. A model&rsquo;s only job is reading a
+                  mess into typed observations, and nothing downstream of that projection is a
                   model&rsquo;s opinion. Today the actors are seeded and pure.
                 </p>
               </div>
               <div>
                 <p className="q">We already A/B test.</p>
                 <p className="a">
-                  A/B testing spends real customers and real weeks, and it cannot
-                  evaluate a decision you only make once. A fork is a branch
-                  record. The two compose: use this to decide what is worth
-                  testing for real.
+                  A/B testing spends real customers and real weeks, and it cannot evaluate a
+                  decision you only make once. A fork is a branch record. The two compose: use this
+                  to decide what is worth testing for real.
                 </p>
               </div>
               <div>
                 <p className="q">Our context is a mess.</p>
                 <p className="a">
-                  Then the proposal comes back smaller and emptier. The one it
-                  made of this very repository proposed zero invariants and seven
-                  blocking questions, and said so in the message rather than
-                  filling the gaps with something plausible. An empty slot is
-                  information about your context, not a failure of the tool.
+                  Then the proposal comes back smaller and emptier. The one it made of this very
+                  repository proposed zero invariants and seven blocking questions, and said so in
+                  the message rather than filling the gaps with something plausible. An empty slot
+                  is information about your context, not a failure of the tool.
                 </p>
               </div>
             </div>
@@ -601,10 +553,9 @@ export default function Home() {
               <p className="eyebrow">Start</p>
               <h2 className="h">Reproduce every number on this page.</h2>
               <p className="lede">
-                Requires Bun. The demo runs a WhatsApp storefront under an
-                ungoverned sales agent, catches it overselling, forks the history
-                at the moment before the damage, replays the same twelve steps
-                with a governor installed, and prints the difference.
+                Requires Bun. The demo runs a WhatsApp storefront under an ungoverned sales agent,
+                catches it overselling, forks the history at the moment before the damage, replays
+                the same twelve steps with a governor installed, and prints the difference.
               </p>
               <pre>
                 <code>
@@ -615,27 +566,19 @@ export default function Home() {
                   {"$ "}
                   <b>bun run demo</b>
                   {"           "}
-                  <span className="c">
-                    # run, observe, check, fork, prove
-                  </span>
+                  <span className="c"># run, observe, check, fork, prove</span>
                   {"\n$ "}
                   <b>bun run demo:whatsapp</b>
                   {"  "}
-                  <span className="c">
-                    # the same thing as one thread, ending in a receipt
-                  </span>
+                  <span className="c"># the same thing as one thread, ending in a receipt</span>
                   {"\n$ "}
                   <b>bun run demo:live</b>
                   {"      "}
-                  <span className="c">
-                    # the same thread against the deployed hub
-                  </span>
+                  <span className="c"># the same thread against the deployed hub</span>
                   {"\n$ "}
                   <b>bun run mutants</b>
                   {"        "}
-                  <span className="c">
-                    # deletes a guarantee, checks whether anything goes red
-                  </span>
+                  <span className="c"># deletes a guarantee, checks whether anything goes red</span>
                 </code>
               </pre>
               <div className="actions">
@@ -656,55 +599,89 @@ export default function Home() {
               <div>
                 <h2>Product</h2>
                 <ul>
-                  <li><a href="#guarantees">Guarantees</a></li>
-                  <li><a href="#how">How it works</a></li>
-                  <li><a href="#domains">Domains</a></li>
-                  <li><a href="#uses">Where it fits</a></li>
-                  <li><a href={`${base}/use-cases/`}>Multi-site operator</a></li>
+                  <li>
+                    <a href="#guarantees">Guarantees</a>
+                  </li>
+                  <li>
+                    <a href="#how">How it works</a>
+                  </li>
+                  <li>
+                    <a href="#domains">Domains</a>
+                  </li>
+                  <li>
+                    <a href="#uses">Where it fits</a>
+                  </li>
+                  <li>
+                    <a href={`${base}/use-cases/`}>Multi-site operator</a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h2>Build</h2>
                 <ul>
-                  <li><a href="#surface">CLI, HTTP and tools</a></li>
-                  <li><a href="#channel">WhatsApp and Kapso</a></li>
-                  <li><a href={`${HUB}/health`} rel="noopener">Hub health</a></li>
-                  <li><a href={`${REPO}#run-it`} rel="noopener">Run it locally</a></li>
+                  <li>
+                    <a href="#surface">CLI, HTTP and tools</a>
+                  </li>
+                  <li>
+                    <a href="#channel">WhatsApp and Kapso</a>
+                  </li>
+                  <li>
+                    <a href={`${HUB}/health`} rel="noopener">
+                      Hub health
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`${REPO}#run-it`} rel="noopener">
+                      Run it locally
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h2>Evidence</h2>
                 <ul>
-                  <li><a href={proof("")}>The proof page</a></li>
-                  <li><a href="#state">Build state</a></li>
-                  <li><a href="#objections">Objections</a></li>
+                  <li>
+                    <a href={proof("")}>The proof page</a>
+                  </li>
+                  <li>
+                    <a href="#state">Build state</a>
+                  </li>
+                  <li>
+                    <a href="#objections">Objections</a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h2>Project</h2>
                 <ul>
-                  <li><a href={REPO} rel="noopener">GitHub</a></li>
-                  <li><a href={`${REPO}/blob/main/LICENSE`} rel="noopener">Apache-2.0</a></li>
+                  <li>
+                    <a href={REPO} rel="noopener">
+                      GitHub
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`${REPO}/blob/main/LICENSE`} rel="noopener">
+                      Apache-2.0
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
             OPERATORS step · observe · check · rollout · diff · trace
             <br />
-            CLASSES PINNED · STABLE · RECORDED &nbsp;·&nbsp; ORIGINS observed ·
-            simulated
+            CLASSES PINNED · STABLE · RECORDED &nbsp;·&nbsp; ORIGINS observed · simulated
             <br />
             <a href={REPO} rel="noopener">
               github.com/broomva/parallax
             </a>{" "}
             · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
             <p className="note">
-              Every number on this page is printed by <code>bun run demo</code>{" "}
-              or <code>bun run demo:whatsapp</code> in this repository, at seed
-              42 over a horizon of 12 steps, and every quoted string is copied
-              from that output or from the source file named beside it. There are
-              no customer deployments, no accuracy claims and no benchmark
-              results, because we have none — and inventing them is the exact
-              failure this system exists to make visible.
+              Every number on this page is printed by <code>bun run demo</code> or{" "}
+              <code>bun run demo:whatsapp</code> in this repository, at seed 42 over a horizon of 12
+              steps, and every quoted string is copied from that output or from the source file
+              named beside it. There are no customer deployments, no accuracy claims and no
+              benchmark results, because we have none — and inventing them is the exact failure this
+              system exists to make visible.
             </p>
           </div>
         </footer>

@@ -8,5 +8,10 @@
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
     "types": ["bun-types"]
-  }
+  },
+  // `web/` is a separate Next project with its own tsconfig, its own lib and
+  // its own JSX setting, and it is typechecked by `next build` with
+  // `typescript.ignoreBuildErrors: false`. Checking it from here as well only
+  // reports that this config has no --jsx, which is true and irrelevant.
+  "exclude": ["node_modules", "web"]
 }

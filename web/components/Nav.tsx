@@ -13,7 +13,13 @@ export function Nav({ base }: { base: string }) {
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <title>Parallax</title>
           {/* one baseline, two rays: the mark is the measurement */}
-          <path d="M2 15 L9 9" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          <path
+            d="M2 15 L9 9"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            fill="none"
+            strokeLinecap="round"
+          />
           <path
             d="M9 9 L16 3"
             stroke="currentColor"
@@ -41,11 +47,7 @@ export function Nav({ base }: { base: string }) {
           </a>
         ))}
       </nav>
-      <a
-        className="navcta"
-        href="https://github.com/broomva/parallax"
-        rel="noopener"
-      >
+      <a className="navcta" href="https://github.com/broomva/parallax" rel="noopener">
         Read the source
       </a>
     </header>

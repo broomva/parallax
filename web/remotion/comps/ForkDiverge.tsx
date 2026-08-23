@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { at, C, Caption, ease, H, Mono, Rail, Stage, Tag, W } from "../kit";
+import { at, C, Caption, ease, H, Mono, Rail, Stage, Tag } from "../kit";
 
 /**
  * Claim 2 — a history can be forked, and the angle between the branches is
@@ -59,13 +59,7 @@ export const ForkDiverge: React.FC = () => {
         </Tag>
         {[0, 4, 8, 12].map((v) => (
           <g key={v}>
-            <line
-              x1={X0 - 8}
-              y1={py(v)}
-              x2={X1 + 40}
-              y2={py(v)}
-              stroke={C.grid}
-            />
+            <line x1={X0 - 8} y1={py(v)} x2={X1 + 40} y2={py(v)} stroke={C.grid} />
             <Mono x={X0 - 22} y={py(v) + 8} size={28} anchor="end" fill={C.faint}>
               {v}
             </Mono>
@@ -145,14 +139,7 @@ export const ForkDiverge: React.FC = () => {
 
         {/* ---- the playhead ---- */}
         <g opacity={at(f, 84) * (1 - at(f, 222, 14))}>
-          <line
-            x1={headX}
-            y1={Y12 - 20}
-            x2={headX}
-            y2={Y0 + 12}
-            stroke={C.faint}
-            strokeWidth={1}
-          />
+          <line x1={headX} y1={Y12 - 20} x2={headX} y2={Y0 + 12} stroke={C.faint} strokeWidth={1} />
         </g>
 
         {/* ---- live readouts, one per branch ---- */}
@@ -202,9 +189,7 @@ export const ForkDiverge: React.FC = () => {
         </g>
 
         {done ? (
-          <Caption from={236}>
-            Same seed, same state, same steps. One policy different.
-          </Caption>
+          <Caption from={236}>Same seed, same state, same steps. One policy different.</Caption>
         ) : null}
       </Stage>
     </AbsoluteFill>

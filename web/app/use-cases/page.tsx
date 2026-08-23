@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { MotionPanel } from "../../components/MotionPanel";
-import { Verdict } from "../../components/Verdict";
 import { Nav } from "../../components/Nav";
+import { Verdict } from "../../components/Verdict";
 import { Wiring } from "../../components/Wiring";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -82,22 +82,19 @@ export default function UseCases() {
             <span className="badge">Proposal, not a deployment</span>
           </div>
           <h1 className="h1">
-            Your business tells you what is about to happen, and helps you act
-            first.
+            Your business tells you what is about to happen, and helps you act first.
           </h1>
           <p className="sub">
-            An AI operator for multi-site businesses that turns POS, WhatsApp
-            and scattered files into a living model of the business —
-            anticipating problems, simulating alternatives and coordinating
-            action before money is lost.
+            An AI operator for multi-site businesses that turns POS, WhatsApp and scattered files
+            into a living model of the business — anticipating problems, simulating alternatives and
+            coordinating action before money is lost.
           </p>
           <Verdict>
-            Nothing on this page is running for a customer. What exists is the
-            runtime underneath it: the ontology proposal and its accept gate,
-            the forkable log, the conservation checker, the receipt and the
-            reproducibility lattice. This page is the argument that those are
-            the right primitives for this product, and it says which parts are
-            still missing.
+            Nothing on this page is running for a customer. What exists is the runtime underneath
+            it: the ontology proposal and its accept gate, the forkable log, the conservation
+            checker, the receipt and the reproducibility lattice. This page is the argument that
+            those are the right primitives for this product, and it says which parts are still
+            missing.
           </Verdict>
         </div>
       </section>
@@ -106,37 +103,33 @@ export default function UseCases() {
         <div className="wrap">
           <p className="eyebrow">The thesis</p>
           <h2 className="h">
-            Small businesses do not lack data. They lack a coherent operational
-            model of themselves.
+            Small businesses do not lack data. They lack a coherent operational model of themselves.
           </h2>
           <p className="lede">
-            The data is fragmented across a point-of-sale system, a set of
-            spreadsheets and a phone, and a large share of the decisions live in
-            conversations that were never written down anywhere. This is not a
-            reporting problem, and a dashboard does not touch it.
+            The data is fragmented across a point-of-sale system, a set of spreadsheets and a phone,
+            and a large share of the decisions live in conversations that were never written down
+            anywhere. This is not a reporting problem, and a dashboard does not touch it.
           </p>
           <p className="lede" style={{ marginTop: 16 }}>
-            What is missing is a representation: a model of how this business
-            actually runs, assembled from the traces it already produces, kept
-            current, and usable for asking what happens if. That is the thing
-            Parallax proposes, gates behind a human, and then rolls forward.
+            What is missing is a representation: a model of how this business actually runs,
+            assembled from the traces it already produces, kept current, and usable for asking what
+            happens if. That is the thing Parallax proposes, gates behind a human, and then rolls
+            forward.
           </p>
 
           <blockquote className="quote">
-            &ldquo;La búsqueda es generalizable, y lo que retorna el agente
-            tiene que razonar cómo articularlo en la ontología según el modelo
-            de datos que va emergiendo.&rdquo;
+            &ldquo;La búsqueda es generalizable, y lo que retorna el agente tiene que razonar cómo
+            articularlo en la ontología según el modelo de datos que va emergiendo.&rdquo;
             <cite>the line the whole design follows from</cite>
           </blockquote>
 
           <p className="body" style={{ marginTop: 24 }}>
-            The consequence is the interesting part, and it is the opposite of
-            how these systems are usually built. The ontology is not installed
-            first. It is discovered and corrected by watching the business, so
-            search is a way of reconstructing context rather than the product,
-            and predictions are expressed over real entities — this site, this
-            employee, this supplier — rather than over an anonymous time series.
-            Actions and their outcomes then feed the model that produced them.
+            The consequence is the interesting part, and it is the opposite of how these systems are
+            usually built. The ontology is not installed first. It is discovered and corrected by
+            watching the business, so search is a way of reconstructing context rather than the
+            product, and predictions are expressed over real entities — this site, this employee,
+            this supplier — rather than over an anonymous time series. Actions and their outcomes
+            then feed the model that produced them.
           </p>
         </div>
       </section>
@@ -144,14 +137,11 @@ export default function UseCases() {
       <section id="loop">
         <div className="wrap wide">
           <p className="eyebrow">The loop</p>
-          <h2 className="h">
-            Seven stations, and not one of them is a new subsystem.
-          </h2>
+          <h2 className="h">Seven stations, and not one of them is a new subsystem.</h2>
           <p className="lede">
-            observar → estructurar → predecir → simular → recomendar → medir →
-            recalibrar. Each station below names the operator in the repository
-            that does the work, because a loop drawn over primitives that do not
-            exist is a diagram, not an architecture.
+            observar → estructurar → predecir → simular → recomendar → medir → recalibrar. Each
+            station below names the operator in the repository that does the work, because a loop
+            drawn over primitives that do not exist is a diagram, not an architecture.
           </p>
 
           <div style={{ marginTop: 40 }} className="loopwrap">
@@ -179,10 +169,9 @@ export default function UseCases() {
           <p className="eyebrow">Worked example</p>
           <h2 className="h">What the operator actually receives.</h2>
           <p className="lede">
-            The regression, the chart and the explanation can all be attached.
-            They are evidence for the recommendation; they are not the product.
-            The product is one message that names a decision and can be answered
-            with a word.
+            The regression, the chart and the explanation can all be attached. They are evidence for
+            the recommendation; they are not the product. The product is one message that names a
+            decision and can be answered with a word.
           </p>
 
           <div className="thread">
@@ -226,9 +215,8 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
           </div>
 
           <Verdict>
-            The last message is the one that matters and it is the one this kind
-            of product usually skips. A recommendation nobody scored is a
-            guess with good manners.
+            The last message is the one that matters and it is the one this kind of product usually
+            skips. A recommendation nobody scored is a guess with good manners.
           </Verdict>
         </div>
       </section>
@@ -240,8 +228,7 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
           <div className="tblwrap scrollx">
             <table>
               <caption>
-                <b>LAYERS</b> — the product is not the engine, and neither is
-                the defensibility
+                <b>LAYERS</b> — the product is not the engine, and neither is the defensibility
               </caption>
               <thead>
                 <tr>
@@ -260,12 +247,11 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
             </table>
           </div>
           <p className="body" style={{ marginTop: 24 }}>
-            The moat row is the only one that cannot be bought or copied in a
-            quarter, and it is the one Parallax is built to produce. A receipt
-            binds a forecast to the decision it caused and to the outcome that
-            followed, under a seed that makes the whole thing replayable. A
-            year of those is a calibrated record of this specific business. A
-            year of chat logs is not.
+            The moat row is the only one that cannot be bought or copied in a quarter, and it is the
+            one Parallax is built to produce. A receipt binds a forecast to the decision it caused
+            and to the outcome that followed, under a seed that makes the whole thing replayable. A
+            year of those is a calibrated record of this specific business. A year of chat logs is
+            not.
           </p>
         </div>
       </section>
@@ -275,10 +261,9 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
           <p className="eyebrow">How it is wired</p>
           <h2 className="h">WhatsApp, Kapso, Genesis, and the hub.</h2>
           <p className="lede">
-            The channel is not a metaphor. A real WhatsApp message already runs
-            an agent turn in a confined workspace on our own hardware, and the
-            hub already answers the route that turn would call. Here is each hop
-            and whether it carries traffic today.
+            The channel is not a metaphor. A real WhatsApp message already runs an agent turn in a
+            confined workspace on our own hardware, and the hub already answers the route that turn
+            would call. Here is each hop and whether it carries traffic today.
           </p>
           <Wiring />
 
@@ -303,8 +288,7 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
                 <li>A POS intake alongside the filesystem and table proposers</li>
                 <li>A forecasting actor — today&rsquo;s actors are seeded and pure</li>
                 <li>
-                  A restaurant domain: its transition, and the conservation law
-                  it already keeps
+                  A restaurant domain: its transition, and the conservation law it already keeps
                 </li>
                 <li>Joining the Genesis session to the hub for a real number</li>
                 <li>The write-back that turns an approval into an action</li>
@@ -315,17 +299,14 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
               <ul className="none">
                 <li>No forecast has been scored against a real Friday</li>
                 <li>No business has been modelled from its own transcripts</li>
-                <li>
-                  The +22% and the +19% above are illustration, not results
-                </li>
+                <li>The +22% and the +19% above are illustration, not results</li>
               </ul>
             </div>
           </div>
           <Verdict>
-            The third column is the one to read first. The numbers in the
-            example thread are made up to show the shape of the message, and a
-            system whose whole claim is that a number must say how much of it
-            was real does not get to be vague about that on its own website.
+            The third column is the one to read first. The numbers in the example thread are made up
+            to show the shape of the message, and a system whose whole claim is that a number must
+            say how much of it was real does not get to be vague about that on its own website.
           </Verdict>
         </div>
       </section>
@@ -336,9 +317,8 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
             <p className="eyebrow">Start</p>
             <h2 className="h">The runtime is the part that already works.</h2>
             <p className="lede">
-              Point it at a directory and it will propose a model of it, refuse
-              to run until you accept, and hand you a receipt that says what
-              share of its own answer was real.
+              Point it at a directory and it will propose a model of it, refuse to run until you
+              accept, and hand you a receipt that says what share of its own answer was real.
             </p>
             <div className="actions">
               <a className="cta" href={REPO} rel="noopener">
@@ -354,17 +334,16 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
 
       <footer>
         <div className="fwrap">
-          Parallax · point it at a context · accept the ontology · fork it ·
-          prove it
+          Parallax · point it at a context · accept the ontology · fork it · prove it
           <br />
           <a href={REPO} rel="noopener">
             github.com/broomva/parallax
           </a>{" "}
           · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
           <p className="note">
-            This page describes a product that is proposed and a runtime that is
-            built. Where the two are confused, the runtime is the one with tests
-            and the product is the one without customers.
+            This page describes a product that is proposed and a runtime that is built. Where the
+            two are confused, the runtime is the one with tests and the product is the one without
+            customers.
           </p>
         </div>
       </footer>

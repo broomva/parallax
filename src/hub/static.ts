@@ -2,8 +2,8 @@ import { realpathSync, statSync } from "node:fs";
 import { resolve, sep } from "node:path";
 
 /**
- * Static serving for the landing page, with one job it must not get wrong:
- * nothing outside `landing/` is ever readable.
+ * Static serving for the hub's own front door, with one job it must not get
+ * wrong: nothing outside the configured root is ever readable.
  *
  * The interesting case is not `../`. A URL parser normalises literal `..`
  * segments away before any handler sees them, so `GET /../package.json`
@@ -113,8 +113,10 @@ export function serveStatic(root: StaticRoot, req: Request, pathname: string): S
  * Serve the file, honouring a single byte range.
  *
  * Range support is not decoration: several browsers refuse to play a `<video>`
- * element served from a source that answers a range request with a whole-file
- * 200, and the landing page's hero is video.
+ * or `<audio>` element served from a source that answers a range request with
+ * a whole-file 200. Nothing in `hub-static/` needs it today, but a static root
+ * that silently breaks media the first time someone drops a file in it is a
+ * trap, and the correct behaviour costs these twenty lines.
  */
 function fileResponse(path: string, req: Request): Response {
   const file = Bun.file(path);

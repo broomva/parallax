@@ -59,7 +59,7 @@ const WAYS: Way[] = [
         {"                    → the receipt, as a page\n"}
         {"GET  "}
         <b>/health</b>
-        {"                   → {\"commit\": \"d800f1045a01\"}"}
+        {'                   → {"commit": "d800f1045a01"}'}
       </>
     ),
   },

@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { at, C, Caption, ease, H, Mono, Rail, Stage, Tag, W } from "../kit";
+import { at, C, Caption, ease, Mono, Rail, Stage, Tag } from "../kit";
 
 /**
  * The multi-site operator loop, drawn on the runtime that already exists.
@@ -50,10 +50,7 @@ export const OperatorLoop: React.FC = () => {
   return (
     <AbsoluteFill>
       <Stage>
-        <Rail
-          left="OPERADOR MULTI-SEDE"
-          right="cada estación ya existe"
-        />
+        <Rail left="OPERADOR MULTI-SEDE" right="cada estación ya existe" />
 
         {/* ---- the track ---- */}
         <line x1={X_A} y1={TRACK_Y} x2={X_B} y2={TRACK_Y} stroke={C.axis} />
@@ -101,7 +98,15 @@ export const OperatorLoop: React.FC = () => {
             </g>
           );
         })}
-        <circle cx={tokenX} cy={TRACK_Y} r={16} fill="none" stroke={C.accent} strokeWidth={2} opacity={0.7} />
+        <circle
+          cx={tokenX}
+          cy={TRACK_Y}
+          r={16}
+          fill="none"
+          stroke={C.accent}
+          strokeWidth={2}
+          opacity={0.7}
+        />
 
         {/* ---- 01 observar ---- */}
         <g opacity={on(0)}>
@@ -114,7 +119,15 @@ export const OperatorLoop: React.FC = () => {
             ["hojas y archivos", "inventario, nómina, recetas"],
           ].map(([k, v], i) => (
             <g key={k} opacity={at(f, 16 + i * 10)}>
-              <rect x={150} y={DETAIL_Y + 40 + i * 96} width={1180} height={72} rx={12} fill="none" stroke={C.rule} />
+              <rect
+                x={150}
+                y={DETAIL_Y + 40 + i * 96}
+                width={1180}
+                height={72}
+                rx={12}
+                fill="none"
+                stroke={C.rule}
+              />
               <Mono x={186} y={DETAIL_Y + 86 + i * 96} size={35} fill={C.fg}>
                 {k}
               </Mono>
@@ -139,10 +152,21 @@ export const OperatorLoop: React.FC = () => {
             ["invariante", "insumo consumido ≤ insumo disponible"],
           ].map(([k, v], i) => (
             <g key={k} opacity={at(f, 62 + i * 6)}>
-              <Mono x={150 + (i % 2) * 620} y={DETAIL_Y + 60 + Math.floor(i / 2) * 62} size={30} fill={C.tag}>
+              <Mono
+                x={150 + (i % 2) * 620}
+                y={DETAIL_Y + 60 + Math.floor(i / 2) * 62}
+                size={30}
+                fill={C.tag}
+              >
                 {k}
               </Mono>
-              <Mono x={150 + (i % 2) * 620 + 560} y={DETAIL_Y + 60 + Math.floor(i / 2) * 62} size={30} anchor="end" fill={C.fg}>
+              <Mono
+                x={150 + (i % 2) * 620 + 560}
+                y={DETAIL_Y + 60 + Math.floor(i / 2) * 62}
+                size={30}
+                anchor="end"
+                fill={C.fg}
+              >
                 {v}
               </Mono>
             </g>
@@ -160,7 +184,15 @@ export const OperatorLoop: React.FC = () => {
           <Mono x={150} y={DETAIL_Y + 82} size={43} fill={C.fg}>
             Chapinero · viernes · +22% en ventas
           </Mono>
-          <rect x={150} y={DETAIL_Y + 120} width={1180} height={18} rx={9} fill={C.grid} stroke={C.rule} />
+          <rect
+            x={150}
+            y={DETAIL_Y + 120}
+            width={1180}
+            height={18}
+            rx={9}
+            fill={C.grid}
+            stroke={C.rule}
+          />
           <rect
             x={150}
             y={DETAIL_Y + 120}
@@ -179,7 +211,15 @@ export const OperatorLoop: React.FC = () => {
           <Tag x={150} y={DETAIL_Y} fill={C.faint}>
             rollout → diff · DOS RAMAS DESDE EL MISMO ESTADO
           </Tag>
-          <rect x={150} y={DETAIL_Y + 40} width={570} height={230} rx={12} fill="none" stroke={C.rule} />
+          <rect
+            x={150}
+            y={DETAIL_Y + 40}
+            width={570}
+            height={230}
+            rx={12}
+            fill="none"
+            stroke={C.rule}
+          />
           <Mono x={186} y={DETAIL_Y + 92} size={35} fill={C.fg}>
             no hacer nada
           </Mono>
@@ -189,7 +229,15 @@ export const OperatorLoop: React.FC = () => {
           <Mono x={186} y={DETAIL_Y + 186} size={30} fill={C.crit}>
             déficit de personal 7–9 p.m.
           </Mono>
-          <rect x={760} y={DETAIL_Y + 40} width={570} height={230} rx={12} fill={C.accentSoft} stroke={C.accent} />
+          <rect
+            x={760}
+            y={DETAIL_Y + 40}
+            width={570}
+            height={230}
+            rx={12}
+            fill={C.accentSoft}
+            stroke={C.accent}
+          />
           <Mono x={796} y={DETAIL_Y + 92} size={35} fill={C.fg}>
             mover a Cindy · +18 kg
           </Mono>
@@ -206,7 +254,15 @@ export const OperatorLoop: React.FC = () => {
           <Tag x={150} y={DETAIL_Y} fill={C.faint}>
             AL CANAL DONDE LA EMPRESA YA TRABAJA
           </Tag>
-          <rect x={150} y={DETAIL_Y + 40} width={1180} height={252} rx={14} fill="none" stroke={C.accent} />
+          <rect
+            x={150}
+            y={DETAIL_Y + 40}
+            width={1180}
+            height={252}
+            rx={14}
+            fill="none"
+            stroke={C.accent}
+          />
           <Mono x={186} y={DETAIL_Y + 92} size={30} fill={C.dim}>
             La sede de Chapinero venderá ~22% más este viernes.
           </Mono>

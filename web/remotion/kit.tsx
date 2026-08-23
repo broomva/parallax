@@ -36,8 +36,7 @@ export const C = {
   crit: "oklch(0.72 0.18 27)",
 } as const;
 
-export const MONO =
-  'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace';
+export const MONO = 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace';
 export const SANS =
   'ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Helvetica, Arial, sans-serif';
 
@@ -51,14 +50,18 @@ export const at = (frame: number, from: number, len = 12) =>
 /** Ease-out over a window, for anything that travels rather than appears. */
 export const ease = (frame: number, from: number, len: number) => {
   const t = at(frame, from, len);
-  return 1 - Math.pow(1 - t, 3);
+  return 1 - (1 - t) ** 3;
 };
 
 export const Stage: React.FC<{ children: ReactNode }> = ({ children }) => (
+  // The accessible name lives on the panel wrapper (components/MotionPanel.tsx
+  // carries role="img" and the figure's full description). A <title> here would
+  // announce the figure twice and say less than the description does.
   <svg
     viewBox={`0 0 ${W} ${H}`}
     width="100%"
     height="100%"
+    aria-hidden="true"
     style={{ display: "block", background: C.bg }}
   >
     <defs>
@@ -109,16 +112,7 @@ export const Mono: React.FC<{
   anchor?: "start" | "middle" | "end";
   opacity?: number;
   weight?: number;
-}> = ({
-  x,
-  y,
-  children,
-  size = 34,
-  fill = C.fg,
-  anchor = "start",
-  opacity = 1,
-  weight = 400,
-}) => (
+}> = ({ x, y, children, size = 34, fill = C.fg, anchor = "start", opacity = 1, weight = 400 }) => (
   <text
     x={x}
     y={y}
@@ -159,10 +153,7 @@ export const Caption: React.FC<{
 };
 
 /** Header rail: which operator is running, and on what. */
-export const Rail: React.FC<{ left: string; right?: string }> = ({
-  left,
-  right,
-}) => (
+export const Rail: React.FC<{ left: string; right?: string }> = ({ left, right }) => (
   <>
     <Tag x={64} y={78} fill={C.dim}>
       {left}

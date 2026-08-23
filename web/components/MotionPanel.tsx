@@ -1,15 +1,9 @@
 "use client";
 
+import type { PlayerRef } from "@remotion/player";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import type { PlayerRef } from "@remotion/player";
-import {
-  MOTION,
-  MOTION_FPS,
-  MOTION_H,
-  MOTION_W,
-  type MotionId,
-} from "../remotion/registry";
+import { MOTION, MOTION_FPS, MOTION_H, MOTION_W, type MotionId } from "../remotion/registry";
 
 /**
  * The Player touches the DOM at module scope, and this site is exported to
@@ -18,14 +12,10 @@ import {
  * a figure makes is also written in the prose beside it, so a reader with no
  * JavaScript loses the animation and none of the argument.
  */
-const Player = dynamic(
-  () => import("@remotion/player").then((m) => m.Player),
-  { ssr: false },
-);
-const Thumbnail = dynamic(
-  () => import("@remotion/player").then((m) => m.Thumbnail),
-  { ssr: false },
-);
+const Player = dynamic(() => import("@remotion/player").then((m) => m.Player), { ssr: false });
+const Thumbnail = dynamic(() => import("@remotion/player").then((m) => m.Thumbnail), {
+  ssr: false,
+});
 
 export function MotionPanel({
   id,
@@ -55,10 +45,7 @@ export function MotionPanel({
   useEffect(() => {
     const el = host.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => setInView(e.isIntersecting),
-      { threshold: 0.25 },
-    );
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.25 });
     io.observe(el);
     return () => io.disconnect();
   }, []);

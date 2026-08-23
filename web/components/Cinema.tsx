@@ -81,10 +81,7 @@ export function Cinema() {
   useEffect(() => {
     const after = document.querySelector(".after");
     if (!after) return;
-    const io = new IntersectionObserver(
-      ([e]) => setPast(e.isIntersecting),
-      { threshold: 0.02 },
-    );
+    const io = new IntersectionObserver(([e]) => setPast(e.isIntersecting), { threshold: 0.02 });
     io.observe(after);
     return () => io.disconnect();
   }, []);
@@ -107,18 +104,14 @@ export function Cinema() {
           role="img"
           aria-labelledby="cine-t cine-d"
         >
-          <title id="cine-t">
-            A recorded trunk, a fork at now, and two simulated branches
-          </title>
+          <title id="cine-t">A recorded trunk, a fork at now, and two simulated branches</title>
           <desc id="cine-d">
-            A solid line runs left to right and stops at a point marked NOW. The
-            solid stroke is the RECORDED class: it is what actually happened,
-            tagged observed. At NOW a bar stands across the line — nothing runs
-            until a human accepts. Past NOW the line forks into two dotted rays
-            that share that one baseline. Dotted is the PINNED class:
-            byte-identical on replay. One ray, named main, rises to more
-            violations; the other, named governed, stays flat on zero. Both are
-            tagged simulated. The angle between the two rays, marked at the
+            A solid line runs left to right and stops at a point marked NOW. The solid stroke is the
+            RECORDED class: it is what actually happened, tagged observed. At NOW a bar stands
+            across the line — nothing runs until a human accepts. Past NOW the line forks into two
+            dotted rays that share that one baseline. Dotted is the PINNED class: byte-identical on
+            replay. One ray, named main, rises to more violations; the other, named governed, stays
+            flat on zero. Both are tagged simulated. The angle between the two rays, marked at the
             fork, is the measurement — which is what the word parallax means.
           </desc>
 
@@ -142,17 +135,11 @@ export function Cinema() {
               width="700"
               height="160"
             >
-              <rect
-                x="280"
-                y="560"
-                width="700"
-                height="160"
-                fill="url(#cine-fade)"
-              />
+              <rect x="280" y="560" width="700" height="160" fill="url(#cine-fade)" />
             </mask>
           </defs>
 
-          <g className="cine-grid" aria-hidden="true">
+          <g className="cine-grid">
             <line x1="300" y1="470" x2="1380" y2="470" />
             <line x1="300" y1="630" x2="1380" y2="630" />
             <line x1="300" y1="790" x2="1380" y2="790" />
@@ -161,11 +148,7 @@ export function Cinema() {
           {/* the recorded past, faded at its left edge so it reads as
               continuing off-frame: the history predates the view */}
           <g className="b-trunk">
-            <path
-              className="cine-trunk"
-              d="M 300 630 L 920 630"
-              mask="url(#cine-past)"
-            />
+            <path className="cine-trunk" d="M 300 630 L 920 630" mask="url(#cine-past)" />
             <text className="cine-tag b-rec" x="700" y="676">
               RECORDED
             </text>
@@ -192,16 +175,10 @@ export function Cinema() {
           </g>
 
           <g clipPath="url(#cine-clip)">
-            <path
-              className="cine-wedge b-angle"
-              d="M 920 630 L 1380 470 L 1380 630 Z"
-            />
+            <path className="cine-wedge b-angle" d="M 920 630 L 1380 470 L 1380 630 Z" />
             <line className="cine-ray main b-fork" x1="920" y1="630" x2="1380" y2="470" />
             <line className="cine-ray gov b-fork" x1="920" y1="630" x2="1380" y2="630" />
-            <path
-              className="cine-arc b-angle"
-              d="M 1090 630 A 170 170 0 0 0 1080.56 574.15"
-            />
+            <path className="cine-arc b-angle" d="M 1090 630 A 170 170 0 0 0 1080.56 574.15" />
             <circle className="cine-end b-fork" cx="1380" cy="470" r="6" />
             <circle className="cine-end gov b-fork" cx="1380" cy="630" r="6" />
           </g>
@@ -237,11 +214,7 @@ export function Cinema() {
       <p className="scrollcue" style={hide}>
         scroll — you are scrubbing a log
       </p>
-      <a
-        className="jump"
-        href="#main"
-        style={{ ...hide, pointerEvents: past ? "none" : "auto" }}
-      >
+      <a className="jump" href="#main" style={{ ...hide, pointerEvents: past ? "none" : "auto" }}>
         Skip to the product
       </a>
 

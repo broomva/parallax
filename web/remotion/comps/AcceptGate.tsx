@@ -41,10 +41,7 @@ export const AcceptGate: React.FC = () => {
   const f = useCurrentFrame();
 
   // How many questions are answered by now: one every 9 frames from f=66.
-  const answered = Math.max(
-    0,
-    Math.min(QUESTIONS.length, Math.floor((f - 66) / 9) + 1),
-  );
+  const answered = Math.max(0, Math.min(QUESTIONS.length, Math.floor((f - 66) / 9) + 1));
   const allAnswered = answered >= QUESTIONS.length;
 
   // The refusal: activate() is attempted at f=38 and bounces off a closed gate.
@@ -66,15 +63,7 @@ export const AcceptGate: React.FC = () => {
 
         {/* ---- the proposal record ---- */}
         <g opacity={at(f, 4)}>
-          <rect
-            x={64}
-            y={168}
-            width={496}
-            height={380}
-            rx={14}
-            fill="none"
-            stroke={C.rule}
-          />
+          <rect x={64} y={168} width={496} height={380} rx={14} fill="none" stroke={C.rule} />
           <Tag x={92} y={212} fill={C.dim}>
             PROPOSAL
           </Tag>
@@ -84,29 +73,16 @@ export const AcceptGate: React.FC = () => {
           {SLOTS.map(([k, v, tone], i) => {
             const y = 306 + i * 54;
             const fill =
-              tone === "warn"
-                ? C.warn
-                : tone === "faint"
-                  ? C.faint
-                  : tone === "dim"
-                    ? C.dim
-                    : C.fg;
+              tone === "warn" ? C.warn : tone === "faint" ? C.faint : tone === "dim" ? C.dim : C.fg;
             // the blocking count is the only number that moves
-            const shown =
-              k === "blocking" ? String(QUESTIONS.length - answered) : v;
+            const shown = k === "blocking" ? String(QUESTIONS.length - answered) : v;
             const done = k === "blocking" && allAnswered;
             return (
               <g key={k} opacity={at(f, 12 + i * 5)}>
                 <Mono x={92} y={y} size={31} fill={C.tag}>
                   {k}
                 </Mono>
-                <Mono
-                  x={532}
-                  y={y}
-                  size={31}
-                  anchor="end"
-                  fill={done ? C.ok : fill}
-                >
+                <Mono x={532} y={y} size={31} anchor="end" fill={done ? C.ok : fill}>
                   {done ? "0 · clear" : shown}
                 </Mono>
               </g>
@@ -131,20 +107,10 @@ export const AcceptGate: React.FC = () => {
                 <Mono x={x} y={y} size={28} fill={isDone ? C.faint : C.warn}>
                   {isDone ? "✓" : "?"}
                 </Mono>
-                <Mono
-                  x={x + 34}
-                  y={y}
-                  size={28}
-                  fill={isDone ? C.faint : C.dim}
-                >
+                <Mono x={x + 34} y={y} size={28} fill={isDone ? C.faint : C.dim}>
                   {q}
                 </Mono>
-                <Mono
-                  x={x + 330}
-                  y={y}
-                  size={28}
-                  fill={isDone ? C.ok : C.faint}
-                >
+                <Mono x={x + 330} y={y} size={28} fill={isDone ? C.ok : C.faint}>
                   {isDone ? "files" : "unit?"}
                 </Mono>
               </g>
@@ -246,9 +212,7 @@ export const AcceptGate: React.FC = () => {
           </Mono>
         </g>
 
-        <Caption from={206}>
-          Nothing ran until a person answered the seven open questions.
-        </Caption>
+        <Caption from={206}>Nothing ran until a person answered the seven open questions.</Caption>
       </Stage>
     </AbsoluteFill>
   );

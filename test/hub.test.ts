@@ -21,7 +21,7 @@ import { HUB_CODES, httpStatusFor, LIBRARY_CODES, STATUS_BY_CODE } from "../src/
  */
 
 const REPO = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const LANDING = join(REPO, "landing");
+const LANDING = join(REPO, "hub-static");
 
 let fixture: string;
 let hub: Hub;
@@ -108,7 +108,7 @@ describe("health", () => {
 });
 
 describe("static", () => {
-  test("/ serves the landing page", async () => {
+  test("/ serves the hub's front door", async () => {
     const r = await get("/");
     expect(r.status).toBe(200);
     expect(r.headers.get("content-type")).toContain("text/html");
@@ -116,7 +116,7 @@ describe("static", () => {
   });
 
   test("a nested asset is served with its own content type", async () => {
-    const r = await get("/vendor/index.js");
+    const r = await get("/assets/health.js");
     expect(r.status).toBe(200);
     expect(r.headers.get("content-type")).toContain("javascript");
   });

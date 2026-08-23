@@ -1,16 +1,11 @@
-import { AcceptGate, ACCEPT_GATE_DURATION } from "./comps/AcceptGate";
-import { ForkDiverge, FORK_DURATION } from "./comps/ForkDiverge";
-import { OperatorLoop, OPERATOR_LOOP_DURATION } from "./comps/OperatorLoop";
-import { Provenance, PROVENANCE_DURATION } from "./comps/Provenance";
-import { ReplayHash, REPLAY_DURATION } from "./comps/ReplayHash";
+import { ACCEPT_GATE_DURATION, AcceptGate } from "./comps/AcceptGate";
+import { FORK_DURATION, ForkDiverge } from "./comps/ForkDiverge";
+import { OPERATOR_LOOP_DURATION, OperatorLoop } from "./comps/OperatorLoop";
+import { PROVENANCE_DURATION, Provenance } from "./comps/Provenance";
+import { REPLAY_DURATION, ReplayHash } from "./comps/ReplayHash";
 import { FPS, H, W } from "./kit";
 
-export type MotionId =
-  | "AcceptGate"
-  | "ForkDiverge"
-  | "Provenance"
-  | "ReplayHash"
-  | "OperatorLoop";
+export type MotionId = "AcceptGate" | "ForkDiverge" | "Provenance" | "ReplayHash" | "OperatorLoop";
 
 /**
  * One record per composition, so a section names a motion by id and cannot get

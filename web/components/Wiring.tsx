@@ -65,13 +65,12 @@ export function Wiring() {
         ))}
       </ol>
       <Verdict>
-        The first three hops carry real WhatsApp traffic today. The fourth is
-        the one that is not joined in production: the hub answers{" "}
-        <code>/api/whatsapp/turn</code> and serves <code>/r/:id</code>, and{" "}
-        <code>bun run demo:live</code> drives that whole thread against the
-        deployed hub — but no Genesis session is calling it for a real number
-        yet. Parallax&rsquo;s own channel layer is pure functions with no
-        transport attached, which is exactly why it can be pointed at one.
+        The first three hops carry real WhatsApp traffic today. The fourth is the one that is not
+        joined in production: the hub answers <code>/api/whatsapp/turn</code> and serves{" "}
+        <code>/r/:id</code>, and <code>bun run demo:live</code> drives that whole thread against the
+        deployed hub — but no Genesis session is calling it for a real number yet. Parallax&rsquo;s
+        own channel layer is pure functions with no transport attached, which is exactly why it can
+        be pointed at one.
       </Verdict>
     </>
   );
