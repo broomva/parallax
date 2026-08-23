@@ -532,3 +532,68 @@
   color: var(--d-fg);
   font-weight: 600;
 }
+
+/* ---------------- hands-free presentation ---------------- */
+
+.auto {
+  position: fixed;
+  z-index: 20;
+  right: clamp(16px, 3vw, 34px);
+  top: clamp(16px, 3vh, 30px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  width: 116px;
+}
+
+.auto-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: var(--m-code);
+  letter-spacing: var(--tr-code);
+  color: var(--d-fg);
+  background: oklch(0.16 0.012 265 / 0.72);
+  border: 1px solid var(--d-line);
+  backdrop-filter: blur(8px);
+  transition: border-color 160ms ease;
+}
+.auto-btn:hover {
+  border-color: var(--d-fg);
+}
+.auto-btn:focus-visible {
+  outline: 2px solid var(--d-accent);
+  outline-offset: 2px;
+}
+
+.auto-ico {
+  color: var(--d-accent);
+  font-size: 0.72em;
+  line-height: 1;
+}
+
+.auto-bar {
+  height: 2px;
+  background: var(--d-line);
+  overflow: hidden;
+}
+.auto-bar i {
+  display: block;
+  height: 100%;
+  background: var(--d-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* An auto-scroll is exactly the motion this setting is asking us not to
+     start on our own. The control stays — the reader can still choose it. */
+  .auto-bar {
+    display: none;
+  }
+}

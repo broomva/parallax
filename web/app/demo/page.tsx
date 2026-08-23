@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AsciiField } from "../../components/AsciiField";
+import { AutoScroll } from "../../components/AutoScroll";
 import { DemoCinema, type Scene } from "../../components/DemoCinema";
 import { MotionPanel } from "../../components/MotionPanel";
 import type { MotionId } from "../../remotion/registry";
@@ -116,6 +117,9 @@ export default function Demo() {
       <a className="skip" href="#reduccion">
         Saltar la secuencia de apertura
       </a>
+
+      {/* The pitch slot is three minutes with a hard stop at 3:01. */}
+      <AutoScroll totalSeconds={180} />
 
       <DemoCinema scenes={SCENES} clips={CLIPS} posters={POSTERS} />
 
