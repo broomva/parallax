@@ -178,10 +178,27 @@ export const clinic: TypeRecord = {
     {
       name: "cash_conserved",
       kind: "conservation",
+      /**
+       * You cannot refund money you never took.
+       *
+       * The first version of this checked `collected_cents + refunds_cents >= 0`,
+       * which is algebraically CONSTANT: `refund` decrements collected by exactly
+       * what it adds to refunds, so the sum never moves from its initial value
+       * and no sequence of events could make it negative. It read as a
+       * conservation check and verified nothing.
+       *
+       * The reachability test found it. Reading the line never would have -- the
+       * expression is correct arithmetic, it just cannot vary. That is the same
+       * shape as the demotion function that shipped uncalled and the accept
+       * brand that only existed at compile time, filed as
+       * `a-gate-that-never-executes`, and it happened here an hour after filing
+       * it.
+       */
       check: (st) => {
         const s = st as Clinic;
-        const attendedTotal = s.collected_cents + s.refunds_cents;
-        return attendedTotal >= 0 ? null : `collected+refunds is negative: ${attendedTotal}`;
+        return s.collected_cents >= 0
+          ? null
+          : `refunded more than was ever collected: ${s.collected_cents} cents`;
       },
     },
     {
