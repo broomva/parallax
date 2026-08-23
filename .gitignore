@@ -12,3 +12,9 @@ web/.next/
 web/out/
 web/next-env.d.ts
 web/tsconfig.tsbuildinfo
+
+# Scroll-cinema generation intermediates. `web/cinema/storyboard.json` is the
+# durable artifact and `web/public/cinema/` is what ships; raw/, video/ and the
+# .jpg stills are ~40MB of regenerable middle. Note `dist/` and `out/` above are
+# BARE patterns, so anything named that anywhere in this tree vanishes silently.
+web/cinema/assets/

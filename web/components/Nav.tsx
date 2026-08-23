@@ -4,6 +4,7 @@ const LINKS: Array<[string, string]> = [
   ["For agents", "#surface"],
   ["Use case", "use-cases/"],
   ["Proof", "proof/"],
+  ["Demo", "demo/"],
 ];
 
 export function Nav({ base }: { base: string }) {
