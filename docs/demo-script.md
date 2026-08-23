@@ -1,0 +1,88 @@
+# Parallax — the three-minute demo
+
+**Read this on a phone at 09:55.** Hard stop Sun 2026-08-23 09:30 COT; presentations 10:00–13:00.
+
+> The beat sheet in `2026-08-22-simulacro-hackathon-brief.html` §06 is **stale**. It scripts 300
+> synthetic customers, a wall of streaming conversations, and a 62%→84% close rate. That product
+> was never built. This is the beat sheet for the product that exists.
+
+## Before you walk up
+
+```bash
+cd ~/broomva/apps/simulacro
+scripts/warm-hub.sh             # or: curl -s https://parallax-hub.onrender.com/health
+```
+
+Render's free tier spins down after 15 minutes idle. Measured cold start: **12.4s**. Warm: **0.22s**.
+Warm it within 10 minutes of going on stage, and again while the team before you is presenting.
+
+Have open, in this order: a terminal, and `out/backup-demo.mp4` minimised behind it.
+
+## The command
+
+```bash
+PARALLAX_PACE=1.4 bun run demo:live
+```
+
+`PARALLAX_PACE` dials the whole thing: `1` runs 12.5s, `1.8` runs 21.5s. `--fast` is for CI, not stage.
+
+---
+
+## Beat sheet
+
+| Time | Beat | What you say |
+|---|---|---|
+| **0:00** | Cold open, no slides | "There is no staging environment for the way a business actually operates. You change a price, a return policy, an escalation threshold — and you find out what happened after it happened, usually because a customer told you." |
+| **0:20** | Run the command. It opens on `/health` and prints a commit SHA. | "Before I show you anything: this is the commit the server is running. Not a version string — that is a constant somebody typed. Not the deploy dashboard — that reports intent. The commit is the only field on that response a stale image cannot fake. What you are about to see is the code in the repo." |
+| **0:40** | A WhatsApp message arrives. The hub reads the context and proposes an ontology. | "A message comes in on WhatsApp, because that is where LatAm already operates. The runtime reads the context it was pointed at and proposes a model built from **what is actually there** — these things exist, these actions are possible, these are the facts that can never stop being true." |
+| **1:00** | **Let the proposal sit.** This is the read-beat; the script pauses 3.2s here on purpose. | "Nothing has run. Read what it is doing: it is asking permission. And look at the blocking questions — it will not activate without a unit on a numeric quantity. It fails closed. It does not guess. An ontology nobody reviewed should not be able to produce numbers that look authoritative." |
+| **1:20** | The human answers the numbered questions and says *sí, dale*. | "The human accepts, on their phone. That step is not paperwork. That step is the product." |
+| **1:35** | It runs. 12 steps, **0 violations** governed against an ungoverned baseline of **9**. | "Now it rolls the model forward under the decision you are considering. Twelve steps. Nine things broke ungoverned; zero with the governor installed. And every value comes back typed — `observed` or `simulated`. A number derived from anything simulated is simulated, no matter how much real data went in beside it." |
+| **2:00** | The receipt. The script GETs it and prints `HTTP 200, 9937 bytes` *before* naming the URL. | "It just fetched that receipt and watched a server serve it before it put the link on screen. We do not print links we have not checked." |
+| **2:15** | Open the receipt. Point at `observed` vs `simulated`, and at the trace hash. | "Everything it claims, with the hash that re-runs it." |
+| **2:30** | The falsification, from `bun run demo` if there is time, or say it. | "Same seed, identical trace hash. Seed plus one, it diverges — so it can fail, and you can check. And a policy cannot certify itself: we run it against its own claim, and if it cannot reproduce its own result we downgrade it in code regardless of what it declared." |
+| **2:45** | The ask. | "The goal was never a simulator that is right. It is **a simulator that cannot lie about being a simulator.**" |
+
+---
+
+## The line
+
+> **Simula el cambio antes de aplicarlo. Y te decimos cuánto de eso fue real.**
+
+---
+
+## Q&A — the question the track will get asked
+
+**"How do you know any of this is real?"** — the brief predicts six other teams have no answer.
+
+- **The transition and the invariants are code, never a model.** No model computes a ledger and no
+  model decides whether a constraint held.
+- **A policy cannot certify itself.** Declared class vs demonstrated class, and the demotion is
+  written into the branch.
+- **Determinism on demand.** Same seed → byte-identical trace hash. Change one variable → it diverges.
+- **Every value is typed `observed | simulated`,** and the taint propagates.
+
+**"Is it calibrated against a real business?"** — **No, and we say so in the README and in the
+Spanish description.** We have no real transcripts yet. We would rather say that than publish an
+accuracy percentage we cannot support. *Do not improvise a number here.*
+
+**"What is not built?"** — the LLM adapter, the second domain, and the web console are designed and
+not built. The runtime, the copy-on-write forking log, the reproducibility lattice, the conservation
+checker and the accept gate exist and run.
+
+---
+
+## When it breaks
+
+| Failure | What you do |
+|---|---|
+| **Venue wifi is down** | Play `out/backup-demo.mp4`. Say "this is a recording, the live one needs the network" — do not pretend. |
+| **Hub is cold / slow** | It still works, it just takes ~12s on the first call. Talk over it: that beat is the trust opener anyway. |
+| **Hub is unreachable** | `bun run demo:whatsapp` — the same flow, no network. Say the hosted one is on a free tier. |
+| **The receipt 404s** | The script will refuse to name the link and exit. That is the guard working. Fall back to `demo:whatsapp`, which writes a self-contained receipt to `out/`. |
+
+## Links
+
+- Landing (the judged `deploy-url`) — https://broomva.github.io/parallax/
+- Hub — https://parallax-hub.onrender.com
+- Judged repo — https://github.com/platanus-hack/platanus-hack-26-co-team-5
