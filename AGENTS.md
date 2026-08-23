@@ -81,9 +81,12 @@ allow-list there and you are changing a claim the landing page makes.
   turn**, so acceptance round-trips as *data* and the ontology is re-minted
   in-process on every run. A `Map<ontologyId, ActiveOntology>` passes every
   single-process test and evaporates in production. Never add one.
-- **Nothing throws to a caller.** Every surface returns `{ok:true,value}` or
-  `{ok:false,error:{code,reason,detail?}}`. The `try/catch` in `runTool` and
-  `runCli` is a backstop that should never fire, not the error mechanism.
+- **Nothing throws to a caller.** Every handler returns `{ok:true,value}` or
+  `{ok:false,error:{code,reason,detail?}}`, and each surface carries that value out
+  in its own idiom: the tool surface returns it as-is, the hub serialises it, and
+  `runCli` prints the error as JSON on stderr and maps it to an exit code. The
+  `try/catch` in `runTool` and `runCli` is a backstop that should never fire, not
+  the error mechanism.
 - **Exit codes: 0 success, 2 a typed refusal, 1 an unexpected throw.** 2 and 1 are
   different on purpose. Collapsing them makes every refusal look like a crash,
   which is how a fail-closed system gets described as flaky.

@@ -57,7 +57,7 @@ To get `parallax` itself on your PATH:
 bun link                # then `parallax help` anywhere
 parallax propose        # reads the directory you are standing in
 parallax answer --answer 1=pieces
-parallax accept --by <who> --acknowledge-unmapped
+parallax accept --proposal <ref> --by <who> --acknowledge-unmapped
 parallax run --horizon 12 --seed 42
 ```
 
