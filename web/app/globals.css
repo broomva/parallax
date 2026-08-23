@@ -1263,7 +1263,13 @@ figcaption + figcaption {
   .qa {
     grid-template-columns: 1fr 1fr;
   }
-  .qa > div:last-child {
+  /* The last cell spans both columns only when it would otherwise sit alone
+     on its row. Spanning it unconditionally leaves an ORPHAN cell whenever the
+     count is even -- and because this grid draws its rules as a background
+     showing through 1px gaps, that hole renders as a grey block rather than as
+     whitespace. The proof page has five objections and never showed it; this
+     page had four and did. */
+  .qa > div:last-child:nth-child(odd) {
     grid-column: 1 / -1;
   }
 }
@@ -1544,6 +1550,23 @@ footer a:hover {
 .panel .screen {
   aspect-ratio: 16 / 10;
   width: 100%;
+}
+
+/* A 1600px composition scaled into a 328px phone column renders its labels at
+   about six pixels: not small, unreadable. The figure is a diagram whose
+   content IS its text, so shrinking it to a shape -- the way the hero's
+   portrait breakpoint does -- would leave nothing behind. It pans instead, at
+   the width the type was drawn for, using the same horizontal-scroll
+   affordance the wide tables on this page already use. */
+@media (max-width: 46rem) {
+  .panel {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .panel .chrome,
+  .panel .screen {
+    min-width: 640px;
+  }
 }
 /* The Player and the Thumbnail both take the box as a style prop (see
    components/MotionPanel.tsx), so this only has to make sure whatever wrapper

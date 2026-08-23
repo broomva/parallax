@@ -312,12 +312,21 @@ export default function Home() {
             </p>
             <Surface />
             <p className="body" style={{ marginTop: 32 }}>
-              The one place the surfaces deliberately diverge is <code>--root</code>. An arbitrary
-              absolute root is safe at a terminal, because the person typing the path is the
-              confinement. It is absent from every tool schema, because inside a sandboxed session a
-              derived path is denied and a denied read comes back as an empty directory rather than
-              an error — so a wrong path would look like an empty workspace. Same capability,
-              different confinement, and the difference is stated rather than assumed.
+              The surfaces diverge in exactly two places, and both are confinement rather than
+              capability. <code>--root</code>: an arbitrary absolute root is safe at a terminal,
+              because the person typing the path is the confinement. It is absent from every tool
+              schema, because inside a sandboxed session a derived path is denied and a denied read
+              comes back as an empty directory rather than an error — so a wrong path would look
+              like an empty workspace. And <code>--out</code> on <code>receipt</code>, which writes
+              the page to a path the tool surface returns but never sends, because a receipt is tens
+              of kilobytes and does not belong in a context window.
+            </p>
+            <p className="body" style={{ marginTop: 20 }}>
+              That count is not a promise in prose. A test asserts every tool has exactly one CLI
+              command, every command has a tool behind it, and every flag maps to a tool field or to
+              one of those two named divergences — so widening the claim means editing a test that
+              says so. It was written because the claim had been wrong: three tools had no CLI
+              command at all.
             </p>
           </div>
         </section>
@@ -520,6 +529,16 @@ export default function Home() {
                   refuses an ontology that supplies neither. A model&rsquo;s only job is reading a
                   mess into typed observations, and nothing downstream of that projection is a
                   model&rsquo;s opinion. Today the actors are seeded and pure.
+                </p>
+              </div>
+              <div>
+                <p className="q">What if the proposed ontology is wrong for my business?</p>
+                <p className="a">
+                  Then you answer the questions differently, or reject it, and nothing activates
+                  while a blocking question is open. What you cannot do today is accept part of it:
+                  acceptance is all-or-nothing plus the set of answered slots. Editing a proposal
+                  produces a new proposal with a new hash, which is the honest behaviour and also
+                  the more annoying one.
                 </p>
               </div>
               <div>
