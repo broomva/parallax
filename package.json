@@ -11,7 +11,8 @@
     "demo:live": "bun run src/demo-live.ts",
     "video:capture": "bun run scripts/video/capture.ts",
     "video": "bun run scripts/video/render.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mutants": "bun run scripts/mutants.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
