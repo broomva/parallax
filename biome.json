@@ -17,6 +17,7 @@
       "**",
       "!design",
       "!node_modules",
+      "!.unslop",
       "!web/node_modules",
       "!web/.next",
       "!web/out",

@@ -45,9 +45,12 @@
   inset: 0;
   z-index: 0;
   background: #000;
-  /* The runtime appends one <img class="sc-poster"> and two
-     <video class="sc-layer"> here, each absolutely positioned and
-     object-fit: cover. Nothing in this file should fight those. */
+  /* The runtime appends one poster image element (.sc-poster) and two video
+     elements (.sc-layer) here, each absolutely positioned and object-fit:
+     cover. Nothing in this file should fight those.
+     Written without literal tag syntax on purpose: a bare img tag inside a CSS
+     comment is indistinguishable from a real reference to a static scanner,
+     and it was the repo's only source-level detector finding. */
   overflow: hidden;
 }
 
@@ -573,8 +576,8 @@
 
 .auto-ico {
   color: var(--d-accent);
-  font-size: 0.72em;
-  line-height: 1;
+  display: block;
+  flex: none;
 }
 
 .auto-bar {

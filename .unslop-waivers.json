@@ -1,0 +1,40 @@
+{
+  "_note": "Waivers for the unslop crafted-floor gate. Each is a claim about why the check misreads this repo, not permission to ignore it. substance.legal is deliberately NOT waived \u2014 it is a real gap and it needs a human.",
+  "waivers": [
+    {
+      "check": "detector.rule",
+      "value": "side-tab",
+      "reason": "Every finding of this rule is inside web/out/, the gitignored Next export, not source. The detector runs as its own subprocess and does not share unslop's SKIP_TOP_LEVEL_DIRS, so it walks the build output the survey correctly skips. Verified by running detect.mjs directly against web/app, web/components and web/remotion: 0 findings in all three."
+    },
+    {
+      "check": "detector.rule",
+      "value": "broken-image",
+      "reason": "Every finding of this rule is inside web/out/, the gitignored Next export, not source. The detector runs as its own subprocess and does not share unslop's SKIP_TOP_LEVEL_DIRS, so it walks the build output the survey correctly skips. Verified by running detect.mjs directly against web/app, web/components and web/remotion: 0 findings in all three."
+    },
+    {
+      "check": "fonts.deliberate",
+      "reason": "The typeface decision is real and documented, it is simply not a literal font-family with a face name. globals.css declares --sans (system grotesk stack) and --mono, and every rule consumes font-family: var(--sans|--mono). The decision, including why no webfont is loaded, is stated in DESIGN.md under Typeface.",
+      "value": "ui-sans-serif"
+    },
+    {
+      "check": "copy.em-dash",
+      "reason": "Authored voice, kept deliberately. Em dashes are this repo's house punctuation across commits, docs and product copy, and they are load-bearing in a voice that qualifies its own claims mid-sentence. DESIGN.md states this under Voice. Stripping 112 of them would remove the author's register to move a counter, which is precisely what the voice doctrine forbids."
+    },
+    {
+      "check": "copy.emoji",
+      "reason": "The two remaining sites are a check mark used as notation inside a mono technical readout in a Remotion film frame (AcceptGate), where it marks a satisfied condition in a terminal-style status column. It is data notation, not decoration. The one real UI control that was a typed glyph, the play/pause button, is now drawn as SVG instead."
+    },
+    {
+      "check": "copy.checkmark-bullets",
+      "reason": "Same two AcceptGate sites as copy.emoji: a status column inside a rendered composition, not a marketing bullet list. There is no checkmark-bulleted feature list anywhere in this product's copy."
+    },
+    {
+      "check": "substance.product-evidence",
+      "reason": "Real product evidence exists and is shipped: web/public/cinema carries five Veo-generated MP4 clips and six WebP posters, all of which render on /demo, plus docs/backup-demo.mp4 driven against the live hub. The gate looks for public/screenshots or public/media by name, so it misses a directory called cinema. This is a naming-convention miss, not an absence."
+    },
+    {
+      "check": "motion.reduced-motion",
+      "reason": "Reported SKIP as no motion detected, which is wrong: this site is largely motion. prefers-reduced-motion is honoured in DemoCinema, AsciiField, MotionPanel, Cinema and AutoScroll, and in every case the reduced path lands on the finished figure rather than a degraded one. Recorded here so the SKIP is not mistaken for an unexamined surface."
+    }
+  ]
+}
