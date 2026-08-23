@@ -87,6 +87,14 @@ Previously nine literal values across 28 sites and **no token**. Now a named sca
 
 One value moved: a legend swatch at 3px is now `--r-hair` (2px). Nothing else changed by a pixel.
 
+**One documented exception — there are two copies of this scale, on purpose.**
+`web/public/proof/index.html` contains no `<link>` anywhere: it is deliberately self-contained so the
+evidence page opens with no server and no build step. It therefore cannot consume `globals.css`, and
+it **redeclares the same seven tokens in its own `:root`**. That is a duplication, it is the price of
+the page's standalone property, and it is the one place where "declared once" is not literally true.
+The two must be kept in step by hand — if you change a radius token in `globals.css`, change it in
+`proof/index.html` too, or the evidence page quietly drifts away from the product it is evidence for.
+
 **Known follow-up:** seven steps is more than this system needs — 4px / 6px / 8px almost certainly
 want to be one step. That collapse changes pixels on judged surfaces and was deliberately not done
 during the judging window. It is the next radius edit, and it is now a one-line edit because the
