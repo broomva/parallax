@@ -538,6 +538,7 @@
 $ bun install
 $ <b>bun run demo</b>            <span class="c"># the operators: run, observe, check, fork, prove</span>
 $ <b>bun run demo:whatsapp</b>   <span class="c"># the same thing as one thread, ending in a receipt file</span>
+$ <b>bun run demo:live</b>       <span class="c"># the same thread against the deployed hub, ending in a link it fetched first</span>
 $ <b>bun run src/cli.ts help</b> <span class="c"># the same capabilities at a terminal</span>
 $ <b>bun run src/hub/serve.ts</b> <span class="c"># the same capabilities over HTTP</span></code></pre>
       <p class="verdict">Every figure below is printed by one of those two commands at seed 42 over a horizon of 12 steps. There are no customer deployments, no accuracy claims and no benchmark numbers on this page, because we have none.</p>
@@ -740,11 +741,11 @@ sí, dale</pre></div>
 
         <div class="msg bot">
           <p class="who">Parallax</p>
-          <div class="bub"><pre>listo. el recibo: <span class="rcpt">https://parallax.broomva.tech/r/bef312a9</span></pre></div>
+          <div class="bub"><pre>listo. el recibo: <span class="rcpt">out/run-bef312a9.html</span></pre></div>
         </div>
       </div>
 
-      <figcaption>Captured verbatim from <code>bun run demo:whatsapp</code> run against this repository. The state fields are read from the directory itself, so the counts and the <code>ref</code> move whenever the repository does; the storefront numbers further down do not, because they come from a fixed domain at a fixed seed. The proposal is titled <code>simulacro</code> because that is still the name of the directory on disk — the proposer reports what it found, not what we would prefer it were called.</figcaption>
+      <figcaption>Captured verbatim from <code>bun run demo:whatsapp</code> run against this repository. It names the file it wrote, because a local run has no server to serve a URL from; <code>bun run demo:live</code> drives the deployed hub instead and ends on a <code>/r/:id</code> link it has already fetched. Naming a URL nobody was asked to serve is the failure this page exists to refuse, and an earlier version of this transcript did exactly that. The state fields are read from the directory itself, so the counts and the <code>ref</code> move whenever the repository does; the storefront numbers further down do not, because they come from a fixed domain at a fixed seed. The proposal is titled <code>simulacro</code> because that is still the name of the directory on disk — the proposer reports what it found, not what we would prefer it were called.</figcaption>
 
       <div class="grid3">
         <div class="cell">
@@ -1031,7 +1032,13 @@ $ PORT=8791 bun run src/hub/serve.ts
 parallax hub 0.1.0 listening on http://0.0.0.0:8791 (health: /health)
 
 $ curl -s localhost:8791/health
-{"ok":<b>true</b>,"version":<b>"0.1.0"</b>,"uptimeSeconds":<b>2</b>}
+{"ok":<b>true</b>,"version":<b>"0.1.0"</b>,"commit":<b>"local"</b>,"uptimeSeconds":<b>2</b>}
+
+<span class="c"># deployed, the same route reports the commit it is running --
+# `version` is a source constant and a deploy API reports intent, so the
+# commit is the only field on this response a stale image cannot fake</span>
+$ curl -s https://parallax-hub.onrender.com/health
+{"ok":<b>true</b>,"version":<b>"0.1.0"</b>,"commit":<b>"d5516b00f7f6a5cf49e60249b3874eea23f9c279"</b>,"uptimeSeconds":<b>41</b>}
 
 $ curl -s -X POST localhost:8791/api/ontology/accept \
        -d '{"proposalId":"nope","answers":{},"acceptedBy":"you"}'
