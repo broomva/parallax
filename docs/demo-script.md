@@ -67,22 +67,64 @@ PARALLAX_PACE=1.4 bun run demo:live
 
 ---
 
+## Office-hours pass — what it changed
+
+Run against the six forcing questions. Only the answers that changed the script are here.
+
+**Demand reality — we do not have it, and the pitch must not imply we do.** No user, no payment,
+nobody who would be inconvenienced if this vanished tonight. That is already said on every surface
+and it stays said. What changes is that the absence becomes the *ask*: the close asks for the one
+thing that would close it, rather than trailing off.
+
+**Desperate specificity — the weakest point, and it is fixable in one sentence.** "El dueño de una
+empresa con varias sedes" is a category. You cannot email a category. There is, however, a nameable
+person for what is actually on screen: whoever owns an agent that touches stock, money or a
+customer promise and has to answer *would a governor have caught it?* That person is in the room.
+
+**Narrowest wedge — the finding that reorders the demo.** Ask what someone would pay for this week,
+not after the platform, and it is not the restaurant twin: that needs data we do not have and a
+calibration we have refused to fake. It is *point it at your agent's workspace, replay the run it
+already did, and tell me which steps a constraint would have refused.* No integration, no schema
+agreed in advance, no business data. **That is already exactly what the demo shows.** The
+restaurant is the ambition; the governor is the wedge; the demo is the wedge. Say them in that
+order and nothing has to be oversold.
+
+**Future-fit.** As more operations run through agents, the number of consequential decisions taken
+without a reviewable model goes up, and the value of a gate that refuses to run an unaccepted model
+goes up with it. That is a claim about a specific change, not a rising tide every competitor can
+also stand on.
+
+**The one missing sentence.** The old sheet jumped from "there is no staging environment for a
+business" straight to `/health`, leaving the judge to work out on their own why a repository, a
+governor and a trace hash are the same machine as a restaurant. The bridge beat below does that
+work, and it doubles as the answer to the thing a judge is most likely to misread on screen — the
+proposed ontology is over *this repo*, so it says `node_modules`, not `sedes`.
+
 ## Beat sheet
+
+Three minutes, hard stop 3:01. The shape follows the organisers' own: problema ~20s ·
+solución/impacto/ambición ~25s · demo ~135s. The load-bearing lines are given in Spanish because
+that is what will be said; the rest is direction.
 
 | Time | Beat | What you say |
 |---|---|---|
-| **0:00** | Cold open, no slides | "There is no staging environment for the way a business actually operates. You change a price, a return policy, an escalation threshold — and you find out what happened after it happened, usually because a customer told you." |
-| **0:20** | Run the command. It opens on `/health` and prints a commit SHA. | "Before I show you anything: this is the commit the server is running. Not a version string — that is a constant somebody typed. Not the deploy dashboard — that reports intent. The commit is the only field on that response a stale image cannot fake. What you are about to see is the code in the repo." |
-| **0:40** | A WhatsApp message arrives. The hub reads the context and proposes an ontology. | "A message comes in on WhatsApp, because that is where LatAm already operates. The runtime reads the context it was pointed at and proposes a model built from **what is actually there** — these things exist, these actions are possible, these are the facts that can never stop being true." |
-| **1:00** | **Let the proposal sit.** This is the read-beat; the script pauses 3.2s here on purpose. | "Nothing has run. Read what it is doing: it is asking permission. And look at the blocking questions — it will not activate without a unit on a numeric quantity. It fails closed. It does not guess. An ontology nobody reviewed should not be able to produce numbers that look authoritative." |
-| **1:20** | The human answers the numbered questions and says *sí, dale*. | "The human accepts, on their phone. That step is not paperwork. That step is the product." |
-| **1:35** | It runs. 12 steps, **0 violations** governed against an ungoverned baseline of **9**. | "Now it rolls the model forward under the decision you are considering. Twelve steps. Nine things broke ungoverned; zero with the governor installed. And every value comes back typed — `observed` or `simulated`. A number derived from anything simulated is simulated, no matter how much real data went in beside it." |
-| **2:00** | The receipt. The script GETs it and prints `HTTP 200, 9937 bytes` *before* naming the URL. | "It just fetched that receipt and watched a server serve it before it put the link on screen. We do not print links we have not checked." |
-| **2:15** | Open the receipt. Point at `observed` vs `simulated`, and at the trace hash. | "Everything it claims, with the hash that re-runs it." |
-| **2:30** | The falsification, from `bun run demo` if there is time, or say it. | "Same seed, identical trace hash. Seed plus one, it diverges — so it can fail, and you can check. And a policy cannot certify itself: we run it against its own claim, and if it cannot reproduce its own result we downgrade it in code regardless of what it declared." |
-| **2:45** | The ask. | "The goal was never a simulator that is right. It is **a simulator that cannot lie about being a simulator.**" |
+| **0:00** | **Problema.** No slides. | "No existe un ambiente de pruebas para la forma en que opera un negocio. Cambias un precio, un turno, un umbral de escalamiento — y te enteras de lo que pasó cuando ya pasó, normalmente porque te lo dijo un cliente." |
+| **0:20** | **Solución y ambición.** The twin in one breath, then the loop, then the step that is the product. | "Un gemelo operativo: reconstruye cómo funciona el negocio desde lo que ya existe, corre hacia adelante la decisión que estás considerando, y te dice cuánto de esa respuesta fue real. Observar → proponer → **aceptar** → bifurcar → recomendar → medir. El tercer paso no es un trámite: es el producto." |
+| **0:45** | **The bridge.** Do not skip this — it is what makes the next two minutes legible, and it pre-empts the one thing a judge will misread. | "Lo que voy a mostrar no es un restaurante. Es la misma máquina apuntada a lo más difícil de modelar que teníamos a mano: nuestro propio repositorio, que nunca había visto. Si funciona sin saber nada de antemano, funciona con un export de POS." |
+| **0:57** | Run it. Opens on `/health`, prints a commit SHA. | "Antes de mostrarles nada: éste es el commit que el servidor está corriendo. No un `version`, que es una constante que alguien escribió. No el dashboard de deploy, que reporta intención. El commit es lo único en esa respuesta que una imagen vieja no puede falsificar." |
+| **1:12** | A message arrives; the hub reads the context and proposes. **Let it sit.** | "Nada ha corrido. Está pidiendo permiso. Y miren las preguntas bloqueantes: no se activa sin una unidad en una cantidad numérica. Falla cerrado. No adivina." |
+| **1:35** | The human answers and accepts. Then 12 steps, **0 violations** against an ungoverned **9**. | "El humano acepta, desde el teléfono. Ahora corre el modelo hacia adelante bajo la decisión que estás considerando. Doce pasos: nueve cosas se rompen sin gobernador, cero con él." |
+| **1:55** | The receipt. It GETs it and prints `HTTP 200` *before* naming the URL. | "Acaba de pedir ese recibo y ver que un servidor lo sirviera antes de poner el enlace en pantalla. No imprimimos enlaces que no hemos verificado." |
+| **2:10** | Open it. Point at `observed` vs `simulated`, and at the trace hash. | "Cada valor dice si fue observado o simulado, y la marca se propaga. Un valor derivado de algo simulado es simulado, por mucho dato real que haya entrado al lado." |
+| **2:25** | **Falsification + generality.** The heaviest 20 seconds on the rubric — aspecto técnico is 25%. | "Misma semilla, hash idéntico. Semilla más uno, diverge — o sea que puede fallar, y lo pueden comprobar. Y una política no puede certificarse a sí misma. Hay un segundo dominio, un consultorio, con su propia transición y su propia ley de conservación: **el runtime no cambió para aceptarlo.**" |
+| **2:45** | **Honest, then the line, then the ask.** | "Nada está calibrado contra un negocio real y lo decimos en el README — no tenemos transcripciones todavía. Lo que buscamos es exactamente eso: un operador multi-sede que nos deje sus datos. Porque la meta nunca fue un simulador que acierte. Es **un simulador que no puede mentir sobre ser un simulador.**" |
 
----
+**If you are running long at 2:25**, cut the falsification sentence and keep the clinic. Generality
+is the harder claim and the one nobody else in the track can make.
+
+**If you are running short**, the extra beat is the wedge, stated plainly: "si tienen un agente que
+toca inventario o plata, apúntenlo a su propio workspace y les dice qué pasos habría rechazado un
+gobernador."
 
 ## The line
 
