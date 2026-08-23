@@ -689,3 +689,101 @@ describe("the whole gate, at a terminal", () => {
     }
   }, 30000);
 });
+
+/**
+ * Acceptance identity had no behavioural test at all -- only schema inspection --
+ * and mutation testing found four surviving mutants here, every one of them a
+ * promise the product makes out loud. `bun run mutants` regenerates the list.
+ *
+ * These drive the real CLI across a process boundary on purpose: an acceptance
+ * is only worth anything if it survives one, and the accepted ontology is
+ * re-minted from its receipt rather than handed over as a cached object.
+ */
+describe("acceptance identity", () => {
+  async function proposalId(dir: string): Promise<string> {
+    const r = await cli(dir, ["propose", "--json"]);
+    expect(r.code).toBe(0);
+    return (JSON.parse(r.stdout) as { value: { proposalId: string } }).value.proposalId;
+  }
+
+  async function acceptWith(
+    dir: string,
+    unit: string,
+    by: string,
+  ): Promise<{ ontologyId: string; idempotent: boolean }> {
+    const pid = await proposalId(dir);
+    const r = await cli(dir, [
+      "accept",
+      "--proposal",
+      pid,
+      "--by",
+      by,
+      "--answer",
+      `1=${unit}`,
+      "--answer",
+      `2=${unit}`,
+      "--acknowledge-unmapped",
+      "--json",
+    ]);
+    expect(r.stderr).toBe("");
+    expect(r.code).toBe(0);
+    return (JSON.parse(r.stdout) as { value: { ontologyId: string; idempotent: boolean } }).value;
+  }
+
+  test("the same acceptance twice is idempotent, and says so", async () => {
+    const dir = workspace();
+    try {
+      const first = await acceptWith(dir, "unidades", "carlos");
+      const second = await acceptWith(dir, "unidades", "carlos");
+      // A retry on a channel with no delivery receipts must not mint twice.
+      expect(first.idempotent).toBe(false);
+      expect(second.idempotent).toBe(true);
+      expect(second.ontologyId).toBe(first.ontologyId);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("identity covers the answer VALUES, not just which slots were filled", async () => {
+    const dir = workspace();
+    try {
+      const unidades = await acceptWith(dir, "unidades", "carlos");
+      const cajas = await acceptWith(dir, "cajas", "carlos");
+      // Same proposal, same slots, different thing said by the human. Colliding
+      // these would run one acceptance under another's answers.
+      expect(cajas.idempotent).toBe(false);
+      expect(cajas.ontologyId).not.toBe(unidades.ontologyId);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("one person's acceptance is not reused for another person", async () => {
+    const dir = workspace();
+    try {
+      const carlos = await acceptWith(dir, "unidades", "carlos");
+      const julian = await acceptWith(dir, "unidades", "julian");
+      expect(julian.idempotent).toBe(false);
+      expect(julian.ontologyId).not.toBe(carlos.ontologyId);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("run with no --ontology uses the NEWEST acceptance, not the first ever made", async () => {
+    const dir = workspace();
+    try {
+      const older = await acceptWith(dir, "unidades", "carlos");
+      const newer = await acceptWith(dir, "cajas", "carlos");
+      expect(newer.ontologyId).not.toBe(older.ontologyId);
+
+      const r = await cli(dir, ["run", "--json"]);
+      expect(r.code).toBe(0);
+      const ran = (JSON.parse(r.stdout) as { value: { ontologyId: string } }).value;
+      expect(ran.ontologyId).toBe(newer.ontologyId);
+      expect(ran.ontologyId).not.toBe(older.ontologyId);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
