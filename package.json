@@ -7,7 +7,8 @@
     "demo": "bun run src/demo.ts",
     "test": "bun test",
     "lint": "biome check .",
-    "demo:whatsapp": "bun run src/whatsapp-demo.ts"
+    "demo:whatsapp": "bun run src/whatsapp-demo.ts",
+    "demo:live": "bun run src/demo-live.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",

@@ -157,9 +157,14 @@ mkdirSync("out", { recursive: true });
 const path = `out/run-${runId.slice(0, 8)}.html`;
 writeFileSync(path, html);
 
-bot(`listo. el recibo: ${C.b}https://parallax.broomva.tech/r/${runId.slice(0, 8)}${C.off}`);
+// The receipt this run produced is a FILE, and that is what gets named. The
+// hosted form of the same artifact is `GET /r/<runId>` on a hub that actually
+// ran the flow -- see `bun run demo:live`. Naming a URL here that no server was
+// asked to serve would be the exact failure this product exists to refuse: a
+// confident-looking answer nobody checked.
+bot(`listo. el recibo: ${C.b}${path}${C.off}`);
 console.log(
-  `\n   ${C.dim}written to ${path} (${(html.length / 1024).toFixed(1)} KB, self-contained)${C.off}`,
+  `\n   ${C.dim}${(html.length / 1024).toFixed(1)} KB, self-contained, opens with no server${C.off}`,
 );
 console.log(
   `   ${C.dim}trace main=${traceHash(log, "main").slice(0, 12)}  governed=${traceHash(log, "governed").slice(0, 12)}${C.off}\n`,
