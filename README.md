@@ -14,6 +14,14 @@ The runtime now ships *inside* the skill, at `skills/simulation/parallax/runtime
 Installing the skill installs the layer — which it did not do while the two lived
 in separate repositories.
 
+The old address, `npx skills add broomva/parallax --skill parallax`, no longer
+resolves: this repository's `skills/` directory is deleted rather than left as a
+stub. That is deliberate. An archived repository still serves its tree, so a stub
+would go on installing a skill — one with no runtime beside it, whose own SKILL.md
+promised a CI gate that no longer exists — and it would install *successfully*,
+leaving a dead skill in someone's agent. A missing skill is an error the reader
+can act on; a stale one is not.
+
 ## What Parallax is
 
 A simulation runtime built so that it **cannot lie about being a simulation**.
