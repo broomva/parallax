@@ -98,17 +98,28 @@ you branch on. Exit 2 is a typed refusal — a gate doing its job. Exit 1 is a d
 
 Two lookups, because reasoning about them is how they go wrong:
 
+Both run **from the workspace Parallax is reading**, so the script is addressed by
+its own location and never relatively. `parallax status` reports on the directory
+you are standing in; `cd`-ing into the skill to reach the script would make the
+skill directory the workspace, which fails silently by succeeding on the wrong
+context.
+
 ```bash
+SKILL="$HOME/.claude/skills/parallax"   # a checkout instead: <repo>/skills/parallax
+
 # what to do next, from the state on disk
-parallax status --json | python3 scripts/parallax_next.py --status -
+parallax status --json | python3 "$SKILL/scripts/parallax_next.py" --status -
 #   next: parallax answer --proposal 94c50e77db74 --answer 1=<value>
 #   why:  1 blocking question(s) open, no answers recorded yet. ...
 
 # what a refusal actually means
-parallax run --json 2>err.json || python3 scripts/parallax_next.py --error err.json
+parallax run --json 2>err.json || python3 "$SKILL/scripts/parallax_next.py" --error err.json
 #   NO_ACCEPTED_ONTOLOGY
 #     Nothing has been accepted in this workspace. Accept a proposal first.
 ```
+
+`next` comes back **null** when no Parallax command applies -- an unreadable
+workspace is the case -- rather than naming the command that produced the result.
 
 `--json` on either for a machine-readable answer. Exit **0** determined, **3** the
 document parsed but names no state or code on file, **2** the input is not that
@@ -161,12 +172,12 @@ this skill has three homes and only a relative path is correct in all of them:
 broomva/skills (vendored), and `~/.claude/skills/parallax/` once installed.
 
 ```bash
-python3 -m pytest tests/ -q          # 41 passed (34 hermetic + 7 live-CLI)
+python3 -m pytest tests/ -q          # 44 passed (37 hermetic + 7 live-CLI)
 ```
 
 The 7 live-CLI tests **skip** unless `parallax` is on PATH (`bun link` in a parallax
-checkout). A run reporting `34 passed, 7 skipped` is the expected result without it;
-`41 passed` means the remedy table was checked against the real binary.
+checkout). A run reporting `37 passed, 7 skipped` is the expected result without it;
+`44 passed` means the remedy table was checked against the real binary.
 
 `tests/test_skill_md_claims.py` asserts the path and the count above are true, because
 this section was wrong when it shipped: it named `skills/tooling/parallax/tests/`,
