@@ -60,7 +60,9 @@ that must die and a mutant that must live. If either control misbehaves the run
 is reported invalid, because a harness that cannot see red and a harness that
 reports noise are both worth nothing.
 
-Live: the landing page is <https://broomva.github.io/parallax/> and the hub is
+Live: the landing page is <https://broomva.github.io/parallax/> — with the
+worked use case at </use-cases/> and the full evidence page at </proof/> — and
+the hub is
 <https://parallax-hub.onrender.com>. `GET /health` reports the commit the server
 is running, which is the only field on it that a stale image cannot fake — a
 `version` string is a source constant and a deploy dashboard reports intent.

@@ -3,11 +3,12 @@ node_modules/
 *.db-*
 .env
 dist/
-landing/assets/
 design/parallax-console.html
 out/
 
-# landing/assets-real/ is TRACKED on purpose: GitHub Pages serves the landing
-# page and the hero footage must ship with it. It was ignored, which is why the
-# first deploy returned 404 for every clip and poster while working locally.
-landing/assets-real/raw/
+# The Next build output. It is produced in CI from web/ and never committed:
+# a checked-in export is a second source of truth that goes stale silently.
+web/.next/
+web/out/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
