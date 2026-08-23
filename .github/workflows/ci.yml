@@ -32,6 +32,12 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Typecheck
+        # bun test does NOT typecheck. This suite went 175-green with a real TS
+        # error present, and a top-level-await module marker slipped through the
+        # same way. tsc runs as its own step so the failure is its own line.
+        run: bunx tsc --noEmit
+
       - name: Test
         run: bun test
 

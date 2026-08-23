@@ -16,7 +16,7 @@ scripts/warm-hub.sh             # or: curl -s https://parallax-hub.onrender.com/
 Render's free tier spins down after 15 minutes idle. Measured cold start: **12.4s**. Warm: **0.22s**.
 Warm it within 10 minutes of going on stage, and again while the team before you is presenting.
 
-Have open, in this order: a terminal, and `out/backup-demo.mp4` minimised behind it.
+Have open, in this order: a terminal, and `docs/backup-demo.mp4` minimised behind it.
 
 ## The command
 
@@ -76,7 +76,7 @@ checker and the accept gate exist and run.
 
 | Failure | What you do |
 |---|---|
-| **Venue wifi is down** | Play `out/backup-demo.mp4`. Say "this is a recording, the live one needs the network" — do not pretend. |
+| **Venue wifi is down** | Play `docs/backup-demo.mp4`. Say "this is a recording, the live one needs the network" — do not pretend. |
 | **Hub is cold / slow** | It still works, it just takes ~12s on the first call. Talk over it: that beat is the trust opener anyway. |
 | **Hub is unreachable** | `bun run demo:whatsapp` — the same flow, no network. Say the hosted one is on a free tier. |
 | **The receipt 404s** | The script will refuse to name the link and exit. That is the guard working. Fall back to `demo:whatsapp`, which writes a self-contained receipt to `out/`. |
