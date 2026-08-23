@@ -127,14 +127,16 @@ export default function Demo() {
       <section className="act band" id="reduccion">
         <div className="wrap">
           <AsciiField
-            alt="The opening frame of the film — a working kitchen — redrawn entirely out of typographic characters, dense glyphs where the image is bright and spaces where it is dark."
+            alt="The opening frame of the film — a working kitchen — redrawn out of typographic characters and held still, because it already happened. Over it, a solid recorded line runs in from the left, reaches a fork, and opens into nine candidate trajectories that extend, brighten, and then collapse as exactly one of them is taken."
             src={`${base}/cinema/01.webp`}
           />
           <p className="band-cap">
-            <b>Un modelo es una pérdida deliberada de información.</b> Ese es el mismo cuadro con el
-            que abre la película, redibujado con caracteres. Se reconoce la cocina — y se ve
-            exactamente qué se perdió. Un gemelo operativo es esto mismo sobre tu negocio: útil
-            porque es más simple, confiable sólo si puedes ver qué dejó afuera.
+            <b>Un modelo es una pérdida deliberada de información.</b> El fondo quieto es el cuadro
+            con el que abre la película, redibujado con caracteres: se reconoce la cocina, y se ve
+            exactamente qué se perdió. Lo único que se mueve son las trayectorias, porque son lo
+            único que todavía no pasó — un solo pasado observado, muchos futuros simulados, y al
+            final se toma uno. <b>Los demás nunca se observan.</b> Ésos son los que Parallax te deja
+            mirar antes de elegir.
           </p>
         </div>
       </section>
