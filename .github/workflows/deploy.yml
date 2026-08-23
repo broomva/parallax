@@ -66,6 +66,23 @@ jobs:
           if [ -z "$HOOK" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
             echo "::notice::RENDER_DEPLOY_HOOK_URL is not set - skipping. See the header of this file for the one-line setup."
+            # A green check beside "Deploy hub to Render" reads as "it deployed".
+            # It did not. Say so where the run page shows it, or this is a job
+            # that reports success for doing nothing -- the exact shape
+            # research/entities/pattern/a-gate-that-never-executes.md is about.
+            {
+              echo "## Deploy skipped"
+              echo
+              echo "\`RENDER_DEPLOY_HOOK_URL\` is not set, so **nothing was deployed** and the"
+              echo "running commit is unchanged. This job is green because the skip is"
+              echo "intentional, not because a deploy succeeded."
+              echo
+              echo "To enable, from the Render dashboard (Settings -> Deploy Hook):"
+              echo
+              echo "\`\`\`"
+              echo "gh secret set RENDER_DEPLOY_HOOK_URL --repo broomva/parallax --body '<url>'"
+              echo "\`\`\`"
+            } >> "$GITHUB_STEP_SUMMARY"
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
@@ -100,6 +117,7 @@ jobs:
                   | sed -n 's/.*"commit":"\([^"]*\)".*/\1/p')
             if [ "$got" = "$SHA" ]; then
               echo "ok: /health reports $got after $((i * 10))s"
+              { echo "## Deployed"; echo; echo "\`/health\` reports \`$SHA\` — the running code is this commit."; } >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
             echo "  [$i/60] serving ${got:-<no answer>}"
