@@ -55,20 +55,44 @@ export interface Argv {
 /** Flags that never take a value. Anything else consumes the next token. */
 const BOOLEAN_FLAGS = new Set(["json", "governed", "no-governed", "acknowledge-unmapped", "help"]);
 
-interface CommandSpec {
+export interface CommandSpec {
   readonly summary: string;
   readonly usage: string;
   readonly allowed: readonly string[];
   readonly required: readonly string[];
 }
 
-const COMMANDS: Record<string, CommandSpec> = {
+export const COMMANDS: Record<string, CommandSpec> = {
   propose: {
     summary: "Read a context and propose an ontology from what is actually in it.",
     usage:
       "parallax propose [--kind agent-workspace|filesystem|business-data] [--root <abs>] [--within <rel>] [--table <name>:<col,col>] [--json]",
     allowed: ["kind", "root", "within", "table", "chunk-chars", "json"],
     required: [],
+  },
+  render: {
+    summary: "Re-render a proposal byte-for-byte for someone who lost it.",
+    // A re-render, never a re-summary. A paraphrased proposal that a human then
+    // accepts is an acceptance of the paraphrase, so this reads the STORED text
+    // rather than recomputing one.
+    usage: "parallax render [--proposal <id>] [--chunk-chars N] [--json]",
+    allowed: ["proposal", "chunk-chars", "json"],
+    required: [],
+  },
+  "parse-reply": {
+    summary: "Classify a reply against the pending proposal. Records nothing.",
+    usage: "parallax parse-reply --text <message> [--proposal <id>] [--json]",
+    allowed: ["text", "proposal", "json"],
+    required: ["text"],
+  },
+  answer: {
+    summary: "Record answers to blocking questions WITHOUT accepting.",
+    // The capability `accept --answer` cannot express: answers accumulate, so a
+    // person can answer question 2 today and question 1 on Thursday. Folding
+    // this into accept would make answering imply consent.
+    usage: "parallax answer [--proposal <id>] --answer <slot|n>=<value> ... [--json]",
+    allowed: ["proposal", "answer", "json"],
+    required: ["answer"],
   },
   accept: {
     summary: "Accept a proposal so it can run. Nothing simulates before this.",
@@ -282,7 +306,7 @@ function tables(argv: Argv): Result<Array<{ name: string; columns: string[] }>, 
 const HELP = [
   "parallax -- simulation results you accept before they are active.",
   "",
-  ...Object.entries(COMMANDS).map(([name, s]) => `  ${name.padEnd(8)} ${s.summary}`),
+  ...Object.entries(COMMANDS).map(([name, s]) => `  ${name.padEnd(12)} ${s.summary}`),
   "",
   ...Object.values(COMMANDS).map((s) => `  ${s.usage}`),
   "",
@@ -366,6 +390,52 @@ export async function main(argv: readonly string[], io: Io = stdio): Promise<num
       io.out(`${r.value.text}\n\n`);
       io.out(`pending     ${r.value.pendingPath}\n`);
       io.out(`accept it   parallax accept --proposal ${r.value.ref} --by <who>\n`);
+      return 0;
+    }
+
+    case "render": {
+      const chunk = integer(a, "chunk-chars");
+      if (!chunk.ok) return refuse(io, chunk.error);
+      const r = handlers.render({
+        ...(one(a, "proposal") === undefined ? {} : { ref: one(a, "proposal") as string }),
+        ...(chunk.value === undefined ? {} : { chunkChars: chunk.value }),
+      });
+      if (!r.ok) return refuse(io, r.error);
+      if (json) return emit(io, r.value);
+      io.out(`${r.value.text}\n\n`);
+      io.out(`accept it   parallax accept --proposal ${r.value.ref} --by <who>\n`);
+      return 0;
+    }
+
+    case "parse-reply": {
+      const r = handlers.classifyReply({
+        text: one(a, "text") ?? "",
+        ...(one(a, "proposal") === undefined ? {} : { ref: one(a, "proposal") as string }),
+      });
+      if (!r.ok) return refuse(io, r.error);
+      if (json) return emit(io, r.value);
+      const v = r.value;
+      io.out(`intent      ${v.intent}\n`);
+      if (v.reason !== null) io.out(`reason      ${v.reason}\n`);
+      for (const ansr of v.answers) io.out(`  answer  ${ansr.n}. ${ansr.slot} = ${ansr.text}\n`);
+      for (const q of v.stillOpen) io.out(`  open    ${q.n}. ${q.question}\n`);
+      io.out(`can accept  ${v.canAccept}\n`);
+      return 0;
+    }
+
+    case "answer": {
+      const recorded = answers(a);
+      if (!recorded.ok) return refuse(io, recorded.error);
+      const r = handlers.answer({
+        ...(one(a, "proposal") === undefined ? {} : { ref: one(a, "proposal") as string }),
+        answers: recorded.value,
+      });
+      if (!r.ok) return refuse(io, r.error);
+      if (json) return emit(io, r.value);
+      const v = r.value;
+      for (const rec of v.recorded) io.out(`recorded    ${rec.n}. ${rec.slot} = ${rec.text}\n`);
+      for (const q of v.stillOpen) io.out(`open        ${q.n}. ${q.question}\n`);
+      io.out(`can accept  ${v.canAccept}\n`);
       return 0;
     }
 

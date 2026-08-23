@@ -51,6 +51,20 @@ bun run mutants        # deletes a guarantee, checks whether anything goes red
 bun run lint
 ```
 
+To get `parallax` itself on your PATH:
+
+```bash
+bun link                # then `parallax help` anywhere
+parallax propose        # reads the directory you are standing in
+parallax answer --answer 1=pieces
+parallax accept --proposal <ref> --by <who> --acknowledge-unmapped
+parallax run --horizon 12 --seed 42
+```
+
+The nine commands are the nine tools, one for one — see
+[AGENTS.md](./AGENTS.md#the-three-surfaces-are-one-capability-set) for the
+correspondence and the two places the surfaces deliberately differ.
+
 `bun run mutants` exists because a passing suite is not a testing suite. It
 removes one specific promise at a time — the accept brand, idempotent
 acceptance, answer-value identity, "the newest acceptance" — and reports which
@@ -120,7 +134,11 @@ own transition and its own conservation law, which is the generality proof: the
 runtime did not change to accept it.
 
 The LLM policy adapter, a third domain, a domain supplied by someone who is not
-us, and the web console are designed and not built.
+us, an MCP server, and the web console are designed and not built. The MCP one is
+worth naming because the seam for it is already cut and can read as finished:
+`toolSpecs()` hands out every tool as data, the schemas were written so a JSON
+Schema surface and a Zod surface cannot disagree, and a test already asserts every
+tool name is legal as an MCP tool name. What is missing is only the transport.
 
 Nothing here has been calibrated against a real business, because we have no
 real transcripts — that is the oldest open item in this project and it cannot be
