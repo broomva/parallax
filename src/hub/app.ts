@@ -81,9 +81,23 @@ export function createHub(options: HubOptions = {}): Hub {
 
     if (path === "/health") {
       if (req.method !== "GET" && req.method !== "HEAD") return methodNotAllowed("GET, HEAD");
+      /**
+       * `commit` is what makes this endpoint usable as a deploy check.
+       *
+       * `version` is a constant in the source, so a deploy that built but
+       * silently kept serving the previous image answers 200 with a byte-identical
+       * body. Polling that -- or the platform's own deploy status API -- confirms
+       * a deploy was REPORTED, never that the code answering requests is the code
+       * that was pushed. The only thing that settles it is a value only the new
+       * build can emit.
+       *
+       * Render injects RENDER_GIT_COMMIT. Locally there is none, and "local" is
+       * the honest answer rather than a fabricated sha.
+       */
       return json({
         ok: true,
         version,
+        commit: process.env.RENDER_GIT_COMMIT ?? "local",
         uptimeSeconds: Math.max(0, Math.floor((now() - state.startedAt) / 1000)),
       });
     }
