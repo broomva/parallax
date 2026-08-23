@@ -58,7 +58,10 @@ legibles por máquina. El agente es un usuario, no una librería cliente.
 
 El runtime, el log con bifurcación copy-on-write, la retícula de
 reproducibilidad, el verificador de invariantes de conservación y la compuerta
-de aceptación existen y corren. El adaptador de LLM, el segundo dominio y la
+de aceptación existen y corren, junto con la CLI, el hub HTTP, la superficie de
+herramientas para agentes y un segundo dominio — un consultorio con su propia
+transición y su propia ley de conservación, que es la prueba de generalidad: el
+runtime no cambió para aceptarlo. El adaptador de LLM, un tercer dominio y la
 consola web están diseñados y no construidos.
 
 Nada aquí está calibrado contra un negocio real, porque no tenemos transcripciones

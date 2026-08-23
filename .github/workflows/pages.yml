@@ -49,8 +49,18 @@ jobs:
         run: |
           test -f out/index.html || { echo "::error::out/index.html missing"; exit 1; }
           test -f out/proof/index.html || { echo "::error::out/proof/index.html missing"; exit 1; }
+          test -f out/demo/index.html || { echo "::error::out/demo/index.html missing"; exit 1; }
+          test -f out/use-cases/index.html || { echo "::error::out/use-cases/index.html missing"; exit 1; }
           test -f out/.nojekyll || { echo "::error::out/.nojekyll missing"; exit 1; }
-          echo "export ok: $(find out -type f | wc -l) files"
+          # /demo is a scroll-cinema page: without its footage it renders a
+          # black stage and no error. Five clips and six posters is the asset
+          # contract the runtime asserts at construction (N+1), so assert it
+          # here too rather than discover it on stage.
+          clips=$(ls out/cinema/*.mp4 2>/dev/null | wc -l | tr -d ' ')
+          posters=$(ls out/cinema/*.webp 2>/dev/null | wc -l | tr -d ' ')
+          [ "$clips" = "5" ] || { echo "::error::expected 5 clips in out/cinema, found $clips"; exit 1; }
+          [ "$posters" = "6" ] || { echo "::error::expected 6 posters in out/cinema, found $posters"; exit 1; }
+          echo "export ok: $(find out -type f | wc -l) files, $clips clips, $posters posters"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
