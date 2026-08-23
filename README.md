@@ -42,10 +42,20 @@ Requires [Bun](https://bun.sh).
 
 ```bash
 bun install
-bun run demo     # the runtime on one sample flow: run, observe, check, fork, prove
+bun run demo           # the runtime on one sample flow: run, observe, check, fork, prove
+bun run demo:whatsapp  # the same thing as one WhatsApp thread, ending in a receipt file
+bun run demo:live      # the same thread against the deployed hub, ending in a link it fetched first
 bun test
+bun run typecheck      # bun test does not typecheck; this is a separate gate on purpose
 bun run lint
 ```
+
+Live: the landing page is <https://broomva.github.io/parallax/> and the hub is
+<https://parallax-hub.onrender.com>. `GET /health` reports the commit the server
+is running, which is the only field on it that a stale image cannot fake — a
+`version` string is a source constant and a deploy dashboard reports intent.
+The hub is on a free tier, so the first request after fifteen idle minutes pays
+about a twelve-second cold start.
 
 The demo runs a WhatsApp storefront under an ungoverned sales agent, catches it
 overselling stock it does not have, forks the history at the moment before the
@@ -92,10 +102,17 @@ if (!active.ok) return active.error.code;     // BLOCKING_QUESTIONS_OPEN | NO_IN
 
 The runtime, the log with copy-on-write forking, the reproducibility lattice,
 the conservation-invariant checker, the ontology proposal and its accept gate
-all exist and run. The LLM policy adapter, a second domain, the HTTP surface and
-the web console are designed and not built. Nothing here has been calibrated
-against a real business, because we have no real transcripts — that is the
-oldest open item in this project and it cannot be closed by writing code.
+all exist and run. So do a CLI, an HTTP hub and an agent tool surface over the
+same handler functions, and a second domain — a clinic appointment desk with its
+own transition and its own conservation law, which is the generality proof: the
+runtime did not change to accept it.
+
+The LLM policy adapter, a third domain, a domain supplied by someone who is not
+us, and the web console are designed and not built.
+
+Nothing here has been calibrated against a real business, because we have no
+real transcripts — that is the oldest open item in this project and it cannot be
+closed by writing code.
 
 We would rather say that than publish an accuracy number we cannot support.
 
