@@ -1,0 +1,109 @@
+# Deploy the hub when main moves.
+#
+# WHY THIS FILE EXISTS AT ALL
+#
+# The Render service carries `autoDeploy: yes` and `autoDeployTrigger: commit`,
+# and both are INERT. It was created through the API against a public repo URL,
+# so Render never installed a GitHub webhook and nothing tells it a commit
+# happened. The setting reads as configured and does nothing, which is worse
+# than it being off.
+#
+# WHY A DEPLOY HOOK AND NOT AN API KEY
+#
+# A Render API key can read and mutate every service in the workspace. A deploy
+# hook URL can do exactly one thing to exactly one service: start a deploy. If
+# this repository leaks -- and it is public -- the difference is the whole blast
+# radius. Least privilege is the only reason to prefer the more annoying one.
+#
+# Deliberately NOT the token in ~/.render/cli.yaml: that is a session credential
+# with an `expires_at`, not a durable key. Wiring CI to it would work today and
+# break on the expiry date with no warning and no obvious cause.
+#
+# SETUP (one paste, from the Render dashboard)
+#
+#   1. https://dashboard.render.com/web/srv-da551sbbc2fs73frmme0  ->  Settings
+#   2. Find "Deploy Hook" and copy the URL
+#   3. gh secret set RENDER_DEPLOY_HOOK_URL --repo broomva/parallax --body '<url>'
+#
+# Until that secret exists this workflow SKIPS cleanly rather than failing, so
+# merging it changes nothing until someone opts in.
+#
+# Connecting the repo in the dashboard instead is strictly better than this file
+# -- a real webhook needs no secret anywhere -- and if that ever happens, delete
+# this workflow rather than running both.
+#
+# TIMING: do not set the secret during a demo window. The free plan runs ONE
+# instance, so a deploy is downtime, and this fires on every push to main. Turn
+# it on after the presentation, not before it.
+
+name: Deploy hub to Render
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never let two deploys race. A free instance is single-instance, so overlapping
+# deploys mean the second one restarts an instance the first is still booting.
+concurrency:
+  group: render-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: deploy and verify the commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check the hook is configured
+        id: gate
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::RENDER_DEPLOY_HOOK_URL is not set - skipping. See the header of this file for the one-line setup."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger the deploy
+        if: steps.gate.outputs.configured == 'true'
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          # -o /dev/null so a hook URL echoed back in a response body cannot
+          # reach the log. Only the status code is printed.
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$HOOK")
+          echo "deploy hook returned HTTP $code"
+          case "$code" in
+            200|201|202) ;;
+            *) echo "::error::deploy hook returned $code"; exit 1 ;;
+          esac
+
+      - name: Verify the running commit is this commit
+        if: steps.gate.outputs.configured == 'true'
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          # The whole point. A deploy-status API reports that a deploy was
+          # ACCEPTED, and `version` is a source constant -- neither can tell you
+          # which code is serving. /health reports the commit, so this polls for
+          # THIS sha and fails if it never arrives. A green deploy over a stale
+          # image is the failure being guarded against.
+          echo "waiting for /health to report $SHA"
+          for i in $(seq 1 60); do
+            got=$(curl -s --max-time 30 https://parallax-hub.onrender.com/health \
+                  | sed -n 's/.*"commit":"\([^"]*\)".*/\1/p')
+            if [ "$got" = "$SHA" ]; then
+              echo "ok: /health reports $got after $((i * 10))s"
+              exit 0
+            fi
+            echo "  [$i/60] serving ${got:-<no answer>}"
+            sleep 10
+          done
+          echo "::error::/health never reported $SHA. The deploy was triggered but the running code did not change."
+          exit 1
