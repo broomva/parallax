@@ -66,9 +66,18 @@ PARALLAX_PACE=1.4 bun run demo:live
 Spanish description.** We have no real transcripts yet. We would rather say that than publish an
 accuracy percentage we cannot support. *Do not improvise a number here.*
 
-**"What is not built?"** — the LLM adapter, the second domain, and the web console are designed and
-not built. The runtime, the copy-on-write forking log, the reproducibility lattice, the conservation
-checker and the accept gate exist and run.
+**"Does this only work for your one toy storefront?"** — No, and this is the strongest
+architectural claim, so do not skip it. There is a **second domain**: a clinic appointment desk
+(`src/worlds/clinic.ts`, 229 lines, 14 tests). Different transition, different conservation law,
+**the runtime did not change to accept it**. A domain arrives as a record — state, actions,
+transition, invariants, initial. Adding a domain adds a record; adding a capability adds an
+operator, and there are six of those. That asymmetry is what separates a simulation runtime from a
+pile of bespoke simulators.
+
+**"What is not built?"** — the LLM adapter (today's actors are seeded and pure), a *third* domain,
+a domain supplied by someone outside the team, and the web console. The runtime, the copy-on-write
+forking log, the reproducibility lattice, the conservation checker, the accept gate, the CLI, the
+HTTP hub, the agent tool surface and the clinic domain all exist and run.
 
 ---
 
