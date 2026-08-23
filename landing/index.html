@@ -113,11 +113,70 @@
   .skip:focus-visible { transform: translateY(0); }
 
   /* ---------------- cinema (wiring preserved) ---------------- */
+  /* The opening is a DRAWING, not footage. It was six near-identical road shots
+     under six beats of copy about proposing, accepting and forking -- and the
+     one image the product's name depends on, the fork, was not among them.
+     Nothing here loads over the network, so the opening cannot 404 the way this
+     page's first deploy did. */
   #stage {
     position: fixed; inset: 0; z-index: 0; overflow: hidden;
-    background: #0a0c0b url("assets-real/stills/01-road.webp") center / cover no-repeat;
+    background:
+      radial-gradient(120% 90% at 68% 46%, #12171c 0%, #0a0c0b 62%, #070908 100%);
   }
-  #stage video, #stage img { width: 100%; height: 100%; object-fit: cover; }
+  #cine { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* --p is the scroll position of the whole opening, 0 -> 1. Every reveal below
+     is a clamp() over it, so the figure is a pure function of scroll: no
+     timers, no transitions to fall out of sync, and --p: 1 (the @property
+     initial value) is a complete diagram for no-JS and reduced-motion. */
+  .cine-grid  { stroke: oklch(0.97 0.004 265 / 0.05); stroke-width: 1; }
+  .cine-axis  { stroke: oklch(0.97 0.004 265 / 0.14); stroke-width: 1; }
+
+  /* SOLID = RECORDED. Drawn with dashoffset because its finished state is solid. */
+  .cine-trunk {
+    fill: none; stroke: var(--cine-fg); stroke-width: 3; stroke-linecap: round;
+    stroke-dasharray: 620; stroke-dashoffset: calc(620px * (1 - clamp(0, var(--p) / 0.28, 1)));
+  }
+  /* DOTTED = PINNED. A dashed stroke cannot also be drawn ON with dashoffset --
+     the two uses of the same property fight -- so the branches are revealed by
+     a clip that sweeps out from the fork instead. */
+  .cine-ray { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 9; }
+  .cine-ray.main { stroke: oklch(0.97 0.004 265 / 0.72); }
+  .cine-ray.gov  { stroke: var(--accent); }
+  .cine-wedge { fill: color-mix(in oklab, var(--accent) 12%, transparent); stroke: none; }
+  .cine-arc   { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+  /* Starts AT the fork, not at x=0: sweeping from the left edge would spend 57%
+     of the ramp crossing empty canvas before the first ray appeared. */
+  .cine-sweep { x: 920px; width: calc(460px * clamp(0, (var(--p) - 0.46) / 0.30, 1)); }
+
+  .cine-nowline { stroke: oklch(0.97 0.004 265 / 0.30); stroke-width: 1; stroke-dasharray: 3 6; }
+  .cine-ring { fill: none; stroke: var(--cine-fg); stroke-width: 1.5; }
+  .cine-dot  { fill: #0a0c0b; stroke: var(--cine-fg); stroke-width: 2.5; }
+  .cine-end  { fill: var(--cine-fg); }
+  .cine-end.gov { fill: var(--accent); }
+
+  /* The accept gate: a closed bar across NOW that opens before the fork runs.
+     It is the product's whole claim -- nothing runs until a human accepts -- so
+     it gets its own beat rather than a label. */
+  .cine-gate { stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
+  .cine-gate-halo { stroke: color-mix(in oklab, var(--accent) 30%, transparent);
+                    stroke-width: 13; stroke-linecap: round; }
+
+  #cine text { font-family: var(--mono); letter-spacing: var(--tr-code); }
+  .cine-tag  { font-size: 15px; letter-spacing: 0.14em; fill: var(--cine-tag); }
+  .cine-name { font-size: 19px; fill: var(--cine-fg); }
+  .cine-name.gov { fill: var(--accent); }
+  .cine-meta { font-size: 15px; fill: var(--cine-dim); }
+  .cine-delta { font-size: 21px; fill: var(--accent); }
+
+  /* Each beat fades in over its own slice of --p. Numbers are the scene
+     boundaries: 6 scenes, so scene n owns [n/6, (n+1)/6). */
+  .b-trunk { opacity: clamp(0, (var(--p) - 0.06) * 9, 1); }
+  .b-now   { opacity: clamp(0, (var(--p) - 0.20) * 9, 1); }
+  .b-gate  { opacity: calc(clamp(0, (var(--p) - 0.34) * 10, 1) * (1 - clamp(0, (var(--p) - 0.50) * 10, 1))); }
+  .b-fork  { opacity: clamp(0, (var(--p) - 0.50) * 9, 1); }
+  .b-angle { opacity: clamp(0, (var(--p) - 0.69) * 9, 1); }
+  .b-typed { opacity: clamp(0, (var(--p) - 0.85) * 10, 1); }
   #track { position: relative; z-index: 1; height: 420vh; }
   .veil {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
@@ -163,6 +222,29 @@
     transition: opacity 300ms, background 150ms;
   }
   .jump:hover { background: rgba(10,12,11,0.8); }
+  @media (prefers-reduced-motion: reduce) {
+    /* --p stays at 1, so the figure is already complete; 420vh of scroll behind
+       a static drawing would be 3 screens of nothing. */
+    #track { height: 100vh; }
+  }
+  /* The figure scales with the viewport (preserveAspectRatio="meet"); the copy
+     does not. So as the screen narrows the fork walks leftward INTO the copy's
+     column. Measured at 1024x768: the NOW label landed inside the copy box.
+     Both breakpoints below drop the figure clear of the text rather than
+     letting them overlap. */
+  @media (max-width: 68rem) {
+    #cine { transform: translateY(15%); }
+    .copy { top: 40%; }
+  }
+  /* Portrait. At 390px the figure renders at 0.24 scale, where 15px type is
+     under 4px — illegible, not merely small. The labels come off and the figure
+     becomes a SHAPE; the copy beside it and the SVG's own <desc> still carry
+     every word, so nothing is lost but the pretence of a readable diagram. */
+  @media (max-width: 44rem) {
+    #cine { transform: translateY(24%) scale(1.5); }
+    #cine text { display: none; }
+    .copy { top: 30%; }
+  }
   @media (max-width: 34rem) {
     .scrollcue { bottom: 80px; }
     /* a horizontal scrim leaves the middle of a portrait screen half-lit, and the
@@ -482,7 +564,85 @@
 
 <a class="skip" href="#main">Skip the opening sequence</a>
 
-<div id="stage" aria-hidden="true"></div>
+<div id="stage">
+  <svg id="cine" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-labelledby="cine-t cine-d">
+    <title id="cine-t">A recorded trunk, a fork at now, and two simulated branches</title>
+    <desc id="cine-d">A solid line runs left to right and stops at a point marked NOW. The solid
+      stroke is the RECORDED class: it is what actually happened, tagged observed. At NOW a bar
+      stands across the line — nothing runs until a human accepts. Past NOW the line forks into two
+      dotted rays that share that one baseline. Dotted is the PINNED class: byte-identical on
+      replay. One ray, named main, rises to more violations; the other, named governed, stays flat
+      on zero. Both are tagged simulated. The angle between the two rays, marked at the fork, is the
+      measurement — which is what the word parallax means.</desc>
+
+    <defs>
+      <clipPath id="cine-clip" clipPathUnits="userSpaceOnUse">
+        <rect class="cine-sweep" y="0" height="900"></rect>
+      </clipPath>
+      <linearGradient id="cine-fade" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0"    stop-color="#fff" stop-opacity="0"></stop>
+        <stop offset="0.22" stop-color="#fff" stop-opacity="1"></stop>
+      </linearGradient>
+      <!-- userSpaceOnUse is load-bearing: a horizontal line has a ZERO-HEIGHT
+           bounding box, and a mask defaults to objectBoundingBox units, so the
+           mask region collapses to zero height and hides the trunk entirely. -->
+      <mask id="cine-past" maskUnits="userSpaceOnUse" x="280" y="560" width="700" height="160">
+        <rect x="280" y="560" width="700" height="160" fill="url(#cine-fade)"></rect>
+      </mask>
+    </defs>
+
+    <g class="cine-grid" aria-hidden="true">
+      <line x1="300" y1="470" x2="1380" y2="470"></line>
+      <line x1="300" y1="630" x2="1380" y2="630"></line>
+      <line x1="300" y1="790" x2="1380" y2="790"></line>
+    </g>
+
+    <!-- 1 — the recorded past. Faded at its left edge so it reads as continuing
+         off-frame rather than beginning from nowhere: the history predates the view. -->
+    <g class="b-trunk">
+      <path class="cine-trunk" d="M 300 630 L 920 630" mask="url(#cine-past)"></path>
+      <text class="cine-tag"       x="700" y="676">RECORDED</text>
+      <text class="cine-meta b-typed" x="700" y="702">observed · it happened</text>
+    </g>
+
+    <!-- 2 — now -->
+    <g class="b-now">
+      <line class="cine-nowline" x1="920" y1="356" x2="920" y2="800"></line>
+      <text class="cine-tag" x="920" y="340" text-anchor="middle">NOW</text>
+      <circle class="cine-ring" cx="920" cy="630" r="13"></circle>
+      <circle class="cine-dot"  cx="920" cy="630" r="5.5"></circle>
+    </g>
+
+    <!-- 3 — the accept gate, closed. It opens before anything forks. -->
+    <g class="b-gate">
+      <line class="cine-gate-halo" x1="920" y1="582" x2="920" y2="678"></line>
+      <line class="cine-gate" x1="920" y1="582" x2="920" y2="678"></line>
+      <text class="cine-meta" x="952" y="716">nothing runs until you accept</text>
+    </g>
+
+    <!-- 4/5 — the fork. Revealed by a clip sweeping out of NOW, because a dotted
+         stroke cannot also be drawn on with stroke-dashoffset. -->
+    <g clip-path="url(#cine-clip)">
+      <path class="cine-wedge b-angle" d="M 920 630 L 1380 470 L 1380 630 Z"></path>
+      <line class="cine-ray main b-fork" x1="920" y1="630" x2="1380" y2="470"></line>
+      <line class="cine-ray gov  b-fork" x1="920" y1="630" x2="1380" y2="630"></line>
+      <path class="cine-arc b-angle" d="M 1090 630 A 170 170 0 0 0 1080.56 574.15"></path>
+      <circle class="cine-end     b-fork" cx="1380" cy="470" r="6"></circle>
+      <circle class="cine-end gov b-fork" cx="1380" cy="630" r="6"></circle>
+    </g>
+
+    <g class="b-fork">
+      <text class="cine-name"     x="1400" y="464">main</text>
+      <text class="cine-name gov" x="1400" y="624">governed</text>
+    </g>
+    <g class="b-typed">
+      <text class="cine-meta" x="1400" y="488">PINNED · simulated</text>
+      <text class="cine-meta" x="1400" y="648">PINNED · simulated</text>
+    </g>
+    <text class="cine-delta b-angle" x="1136" y="556">&#916; the measurement</text>
+  </svg>
+</div>
 <div class="veil" aria-hidden="true"></div>
 
 <div class="cine-brand" id="cine-brand">
@@ -1112,30 +1272,12 @@ $ <b>bun run src/hub/serve.ts</b>
 </main>
 
 <script type="module">
-  import { createScrollCinema } from "./vendor/index.js";
-
   // The scene copy is read out of the document rather than declared here, so a
   // reader with no JavaScript still gets all six lines in the served HTML.
   const SCENES = [...document.querySelectorAll("#scenes > li")].map((li) => [
     li.querySelector("b")?.textContent ?? "",
     li.querySelector("span")?.textContent ?? ""
   ]);
-
-  const clips = [
-    "assets-real/video/01-road-to-marker.mp4",
-    "assets-real/video/02-marker-to-closure.mp4",
-    "assets-real/video/03-closure-to-return.mp4",
-    "assets-real/video/04-return-to-fork.mp4",
-    "assets-real/video/05-fork-to-divergence.mp4"
-  ];
-  const posters = [
-    "assets-real/stills/01-road.webp",
-    "assets-real/stills/02-marker.webp",
-    "assets-real/stills/03-closure.webp",
-    "assets-real/stills/04-return.webp",
-    "assets-real/stills/05-fork.webp",
-    "assets-real/stills/06-divergence.webp"
-  ];
 
   const copy = document.getElementById("copy");
   const elN = document.getElementById("copy-n");
@@ -1157,13 +1299,37 @@ $ <b>bun run src/hub/serve.ts</b>
   }
   setScene(0);
 
-  createScrollCinema({
-    clips,
-    posters,
-    stage: document.getElementById("stage"),
-    track: document.getElementById("track"),
-    onScene: setScene
-  });
+  // Scroll drives ONE number. --p is the position through the opening, 0 -> 1;
+  // every reveal in the figure is a clamp() over it in CSS, and the scene copy
+  // is the same number bucketed. Nothing here interpolates or tweens, so the
+  // drawing and the words cannot drift apart the way footage and copy did.
+  const cine = document.getElementById("cine");
+  const track = document.getElementById("track");
+  const reducedCine = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (cine && track && !reducedCine) {
+    cine.style.setProperty("--p", "0");
+    let queued = false;
+    const paint = () => {
+      queued = false;
+      const r = track.getBoundingClientRect();
+      // the track is taller than the viewport; the scrub is over the overflow
+      const span = Math.max(1, r.height - window.innerHeight);
+      const p = Math.min(1, Math.max(0, -r.top / span));
+      cine.style.setProperty("--p", p.toFixed(4));
+      setScene(Math.min(SCENES.length - 1, Math.floor(p * SCENES.length)));
+    };
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    paint();
+  }
+  // Reduced motion and no-JS both land on --p: 1 (the @property initial value),
+  // which is the finished diagram rather than a blank stage.
 
   // the cinema owns the viewport; once the reader is past it, get out of the way
   const after = document.querySelector(".after");
