@@ -44,10 +44,14 @@ const MUTANTS: Mutant[] = [
   {
     name: "control/must-kill",
     file: "src/core/ops.ts",
-    find: "export function traceHash(",
-    replace:
-      "export function traceHash(\n  ..._mutantIgnored: never[]\n): never;\nexport function traceHash(",
-    promise: "CONTROL: an outright broken signature. If this survives, the harness cannot see red.",
+    // A RUNTIME break, not a type break. The first version of this control was a
+    // broken signature and it SURVIVED -- because `bun test` does not typecheck.
+    // The control was measuring the wrong thing, which is the exact failure it
+    // exists to detect.
+    find: "  return h(\n    log.read(branch).map((e) => ({ a: e.actor, n: e.action, p: e.params, d: e.derivation })),\n  );",
+    replace: '  return "mutant-constant-trace-hash";',
+    promise:
+      "CONTROL: replay collapses to a constant. If this survives, the harness cannot see red.",
     control: "must-kill",
   },
   {
@@ -91,8 +95,11 @@ const MUTANTS: Mutant[] = [
   {
     name: "find/newest-becomes-oldest",
     file: "src/tools/handlers.ts",
-    find: "    const newest = all[0];",
-    replace: "    const newest = all[all.length - 1];",
+    // `const newest = all[0]` appears twice (findAcceptance and findRun), so the
+    // anchor carries the line above it to stay unique.
+    find: "  if (ontologyId === undefined || ontologyId.length === 0) {\n    const newest = all[0];",
+    replace:
+      "  if (ontologyId === undefined || ontologyId.length === 0) {\n    const newest = all[all.length - 1];",
     promise: "`run` with no --ontology silently uses the FIRST acceptance ever made.",
   },
 ];
