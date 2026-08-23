@@ -47,8 +47,18 @@ bun run demo:whatsapp  # the same thing as one WhatsApp thread, ending in a rece
 bun run demo:live      # the same thread against the deployed hub, ending in a link it fetched first
 bun test
 bun run typecheck      # bun test does not typecheck; this is a separate gate on purpose
+bun run mutants        # deletes a guarantee, checks whether anything goes red
 bun run lint
 ```
+
+`bun run mutants` exists because a passing suite is not a testing suite. It
+removes one specific promise at a time — the accept brand, idempotent
+acceptance, answer-value identity, "the newest acceptance" — and reports which
+ones nothing notices. It refuses to run against a dirty tree, requires every
+anchor to match exactly once, and carries a control in each polarity: a mutant
+that must die and a mutant that must live. If either control misbehaves the run
+is reported invalid, because a harness that cannot see red and a harness that
+reports noise are both worth nothing.
 
 Live: the landing page is <https://broomva.github.io/parallax/> and the hub is
 <https://parallax-hub.onrender.com>. `GET /health` reports the commit the server
