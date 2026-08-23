@@ -333,6 +333,31 @@ def render_logo(seed: int, size: int) -> Image.Image:
     return Image.fromarray(array, "RGB")
 
 
+# The Platanus validator caps project-logo.png at 500 KB. A 1000x1000 render with
+# gradients, bloom and per-pixel grain lands near 670 KB as truecolour PNG, because
+# grain is precisely the thing PNG cannot compress. An adaptive 256-colour palette
+# takes it to ~170 KB and is visually indistinguishable at every size that matters.
+#
+# NOT dithered on purpose: Floyd-Steinberg reaches ~90 KB but spends palette entries
+# on dither pattern instead of on the plume's gradient, which crushes the ground to
+# black and leaves green/magenta blotches through the fan. Measured, then rejected.
+#
+# MAXCOVERAGE, not FASTOCTREE, though octree is smaller (126 KB vs 229 KB). Octree
+# visibly flattens the plume, and the plume is the whole reason this mark survives a
+# 31x downsample -- see the selftest below. Both fit the cap with room, so the choice
+# is made on the thing the cap does not measure. MEDIANCUT is useless here: 521 KB,
+# over the cap on its own.
+MAX_LOGO_BYTES = 500_000
+
+
+def save_logo(image: Image.Image, path: Path) -> int:
+    """Write the logo under the validator's size cap and return the byte count."""
+    image.convert("RGB").quantize(colors=256, method=Image.Quantize.MAXCOVERAGE, dither=Image.Dither.NONE).save(
+        path, optimize=True
+    )
+    return path.stat().st_size
+
+
 def save_previews(image: Image.Image, root: Path) -> list[Path]:
     preview_dir = root / "previews"
     preview_dir.mkdir(parents=True, exist_ok=True)
@@ -479,7 +504,12 @@ def main() -> None:
         return
     args.out.parent.mkdir(parents=True, exist_ok=True)
     image = render_logo(args.seed, args.size)
-    image.save(args.out, optimize=True)
+    written = save_logo(image, Path(args.out))
+    print(f"wrote {args.out}  {written} bytes  ({written / 1024:.1f} KB)")
+    if written > MAX_LOGO_BYTES:
+        raise SystemExit(
+            f"FAIL: {written} bytes exceeds the {MAX_LOGO_BYTES}-byte validator cap"
+        )
 
     root = args.out.parent
     save_previews(image, root)
