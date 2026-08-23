@@ -93,6 +93,7 @@ HTTP hub, the agent tool surface and the clinic domain all exist and run.
 | Failure | What you do |
 |---|---|
 | **Venue wifi is down** | Play `docs/backup-demo.mp4`. Say "this is a recording, the live one needs the network" — do not pretend. |
+| **Someone pushes to main mid-demo** | Nothing deploys automatically today — `RENDER_DEPLOY_HOOK_URL` is unset, so `.github/workflows/deploy.yml` skips. Do **not** set that secret before the presentation: the free plan is single-instance, so a deploy is downtime. |
 | **Hub is cold / slow** | It still works, it just takes ~12s on the first call. Talk over it: that beat is the trust opener anyway. |
 | **Hub is unreachable** | `bun run demo:whatsapp` — the same flow, no network. Say the hosted one is on a free tier. |
 | **The receipt 404s** | The script will refuse to name the link and exit. That is the guard working. Fall back to `demo:whatsapp`, which writes a self-contained receipt to `out/`. |
