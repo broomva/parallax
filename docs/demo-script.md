@@ -13,6 +13,12 @@ cd ~/broomva/apps/simulacro
 scripts/warm-hub.sh             # or: curl -s https://parallax-hub.onrender.com/health
 ```
 
+A cron on the always-on VPS (`srv1692698`) already pings `/health` every 10 minutes from
+**08:00–13:50 COT today**, so the hub should be warm when you arrive whether or not anyone's laptop
+is open. It is pinned to 23 Aug and stops firing by itself. Remove early with:
+`ssh agent@100.82.195.109 "crontab -l | grep -v parallax-demo-warm | crontab -"`. Run `warm-hub.sh`
+anyway — it is the check that tells you the deployed commit.
+
 If it prints **`local HEAD is N commit(s) ahead of what is deployed`**, the opening beat gets weaker
 — you would be saying "this is the code in the repo" while showing an older commit. Either redeploy
 (`./scripts/deploy-render.sh --deploy`, about three minutes, wait for `health check 200`) or say
