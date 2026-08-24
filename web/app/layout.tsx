@@ -2,7 +2,22 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const site = `https://broomva.github.io${base || "/parallax"}/`;
+// The address the site is actually reachable at today. This repository does not
+// publish it -- GitHub goes on serving broomva/parallax's Pages build after that
+// repo is archived read-only -- but that is where a reader following a share card
+// still lands, so it is the honest canonical origin until something republishes.
+//
+// The default is deliberately NOT localhost. A localhost fallback reads as
+// cautious and ships worse: the exported HTML then declares
+// `og:url = http://localhost:3000/` to every crawler and chat client that
+// unfurls it, which is not "no claim", it is a wrong claim that nobody can
+// follow. Override with NEXT_PUBLIC_SITE_URL when the site moves (BRO-2271).
+// Deliberately NOT composed with `base`. The two are different things: `base` is
+// the path prefix assets are served under, while this is the one canonical
+// address of the site. Composing them yields /parallax/parallax/ in any build
+// that sets NEXT_PUBLIC_BASE_PATH=/parallax, which is exactly the build that
+// publishes.
+const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://broomva.github.io/parallax/";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site),

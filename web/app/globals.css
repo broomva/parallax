@@ -1521,6 +1521,9 @@ footer a:hover {
   border-radius: var(--r-sm);
   padding: 8px 12px;
   color: var(--fg-2);
+  /* The runtime path is long and a path has no spaces to break at, so a narrow
+     viewport would push the chip past the hero rather than wrap it. */
+  overflow-wrap: anywhere;
 }
 
 /* ---------------- the moving panel ----------------

@@ -1,3 +1,5 @@
+import { REPO } from "../lib/repo";
+
 const LINKS: Array<[string, string]> = [
   ["How it works", "#how"],
   ["Guarantees", "#guarantees"],
@@ -49,7 +51,7 @@ export function Nav({ base }: { base: string }) {
           </a>
         ))}
       </nav>
-      <a className="navcta" href="https://github.com/broomva/parallax" rel="noopener">
+      <a className="navcta" href={REPO} rel="noopener">
         Read the source
       </a>
     </header>

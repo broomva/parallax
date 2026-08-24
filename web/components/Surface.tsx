@@ -5,8 +5,9 @@ import { useId, useState } from "react";
 /**
  * The same three operations, three ways in. The point of the section is that
  * they are the same handler functions underneath, so the snippets are the real
- * ones -- the CLI usage strings come out of src/cli.ts, the routes out of
- * src/hub/app.ts and the tool names out of src/tools/index.ts.
+ * ones -- the CLI usage strings come out of the runtime's src/cli.ts, the routes
+ * out of src/hub/app.ts and the tool names out of src/tools/index.ts
+ * (skills/simulation/parallax/runtime/).
  */
 
 type Way = { id: string; label: string; say: string; code: React.ReactNode };

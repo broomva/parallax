@@ -3,11 +3,11 @@ import { AsciiField } from "../../components/AsciiField";
 import { AutoScroll } from "../../components/AutoScroll";
 import { DemoCinema, type Scene } from "../../components/DemoCinema";
 import { MotionPanel } from "../../components/MotionPanel";
+import { REPO } from "../../lib/repo";
 import type { MotionId } from "../../remotion/registry";
 import "./demo.css";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const REPO = "https://github.com/broomva/parallax";
 const HUB = "https://parallax-hub.onrender.com";
 
 export const metadata: Metadata = {
@@ -118,7 +118,8 @@ export default function Demo() {
         Saltar la secuencia de apertura
       </a>
 
-      {/* The pitch slot is three minutes with a hard stop at 3:01. */}
+      {/* A hands-free three-minute pass through the page; the reader can take
+          over at any point. */}
       <AutoScroll totalSeconds={180} />
 
       <DemoCinema scenes={SCENES} clips={CLIPS} posters={POSTERS} />
@@ -191,7 +192,7 @@ export default function Demo() {
           <p className="act-l">
             Un simulador produce números seguros sobre un mundo que no existe, y casi nunca te da
             cómo verificarlos. La respuesta habitual es prometer más fidelidad, que no se puede
-            comprobar en una conversación de tres minutos. Estas cuatro sí.
+            comprobar desde afuera. Estas cuatro sí.
           </p>
 
           <div className="glist">
@@ -276,7 +277,7 @@ export default function Demo() {
           <p className="foot">
             El hub responde en <code>{HUB}</code> — <code>GET /health</code> reporta el commit que
             está corriendo, que es el único campo de esa respuesta que una imagen vieja no puede
-            falsificar. Track Simulations · team-5 · Platanus Hack 26 Bogotá.
+            falsificar. Carlos Escobar (@broomva) · Apache-2.0.
           </p>
         </div>
       </section>

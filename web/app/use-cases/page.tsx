@@ -3,9 +3,9 @@ import { MotionPanel } from "../../components/MotionPanel";
 import { Nav } from "../../components/Nav";
 import { Verdict } from "../../components/Verdict";
 import { Wiring } from "../../components/Wiring";
+import { REPO } from "../../lib/repo";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const REPO = "https://github.com/broomva/parallax";
 
 export const metadata: Metadata = {
   title: "Parallax — an operating twin for multi-site businesses",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
  * The claim the page has to earn is that this is not seven new subsystems. It
  * is the six operators plus the accept gate, arranged in a circle. The table
  * below is where that is either true or it is marketing, so every row names
- * the thing in the repository that does the work.
+ * the thing in the runtime that does the work.
  */
 const LOOP = [
   {
@@ -140,8 +140,8 @@ export default function UseCases() {
           <h2 className="h">Seven stations, and not one of them is a new subsystem.</h2>
           <p className="lede">
             observar → estructurar → predecir → simular → recomendar → medir → recalibrar. Each
-            station below names the operator in the repository that does the work, because a loop
-            drawn over primitives that do not exist is a diagram, not an architecture.
+            station below names the operator in the runtime that does the work, because a loop drawn
+            over primitives that do not exist is a diagram, not an architecture.
           </p>
 
           <div style={{ marginTop: 40 }} className="loopwrap">
@@ -337,9 +337,9 @@ Pronóstico 22% → real 19%. Error de 3 puntos, registrado.`}</pre>
           Parallax · point it at a context · accept the ontology · fork it · prove it
           <br />
           <a href={REPO} rel="noopener">
-            github.com/broomva/parallax
+            github.com/broomva/skills
           </a>{" "}
-          · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
+          · Apache-2.0 · Carlos Escobar (@broomva)
           <p className="note">
             This page describes a product that is proposed and a runtime that is built. Where the
             two are confused, the runtime is the one with tests and the product is the one without

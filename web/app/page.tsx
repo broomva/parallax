@@ -4,9 +4,9 @@ import { Nav } from "../components/Nav";
 import { Surface } from "../components/Surface";
 import { Verdict } from "../components/Verdict";
 import { Wiring } from "../components/Wiring";
+import { CLONE, REPO, RUNTIME } from "../lib/repo";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const REPO = "https://github.com/broomva/parallax";
 const HUB = "https://parallax-hub.onrender.com";
 const proof = (hash: string) => `${base}/proof/${hash}`;
 
@@ -135,7 +135,7 @@ export default function Home() {
           <div className="wrap">
             <div className="badges">
               <span className="badge">Apache-2.0</span>
-              <span className="badge">Platanus Hack 26 · track Simulations</span>
+              <span className="badge">bstack · ontology simulation layer</span>
               <span className="badge live">
                 <span className="dot" /> hub deployed
               </span>
@@ -155,7 +155,9 @@ export default function Home() {
               </a>
             </div>
             <p className="install">
-              <code>git clone {REPO.replace("https://", "")}</code>
+              <code>git clone {CLONE.replace("https://", "")}</code>
+              <span>then</span>
+              <code>cd skills/{RUNTIME}</code>
               <span>then</span>
               <code>bun install &amp;&amp; bun run demo</code>
             </p>
@@ -175,7 +177,7 @@ export default function Home() {
             <p className="lede">
               A simulator&rsquo;s output is unfalsifiable by default: it produces confident numbers
               about a world that does not exist. The usual response is to claim more fidelity, which
-              cannot be checked inside a three-minute conversation. These four can.
+              cannot be checked from the outside at all. These four can.
             </p>
 
             <div className="featlist">
@@ -459,9 +461,9 @@ export default function Home() {
             <p className="eyebrow">Build state</p>
             <h2 className="h">What runs, what does not, and what is unmeasured.</h2>
             <p className="lede">
-              Every figure on this page is printed by a command in the repository at seed 42 over a
-              horizon of 12 steps. There are no customer deployments, no accuracy claims and no
-              benchmark numbers here, because we have none.
+              Every figure on this page is printed by a command in the Parallax runtime at seed 42
+              over a horizon of 12 steps. There are no customer deployments, no accuracy claims and
+              no benchmark numbers here, because we have none.
             </p>
             <div className="state2">
               <div>
@@ -552,10 +554,10 @@ export default function Home() {
               <div>
                 <p className="q">Our context is a mess.</p>
                 <p className="a">
-                  Then the proposal comes back smaller and emptier. The one it made of this very
-                  repository proposed zero invariants and seven blocking questions, and said so in
-                  the message rather than filling the gaps with something plausible. An empty slot
-                  is information about your context, not a failure of the tool.
+                  Then the proposal comes back smaller and emptier. The one it made of the Parallax
+                  project directory proposed zero invariants and seven blocking questions, and said
+                  so in the message rather than filling the gaps with something plausible. An empty
+                  slot is information about your context, not a failure of the tool.
                 </p>
               </div>
             </div>
@@ -579,8 +581,10 @@ export default function Home() {
               <pre>
                 <code>
                   {"$ git clone "}
-                  {REPO}
-                  {" && cd parallax\n"}
+                  {CLONE}
+                  {"\n$ cd skills/"}
+                  {RUNTIME}
+                  {"\n"}
                   {"$ bun install\n"}
                   {"$ "}
                   <b>bun run demo</b>
@@ -650,7 +654,7 @@ export default function Home() {
                     </a>
                   </li>
                   <li>
-                    <a href={`${REPO}#run-it`} rel="noopener">
+                    <a href={`${REPO}/README.md#run-it`} rel="noopener">
                       Run it locally
                     </a>
                   </li>
@@ -679,7 +683,7 @@ export default function Home() {
                     </a>
                   </li>
                   <li>
-                    <a href={`${REPO}/blob/main/LICENSE`} rel="noopener">
+                    <a href={`${CLONE}/blob/main/${RUNTIME}/LICENSE`} rel="noopener">
                       Apache-2.0
                     </a>
                   </li>
@@ -691,12 +695,12 @@ export default function Home() {
             CLASSES PINNED · STABLE · RECORDED &nbsp;·&nbsp; ORIGINS observed · simulated
             <br />
             <a href={REPO} rel="noopener">
-              github.com/broomva/parallax
+              github.com/broomva/skills
             </a>{" "}
-            · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
+            · Apache-2.0 · Carlos Escobar (@broomva)
             <p className="note">
               Every number on this page is printed by <code>bun run demo</code> or{" "}
-              <code>bun run demo:whatsapp</code> in this repository, at seed 42 over a horizon of 12
+              <code>bun run demo:whatsapp</code> in the runtime, at seed 42 over a horizon of 12
               steps, and every quoted string is copied from that output or from the source file
               named beside it. There are no customer deployments, no accuracy claims and no
               benchmark results, because we have none — and inventing them is the exact failure this

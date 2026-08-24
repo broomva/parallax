@@ -1,10 +1,10 @@
 /* ------------------------------------------------------------------
-   /demo — the pitch surface.
+   /demo — the narrated walkthrough, in Spanish.
 
-   Dark end to end, deliberately: this page is shown on a projector and
-   restreamed, and the organisers' own guidance is that a light deck washes out
-   on the stream. The landing stays light; this is the same design system with
-   the foreground and background exchanged, not a second one.
+   Dark end to end, deliberately: the page opens on a film and stays inside it,
+   so the surface follows the footage rather than the document. The landing
+   stays light; this is the same design system with the foreground and
+   background exchanged, not a second one.
 
    The film is a fixed stage the whole document scrolls over. Everything after
    it is opaque and sits on a higher layer, so the stage is covered rather than
@@ -14,7 +14,7 @@
 :root:has(.demo) {
   /* The root layout pins light for the landing. The scrollbar and any form
      control follow color-scheme, not our tokens, so a light gutter would frame
-     a dark page on the projector. Scoped with :has so the landing is untouched. */
+     a dark page. Scoped with :has so the landing is untouched. */
   color-scheme: dark;
 }
 

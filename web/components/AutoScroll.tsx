@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Hands-free presentation. The pitch slot is three minutes with a hard stop at
- * 3:01, so the page can drive itself through exactly that and the presenter can
- * talk instead of scrolling.
+ * Hands-free reading. The page can drive itself through its own length in a
+ * fixed three minutes, so a reader can watch it rather than scroll it.
  *
  * The naive version scrolls at a constant rate, which is wrong in both
  * directions at once: it races past the sections with the most to read and
@@ -19,12 +18,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * A section taller than the viewport is read by scrolling slowly through it
  * across its dwell rather than being pinned at its top with the end off-screen.
  * Whatever the natural durations sum to, they are then scaled to hit the target
- * exactly, which preserves the relative weighting while landing on the slot.
+ * exactly, which preserves the relative weighting while landing on the budget.
  *
- * Any real scroll input hands control straight back to the human: a presenter
- * who reaches for the trackpad has decided to take over, and fighting them for
- * the scroll position is the one behaviour that would make this unusable on
- * stage.
+ * Any real scroll input hands control straight back to the human: a reader who
+ * reaches for the trackpad has decided to take over, and fighting them for the
+ * scroll position is the one behaviour that would make this unusable.
  */
 
 /** Characters per second. Spanish prose at ~180wpm, ~5.5 chars a word. */
@@ -43,7 +41,7 @@ type Leg =
 const easeInOut = (p: number) => (p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2);
 
 /**
- * How much of a section is actually PROSE a presenter would speak over.
+ * How much of a section is actually PROSE a reader reads.
  *
  * This is not a nicety. The ascii figure is two <pre> layers of ~6,190
  * characters each, so counting a section's raw text made one caption read as
@@ -93,7 +91,7 @@ export function AutoScroll({ totalSeconds = 180 }: { totalSeconds?: number }) {
       const h = act.getBoundingClientRect().height;
       // Reading time from the section's own text. `innerText` rather than
       // textContent so visually-hidden copy -- which exists on this page for
-      // screen readers -- is not counted as something to be read on stage.
+      // screen readers -- is not counted as something to be read aloud.
       const dwell = Math.max(MIN_DWELL, readableChars(act) / CPS);
 
       const prev = out.at(-1);
