@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Nav } from "../../components/Nav";
 import { type Beat, ScrollCinemaStage } from "../../components/ScrollCinemaStage";
+import { REPO } from "../../lib/repo";
 import "./scroll-cinema.css";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const REPO = "https://github.com/broomva/parallax";
 
 export const metadata: Metadata = {
   title: "Parallax — the branch that held",
@@ -114,8 +114,8 @@ export default function ScrollCinemaPage() {
             <p className="t" style={{ marginTop: 32 }}>
               Nothing here is calibrated against a real business, and there is no accuracy figure on
               this page, because we do not have one. The footage above is generated and carries no
-              claim — every number in this project is printed by a command in the repository at seed
-              42 over a horizon of twelve steps.
+              claim — every number in this project is printed by a command in the Parallax runtime
+              at seed 42 over a horizon of twelve steps.
             </p>
 
             <div className="sc-acts">

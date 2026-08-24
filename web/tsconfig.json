@@ -29,5 +29,10 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "out"]
+  // scripts/ holds Bun programs (Veo generation, the video renderer, the hub
+  // capture). They lived outside the Next app before the move and are still not
+  // part of its module graph; they run under Bun, whose globals this app does
+  // not depend on types for. Including them here would fail `next build` on
+  // `Bun` and `import.meta.dir` without typechecking anything the site renders.
+  "exclude": ["node_modules", "out", "scripts"]
 }

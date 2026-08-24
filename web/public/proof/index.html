@@ -17,7 +17,7 @@
   @property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
 
   :root {
-    /* The same radius scale as web/app/globals.css, redeclared rather than
+    /* The same radius scale as app/globals.css, redeclared rather than
        imported: this page is deliberately self-contained and opens with no
        server and no build step, so it cannot consume the app's tokens. Keep
        the two in step by hand; see DESIGN.md. */
@@ -581,7 +581,7 @@
      who has already scrolled through 420vh of it once should land on the
      argument, not on the argument's trailer. The cinema's markup and its
      wiring are left in place rather than cut, so this file stays a byte-level
-     descendant of the page the judges saw. */
+     descendant of the landing page it is the depth behind. */
   #stage, .veil, .copy, .scrollcue, .jump, .cine-brand, #track { display: none; }
 
   .rail {
@@ -722,7 +722,7 @@
 
   <section id="what">
     <div class="wrap">
-      <p class="eyebrow">Parallax · Apache-2.0 · Platanus Hack 26 · track Simulations</p>
+      <p class="eyebrow">Parallax · Apache-2.0 · the ontology simulation layer of the bstack</p>
       <h1 class="h1">Simulation results you accept before they are active.</h1>
       <p class="lede">There is no staging environment for the way a business operates. You change a price, a refund policy, an escalation threshold — and you find out what happened once it has already happened, usually because a customer told you.</p>
       <p class="lede" style="margin-top:16px">Parallax proposes a model of your context built from what is actually in it, waits for a human to accept that model, and only then rolls it forward under the decisions you are considering. The goal is not a simulator that is right. It is a simulator that cannot lie about being a simulator.</p>
@@ -736,7 +736,7 @@
       </ol>
 
       <h2 class="mlab" style="margin-top:48px">Reproduce every number on this page</h2>
-      <pre><code>$ git clone https://github.com/broomva/parallax &amp;&amp; cd parallax
+      <pre><code>$ git clone https://github.com/broomva/skills &amp;&amp; cd skills/skills/simulation/parallax/runtime
 $ bun install
 $ <b>bun run demo</b>            <span class="c"># the operators: run, observe, check, fork, prove</span>
 $ <b>bun run demo:whatsapp</b>   <span class="c"># the same thing as one thread, ending in a receipt file</span>
@@ -810,7 +810,7 @@ $ <b>bun run src/hub/serve.ts</b> <span class="c"># the same capabilities over H
 
       <div class="tblwrap scrollx">
         <table>
-          <caption><b>PROPOSAL</b> — what <code>bun run demo:whatsapp</code> emitted when pointed at this repository</caption>
+          <caption><b>PROPOSAL</b> — what <code>bun run demo:whatsapp</code> emitted when pointed at the Parallax project directory on 2026-08-23</caption>
           <thead>
             <tr>
               <th scope="col">Slot</th>
@@ -852,7 +852,7 @@ $ <b>bun run src/hub/serve.ts</b> <span class="c"># the same capabilities over H
           </tbody>
         </table>
       </div>
-      <p class="body" style="margin-top:24px">Those counts are a reading, not a specification. The row above said twelve fields and six actions this morning; a <code>scripts/</code> directory and a <code>render.yaml</code> landed in the repository during the afternoon and it now says fourteen and seven, with a different proposal id. Re-run it after your next commit and it will disagree with this page again. That is the proposer working, not drifting — and it is why an acceptance is bound to the exact proposal it was given rather than to a name.</p>
+      <p class="body" style="margin-top:24px">Those counts are a reading, not a specification. The row above said twelve fields and six actions this morning; a <code>scripts/</code> directory and a <code>render.yaml</code> landed in it that afternoon and it then said fourteen and seven, with a different proposal id. Re-run it against your own context and it will disagree with this page again. That is the proposer working, not drifting — and it is why an acceptance is bound to the exact proposal it was given rather than to a name.</p>
       <p class="verdict">You are approving a model of your own operation, not a model's opinion of it. An empty slot is the correct answer when the context does not support one; a plausible guess is not.</p>
     </div>
   </section>
@@ -948,7 +948,7 @@ sí, dale</pre></div>
         </div>
       </div>
 
-      <figcaption>Captured verbatim from <code>bun run demo:whatsapp</code> run against this repository. It names the file it wrote, because a local run has no server to serve a URL from; <code>bun run demo:live</code> drives the deployed hub instead and ends on a <code>/r/:id</code> link it has already fetched. Naming a URL nobody was asked to serve is the failure this page exists to refuse, and an earlier version of this transcript did exactly that. The state fields are read from the directory itself, so the counts and the <code>ref</code> move whenever the repository does; the storefront numbers further down do not, because they come from a fixed domain at a fixed seed. The proposal is titled <code>simulacro</code> because that is still the name of the directory on disk — the proposer reports what it found, not what we would prefer it were called.</figcaption>
+      <figcaption>Captured verbatim from <code>bun run demo:whatsapp</code> on <strong>2026-08-23, against the project directory as it stood before Parallax moved into the skills monorepo</strong> — at that point the checkout was named <code>simulacro</code> and <code>design/</code>, <code>landing/</code>, <code>src/</code>, <code>test/</code> and <code>scripts/</code> were siblings inside it. None of those names describe the current layout, and the capture is deliberately <em>not</em> restaged to match: it is evidence of a run that happened, and editing a transcript to agree with a later tree would make it a reconstruction wearing the word "verbatim". Re-run today it reports the directory it is actually standing in, which is the whole point of the mechanism — the proposer names what it found, not what we would prefer it were called. It names the file it wrote, because a local run has no server to serve a URL from; <code>bun run demo:live</code> drives the deployed hub instead and ends on a <code>/r/:id</code> link it has already fetched. Naming a URL nobody was asked to serve is the failure this page exists to refuse, and an earlier version of this transcript did exactly that. The state fields are read from the directory itself, so the counts and the <code>ref</code> move whenever the tree does; the storefront numbers further down do not, because they come from a fixed domain at a fixed seed.</figcaption>
 
       <div class="grid3">
         <div class="cell">
@@ -1276,7 +1276,7 @@ $ curl -s -X POST localhost:8791/api/ontology/accept \
         </div>
         <div>
           <p class="q">Our context is a mess.</p>
-          <p class="a">Then the proposal comes back smaller and emptier. The one it made of this very repository proposed zero invariants and seven blocking questions, and said so in the message rather than filling the gaps with something plausible. An empty slot is information about your context, not a failure of the tool.</p>
+          <p class="a">Then the proposal comes back smaller and emptier. The one it made of the Parallax project directory proposed zero invariants and seven blocking questions, and said so in the message rather than filling the gaps with something plausible. An empty slot is information about your context, not a failure of the tool.</p>
         </div>
       </div>
     </div>
@@ -1290,10 +1290,10 @@ $ curl -s -X POST localhost:8791/api/ontology/accept \
         <p class="lede">An ontology is a record, not a codebase: what the state is, what actions exist, how an event folds into the state, and what must always hold. Two of those four are code and always will be. Everything else is the same runtime, and the runtime does not change when a domain arrives.</p>
         <p class="body" style="margin-top:24px">What comes back is the receipt: a plain-language verdict, the branch class, what the policy declared against what it demonstrated, the violation count, the observed-versus-simulated split, per-objective admissibility, the full step-by-step trajectory, and the trace hash you replay it with.</p>
         <div class="actions">
-          <a class="cta" href="https://github.com/broomva/parallax" rel="noopener">Read the source</a>
+          <a class="cta" href="https://github.com/broomva/skills/tree/main/skills/simulation/parallax/runtime" rel="noopener">Read the source</a>
           <a class="cta ghost" href="#gate">See the accept gate</a>
         </div>
-<pre><code>$ git clone https://github.com/broomva/parallax &amp;&amp; cd parallax
+<pre><code>$ git clone https://github.com/broomva/skills &amp;&amp; cd skills/skills/simulation/parallax/runtime
 $ bun install &amp;&amp; <b>bun run demo:whatsapp</b>
 <span class="c"># writes out/run-bef312a9.html — open it, it is the receipt above</span>
 $ <b>bun run src/hub/serve.ts</b>
@@ -1307,8 +1307,8 @@ $ <b>bun run src/hub/serve.ts</b>
       Parallax · point it at a context · accept the ontology · fork it · prove it<br>
       OPERATORS step · observe · check · rollout · diff · trace<br>
       CLASSES PINNED · STABLE · RECORDED &nbsp;·&nbsp; ORIGINS observed · simulated<br>
-      <a href="https://github.com/broomva/parallax" rel="noopener">github.com/broomva/parallax</a> · Apache-2.0 · Platanus Hack 26 Bogotá · track Simulations
-      <p class="note">Every number on this page is printed by <code>bun run demo</code> or <code>bun run demo:whatsapp</code> in this repository, at seed 42 over a horizon of 12 steps, and every quoted string is copied from that output or from the source file named beside it. The proposal transcript is a live reading of this repository's own directory, so its counts and its ref change when the repository does. There are no customer deployments, no accuracy claims and no benchmark results, because we have none — and inventing them is the exact failure this system exists to make visible.</p>
+      <a href="https://github.com/broomva/skills/tree/main/skills/simulation/parallax/runtime" rel="noopener">github.com/broomva/skills</a> · Apache-2.0 · Carlos Escobar (@broomva)
+      <p class="note">Every number on this page is printed by <code>bun run demo</code> or <code>bun run demo:whatsapp</code> in the Parallax runtime, at seed 42 over a horizon of 12 steps, and every quoted string is copied from that output or from the source file named beside it. The proposal transcript is a live reading of the Parallax project directory, so its counts and its ref change when the directory does. There are no customer deployments, no accuracy claims and no benchmark results, because we have none — and inventing them is the exact failure this system exists to make visible.</p>
     </div>
   </footer>
 </main>
